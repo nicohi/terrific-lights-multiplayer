@@ -8,14 +8,20 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "KinematicBody2D",
+"class": "Car",
+"language": "GDScript",
+"path": "res://Car/Car.gd"
+} ]
 _global_script_class_icons={
-
+"Car": ""
 }
 
 [application]
 
 config/name="terrific-lights"
+run/main_scene="res://Map.tscn"
 config/icon="res://icon.png"
 
 [rendering]
