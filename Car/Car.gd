@@ -2,9 +2,10 @@ extends KinematicBody2D
 
 class_name Car
 
-const ACCELERATION := 200
-const MAX_SPEED := 200
-const FRICTION := 200
+const ACCELERATION := 300
+const MAX_SPEED := 500
+const TURNING_SPEED := 100
+const FRICTION := 300
 const DIRECTIONS := [Vector2(-1, 0), Vector2(1, 0), Vector2(0, -1)]
 const PADDING := 50
 const START_DIR := DIRECTIONS[2]
@@ -12,6 +13,10 @@ const START_DIR := DIRECTIONS[2]
 var velocity := Vector2.ZERO
 var input_vector := START_DIR
 var direction := Vector2()
+var use_speed := MAX_SPEED
+var use_factor := ACCELERATION
+var turn_done := false
+
 onready var start_pos := Vector2(
 	OS.window_size.x / 2,
 	OS.window_size.y + PADDING
@@ -29,6 +34,9 @@ func _reset_car():
 	input_vector = START_DIR
 	velocity = Vector2.ZERO
 	direction = _get_direction()
+	use_speed = MAX_SPEED
+	use_factor = ACCELERATION
+	turn_done = false
 
 func _out_of_view() -> bool:
 	var window_size = OS.window_size
@@ -44,12 +52,24 @@ func _physics_process(delta):
 	if _out_of_view():
 		_reset_car()
 	
+	if self.position.y <= 2 * OS.window_size.y / 3 and direction != DIRECTIONS[2]:
+		use_speed = TURNING_SPEED
+		use_factor = FRICTION
+	
+	if turn_done:
+		use_speed = MAX_SPEED
+		use_factor = ACCELERATION
+	
 	if self.position.y <= OS.window_size.y / 2:
 		input_vector = direction
 	
-	velocity = velocity.move_toward(input_vector * MAX_SPEED, ACCELERATION * delta)
+	velocity = velocity.move_toward(input_vector * use_speed, use_factor * delta)
 	
 	velocity = move_and_slide(velocity)
 
 	var target_angle := atan2(velocity.x, velocity.y) - PI
 	self.rotation = -target_angle
+	
+	if stepify(self.rotation, .01) == stepify(PI / 2, .01) or stepify(self.rotation, .01) == stepify(3 * PI / 2, .01):
+		turn_done = true
+
