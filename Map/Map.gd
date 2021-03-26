@@ -1,16 +1,35 @@
 extends Node2D
 
+const N_CARS = 64
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
+var cars = []
+var timer
+var points = 0
 
-
-# Called when the node enters the scene tree for the first time.
+func _init():
+	timer = Timer.new()
+	add_child(timer)
+	timer.connect("timeout", self, "_release_a_car")
+	timer.autostart = true
+	
 func _ready():
+	var window_size = OS.window_size
+	var carscene = load("res://Car/Car.tscn")
+	
+	for i in N_CARS:
+		var car = carscene.instance()
+		cars.push_back(car)
+		car.connect("car_exited", self, "_reset_car")
+		add_child(car)
+		
 	randomize()
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+	
+func _reset_car(car):
+	cars.push_back(car)
+	points += 1
+	print(points)
+	
+func _release_a_car():
+	if cars.size():
+		var car = cars.pop_front()
+		car._go()
