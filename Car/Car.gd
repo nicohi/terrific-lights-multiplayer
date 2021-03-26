@@ -3,7 +3,7 @@ extends KinematicBody2D
 class_name Car
 
 # this signal is emitted when the car goes out of view
-signal car_exited(car)
+signal car_exited(car, points)
 
 # direction vectors
 const LEFT = Vector2(-1, 0)
@@ -27,6 +27,9 @@ var current_speed := MAX_SPEED
 var speed_modifier := ACCELERATION
 var turn_done := false # true when the turn is complete
 var drive := false # if true, the car can proceed
+var points := 99
+
+var timer: Timer
 
 onready var start_pos := Vector2(
 	OS.window_size.x / 2,
@@ -34,12 +37,21 @@ onready var start_pos := Vector2(
 )
 onready var sprite := $Sprite
 
+func _init():
+	timer = Timer.new()
+	add_child(timer)
+	timer.connect("timeout", self, "_reduce_point")
+
 func _ready():
 	_reset_car()
 
 # called when the car should drive
 func _go():
 	drive = true
+	timer.start()
+
+func _reduce_point():
+	points -= 1
 
 # get a random direction to turn to
 func _get_direction() -> Vector2:
@@ -55,6 +67,8 @@ func _reset_car():
 	speed_modifier = ACCELERATION
 	turn_done = false
 	drive = false
+	points = 99
+	timer.stop()
 
 # returns true if the car is out of the screens view
 func _out_of_view() -> bool:
@@ -101,7 +115,7 @@ func _physics_process(delta):
 		return
 
 	if _out_of_view():
-		emit_signal("car_exited", self)
+		emit_signal("car_exited", self, points)
 		_reset_car()
 
 	_set_speed_and_direction()

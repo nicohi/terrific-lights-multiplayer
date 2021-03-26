@@ -4,7 +4,7 @@ const N_CARS = 64
 
 var cars = []
 var timer
-var points = 0
+var total_points = 0
 
 func _init():
 	timer = Timer.new()
@@ -24,10 +24,12 @@ func _ready():
 		
 	randomize()
 	
-func _reset_car(car):
+func _reset_car(car, points):
 	cars.push_back(car)
-	points += 1
+	total_points += points
+	
 	print(points)
+	print(total_points)
 	
 func _release_a_car():
 	if cars.size():
