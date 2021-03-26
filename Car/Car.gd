@@ -19,6 +19,7 @@ const FRICTION := 100
 const DIRECTIONS := [LEFT, RIGHT, UP]
 const PADDING := 50
 const START_DIR := UP
+const MAX_POINTS := 99
 
 var velocity := Vector2.ZERO # current car velocity
 var input_vector := START_DIR # current direction of the car
@@ -27,7 +28,7 @@ var current_speed := MAX_SPEED
 var speed_modifier := ACCELERATION
 var turn_done := false # true when the turn is complete
 var drive := false # if true, the car can proceed
-var points := 99
+var points := MAX_POINTS
 
 var timer: Timer
 
@@ -67,7 +68,7 @@ func _reset_car():
 	speed_modifier = ACCELERATION
 	turn_done = false
 	drive = false
-	points = 99
+	points = MAX_POINTS
 	timer.stop()
 
 # returns true if the car is out of the screens view
