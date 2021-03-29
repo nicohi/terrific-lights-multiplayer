@@ -20,6 +20,7 @@ func _ready():
 		var car = carscene.instance()
 		cars.push_back(car)
 		car.connect("car_exited", self, "_reset_car")
+		car.connect("game_over", self, "_game_over")
 		add_child(car)
 		
 	randomize()
@@ -30,7 +31,10 @@ func _reset_car(car, points):
 	
 	print(points)
 	print(total_points)
-	
+
+func _game_over():
+	print("game over")
+
 func _release_a_car():
 	if cars.size():
 		var car = cars.pop_front()

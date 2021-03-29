@@ -4,6 +4,7 @@ class_name Car
 
 # this signal is emitted when the car goes out of view
 signal car_exited(car, points)
+signal game_over
 
 # direction vectors
 const LEFT = Vector2(-1, 0)
@@ -53,6 +54,9 @@ func _go():
 
 func _reduce_point():
 	points -= 1
+	
+	if points <= 0:
+		emit_signal("game_over")
 
 # get a random direction to turn to
 func _get_direction() -> Vector2:
