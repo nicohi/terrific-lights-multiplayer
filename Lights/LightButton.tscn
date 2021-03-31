@@ -1,13 +1,15 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=2 format=2]
 
 [ext_resource path="res://Lights/LightButton.gd" type="Script" id=1]
-[ext_resource path="res://Lights/Light_option_11.jpg" type="Texture" id=2]
 
 [node name="LightButton" type="Node2D"]
+scale = Vector2( 0.8, 0.8 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_group_": true
 }
 
-[node name="Sprite" type="Sprite" parent="."]
-texture = ExtResource( 2 )
+[node name="LightOn" type="Sprite" parent="."]
+visible = false
+
+[node name="LightOff" type="Sprite" parent="."]

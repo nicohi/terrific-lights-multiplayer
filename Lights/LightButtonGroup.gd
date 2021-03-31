@@ -2,31 +2,19 @@ extends Node2D
 
 class_name LightButtonGroup
 
-var right_turn: LightButton
-var left_turn: LightButton
+signal lit(light)
 
-func set_lights(
-	right_turn_texture_off: String,
-	right_turn_texture_on: String,
-	left_turn_texture_off: String,
-	left_turn_texture_on: String,
-	x: float,
-	y: float
-):
-	var LightButtonScene = load("res://Lights/LightButton.tscn")
+onready var northSouthRight = $NorthSouthRight
+onready var northSouthLeft = $NorthSouthLeft
+onready var eastWestRight = $EastWestRight
+onready var eastWestLeft = $EastWestLeft
+
+func _ready():
+	for light in [northSouthRight, northSouthLeft, eastWestRight, eastWestLeft]:
+		self.connect("lit", light, "handle_light_up")
+		light.connect("light_clicked", self, "handle_light_clicked")
 	
-	right_turn = LightButtonScene.instance()
-	left_turn = LightButtonScene.instance()
-	
-	right_turn.set_textures(right_turn_texture_off, right_turn_texture_on)
-	left_turn.set_textures(left_turn_texture_off, left_turn_texture_on)
-	
-	right_turn.set_pair(left_turn)
-	left_turn.set_pair(right_turn)
-	
-	add_child(right_turn)
-	add_child(left_turn)
-	
-	right_turn.position = Vector2(x, y)
-	left_turn.position = Vector2(x + 200, y)
-	
+	emit_signal("lit", eastWestLeft)
+
+func handle_light_clicked(light: LightButton):
+	emit_signal("lit", light)
