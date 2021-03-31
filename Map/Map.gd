@@ -11,18 +11,22 @@ func _init():
 	add_child(timer)
 	timer.connect("timeout", self, "_release_a_car")
 	timer.autostart = true
-	
-func _ready():
-	var window_size = OS.window_size
-	var carscene = load("res://Car/Car.tscn")
+
+func _create_cars():
+	var car_scene = load("res://Car/Car.tscn")
 	
 	for i in N_CARS:
-		var car = carscene.instance()
+		var car = car_scene.instance()
 		cars.push_back(car)
 		car.connect("car_exited", self, "_reset_car")
 		car.connect("game_over", self, "_game_over")
 		add_child(car)
-		
+
+func _ready():
+	var window_size = OS.window_size
+
+	_create_cars()
+	
 	randomize()
 	
 func _reset_car(car, points):
