@@ -6,6 +6,8 @@ var cars = []
 var timer
 var total_points = 0
 
+onready var pausePopUp = $PausePopup
+
 func _init():
 	timer = Timer.new()
 	add_child(timer)
@@ -23,7 +25,7 @@ func _create_cars():
 		add_child(car)
 
 func _ready():
-	var window_size = OS.window_size
+	var window_size = get_viewport().get_visible_rect().size
 
 	_create_cars()
 	
@@ -43,3 +45,8 @@ func _release_a_car():
 	if cars.size():
 		var car = cars.pop_front()
 		car._go()
+
+func _physics_process(delta):
+	if Input.is_action_just_pressed("ui_cancel"):
+		get_tree().paused = true
+		pausePopUp.popup_centered()
