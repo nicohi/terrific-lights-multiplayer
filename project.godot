@@ -23,11 +23,17 @@ _global_script_classes=[ {
 "class": "LightButtonGroup",
 "language": "GDScript",
 "path": "res://Lights/LightButtonGroup.gd"
+}, {
+"base": "Area2D",
+"class": "Tile",
+"language": "GDScript",
+"path": "res://Map/Tile.gd"
 } ]
 _global_script_class_icons={
 "Car": "",
 "LightButton": "",
-"LightButtonGroup": ""
+"LightButtonGroup": "",
+"Tile": ""
 }
 
 [application]

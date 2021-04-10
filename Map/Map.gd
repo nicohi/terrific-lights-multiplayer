@@ -2,6 +2,7 @@ extends Node2D
 
 const N_CARS = 64
 
+
 var cars = []
 var timer
 var total_points = 0
@@ -11,6 +12,7 @@ func _init():
 	add_child(timer)
 	timer.connect("timeout", self, "_release_a_car")
 	timer.autostart = true
+
 
 func _create_cars():
 	var car_scene = load("res://Car/Car.tscn")
