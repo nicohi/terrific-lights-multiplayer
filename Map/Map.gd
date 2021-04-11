@@ -25,7 +25,7 @@ func _create_cars():
 		add_child(car)
 
 func _ready():
-	var window_size = OS.window_size
+	var window_size = get_viewport_rect().size
 
 	_create_cars()
 	
