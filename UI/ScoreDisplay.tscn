@@ -1,0 +1,46 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://UI/ScoreDisplay.gd" type="Script" id=1]
+
+[node name="ScoreDisplay" type="Control"]
+margin_right = 40.0
+margin_bottom = 40.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScoreHeading" type="Label" parent="."]
+margin_right = 80.0
+margin_bottom = 14.0
+text = "Score"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Score" type="Label" parent="."]
+margin_left = 100.0
+margin_right = 150.0
+margin_bottom = 14.0
+text = "0"
+align = 2
+
+[node name="CarsPassedHeading" type="Label" parent="."]
+margin_top = 20.0
+margin_right = 100.0
+margin_bottom = 34.0
+text = "Cars Passed"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CarsPassed" type="Label" parent="."]
+margin_left = 100.0
+margin_top = 20.0
+margin_right = 150.0
+margin_bottom = 40.0
+text = "0"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
