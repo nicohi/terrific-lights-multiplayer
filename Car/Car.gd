@@ -34,8 +34,8 @@ var points := MAX_POINTS
 var timer: Timer
 
 onready var start_pos := Vector2(
-	OS.window_size.x / 2,
-	OS.window_size.y + PADDING
+	get_viewport_rect().size.x / 2,
+	get_viewport_rect().size.y + PADDING
 )
 onready var sprite := $Sprite
 
@@ -77,7 +77,7 @@ func _reset_car():
 
 # returns true if the car is out of the screens view
 func _out_of_view() -> bool:
-	var window_size = OS.window_size
+	var window_size = get_viewport_rect().size
 	
 	return (
 		self.position.y < -PADDING or

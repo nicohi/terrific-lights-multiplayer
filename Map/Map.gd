@@ -5,8 +5,11 @@ const N_CARS = 64
 var cars = []
 var timer
 var total_points = 0
+var cars_passed = 0
 
 onready var pausePopUp = $PausePopup
+onready var scoreDisplay = $ScoreDisplay
+signal score_changed(total_score, cars_passed)
 
 func _init():
 	timer = Timer.new()
@@ -25,6 +28,8 @@ func _create_cars():
 		add_child(car)
 
 func _ready():
+	self.connect("score_changed", scoreDisplay, "update_score")
+	
 	var window_size = get_viewport().get_visible_rect().size
 
 	_create_cars()
@@ -34,9 +39,9 @@ func _ready():
 func _reset_car(car, points):
 	cars.push_back(car)
 	total_points += points
+	cars_passed += 1
 	
-	print(points)
-	print(total_points)
+	emit_signal("score_changed", total_points, cars_passed)
 
 func _game_over():
 	print("game over")
