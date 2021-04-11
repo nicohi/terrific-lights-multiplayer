@@ -33,6 +33,28 @@ var points := MAX_POINTS
 
 var timer: Timer
 
+var blackCar = preload("res://Car/Car1BlackTransparent.jpg")
+var blueCar = preload("res://Car/Car1BlueTransparent.jpg")
+var redCar = preload("res://Car/Car1RedTransparent.jpg")
+var tanCar = preload("res://Car/Car1TanTransparent.jpg")
+var greenCar = preload("res://Car/Car2GreenTransparent.jpg")
+var orangeCar = preload("res://Car/Car2OrangeTransparent.jpg")
+var purpleCar = preload("res://Car/Car2PurpleTransparent.jpg")
+var tealCar = preload("res://Car/Car2TealTransparent.jpg")
+var whiteCar = preload("res://Car/Car2WhiteTransparent.jpg")
+
+var carTextures = [
+	blackCar,
+	blueCar,
+	redCar,
+	tanCar,
+	greenCar,
+	orangeCar,
+	purpleCar,
+	tealCar,
+	whiteCar
+]
+
 onready var start_pos := Vector2(
 	get_viewport_rect().size.x / 2,
 	get_viewport_rect().size.y + PADDING
@@ -64,6 +86,7 @@ func _get_direction() -> Vector2:
 
 # resets the car to be ready to head for a new adventure
 func _reset_car():
+	sprite.texture = carTextures[randi() % carTextures.size()]
 	self.position = start_pos
 	input_vector = START_DIR
 	velocity = Vector2.ZERO
