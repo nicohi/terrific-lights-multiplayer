@@ -33,11 +33,36 @@ var points := MAX_POINTS
 
 var timer: Timer
 
+var blackCar = preload("res://Car/TriotemplateBlackTurns.png")
+var blueCar = preload("res://Car/TriotemplateBlueTurns.png")
+var redCar = preload("res://Car/TriotemplateRedTurn.png")
+var tanCar = preload("res://Car/TriotemplateTanTurns.png")
+var greenCar = preload("res://Car/TriotemplateGreenTurns.png")
+var orangeCar = preload("res://Car/TriotemplateOrangeTurns.png")
+var purpleCar = preload("res://Car/TriotemplatePurpleTurns.png")
+var tealCar = preload("res://Car/TriotemplateTealTurns.png")
+var whiteCar1 = preload("res://Car/TriotemplateWhite1Turns.png")
+var whiteCar2 = preload("res://Car/TriotemplateWhite2Turns.png")
+
+var carTextures = [
+	blackCar,
+	blueCar,
+	redCar,
+	tanCar,
+	greenCar,
+	orangeCar,
+	purpleCar,
+	tealCar,
+	whiteCar1,
+	whiteCar2
+]
+
 onready var start_pos := Vector2(
 	get_viewport_rect().size.x / 2,
 	get_viewport_rect().size.y + PADDING
 )
 onready var sprite := $Sprite
+onready var animationPlayer := $AnimationPlayer
 
 func _init():
 	timer = Timer.new()
@@ -64,6 +89,7 @@ func _get_direction() -> Vector2:
 
 # resets the car to be ready to head for a new adventure
 func _reset_car():
+	sprite.texture = carTextures[randi() % carTextures.size()]
 	self.position = start_pos
 	input_vector = START_DIR
 	velocity = Vector2.ZERO
@@ -74,6 +100,7 @@ func _reset_car():
 	drive = false
 	points = MAX_POINTS
 	timer.stop()
+	animationPlayer.play("DriveStraight")
 
 # returns true if the car is out of the screens view
 func _out_of_view() -> bool:
@@ -88,10 +115,19 @@ func _out_of_view() -> bool:
 
 func _set_speed_and_direction():
 	if self.position.y <= 2 * OS.window_size.y / 3 and direction != DIRECTIONS[2]:
+		match direction:
+			RIGHT:
+				animationPlayer.play("TurnRight")
+			LEFT:
+				animationPlayer.play("TurnLeft")
+			_:
+				animationPlayer.play("DriveStraight")
+				
 		current_speed = TURNING_SPEED
 		speed_modifier = FRICTION
 	
 	if turn_done:
+		animationPlayer.play("DriveStraight")
 		current_speed = MAX_SPEED
 		speed_modifier = ACCELERATION
 		
