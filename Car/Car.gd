@@ -6,6 +6,12 @@ class_name Car
 signal car_exited(car, points)
 signal game_over
 
+enum {
+	STRAIGHT_AHEAD,
+	TURNING,
+	TURNED
+}
+
 # direction vectors
 const LEFT = Vector2(-1, 0)
 const RIGHT = Vector2(1, 0)
@@ -13,12 +19,12 @@ const UP = Vector2(0, -1)
 const DOWN = Vector2(0, 1)
 
 # constants for car control
-const ACCELERATION := 100
-const MAX_SPEED := 200
-const TURNING_SPEED := 75
-const FRICTION := 100
+const ACCELERATION := Globals.TILE_SIDE_LEN / 2
+const MAX_SPEED := Globals.TILE_SIDE_LEN
+const TURNING_SPEED_LEFT := Globals.TILE_SIDE_LEN * .875
+const TURNING_SPEED_RIGHT := Globals.TILE_SIDE_LEN * .625
+const FRICTION := Globals.TILE_SIDE_LEN / 2
 const DIRECTIONS := [LEFT, RIGHT, UP]
-const PADDING := 50
 const START_DIR := UP
 const MAX_POINTS := 99
 
@@ -27,9 +33,9 @@ var input_vector := START_DIR # current direction of the car
 var direction := Vector2.ZERO # the direction to turn to
 var current_speed := MAX_SPEED
 var speed_modifier := ACCELERATION
-var turn_done := false # true when the turn is complete
 var drive := false # if true, the car can proceed
 var points := MAX_POINTS
+var turn_state := STRAIGHT_AHEAD
 
 var timer: Timer
 
@@ -57,10 +63,32 @@ var carTextures = [
 	whiteCar2
 ]
 
-onready var start_pos := Vector2(
-	get_viewport_rect().size.x / 2,
-	get_viewport_rect().size.y + PADDING
-)
+onready var zero_corner := get_viewport_rect().size / 2 - Vector2(540, 540)
+onready var start_pos_nwn := zero_corner + Vector2(8 * Globals.TILE_SIDE_LEN, 0)
+onready var start_pos_nww := zero_corner + Vector2(0, 9 * Globals.TILE_SIDE_LEN)
+onready var start_pos_nen := zero_corner + Vector2(18 * Globals.TILE_SIDE_LEN, 0)
+onready var start_pos_nee := zero_corner + Vector2(27 * Globals.TILE_SIDE_LEN, 8 * Globals.TILE_SIDE_LEN)
+onready var start_pos_sww := zero_corner + Vector2(0, 19 * Globals.TILE_SIDE_LEN)
+onready var start_pos_sws := zero_corner + Vector2(9 * Globals.TILE_SIDE_LEN, 27 * Globals.TILE_SIDE_LEN)
+onready var start_pos_ses := zero_corner + Vector2(19 * Globals.TILE_SIDE_LEN, 27 * Globals.TILE_SIDE_LEN)
+onready var start_pos_see := zero_corner + Vector2(27 * Globals.TILE_SIDE_LEN, 18 * Globals.TILE_SIDE_LEN)
+
+onready var south_facing_start_positions = [start_pos_nwn, start_pos_nen]
+onready var east_facing_start_positions = [start_pos_nww, start_pos_sww]
+onready var north_facing_start_positions = [start_pos_ses, start_pos_sws]
+onready var west_facing_start_positions = [start_pos_nee, start_pos_see]
+
+onready var start_positions = [
+	start_pos_nwn,
+	start_pos_nww,
+	start_pos_nen,
+	start_pos_nee,
+	start_pos_see,
+	start_pos_ses,
+	start_pos_sws,
+	start_pos_sww
+]
+
 onready var sprite := $Sprite
 onready var animationPlayer := $AnimationPlayer
 
@@ -87,19 +115,40 @@ func _reduce_point():
 func _get_direction() -> Vector2:
 	return DIRECTIONS[randi() % DIRECTIONS.size()]
 
+func _get_start_direction() -> Vector2:
+	if south_facing_start_positions.has(self.position):
+		return DOWN
+	elif east_facing_start_positions.has(self.position):
+		return RIGHT
+	elif north_facing_start_positions.has(self.position):
+		return UP
+	else:
+		return LEFT
+		
+
 # resets the car to be ready to head for a new adventure
 func _reset_car():
+	turn_state = STRAIGHT_AHEAD
+	
 	sprite.texture = carTextures[randi() % carTextures.size()]
-	self.position = start_pos
-	input_vector = START_DIR
+	
+	self.position = start_positions[randi() % start_positions.size()]
+	
+	self.input_vector = _get_start_direction()
+	
 	velocity = Vector2.ZERO
+	
 	direction = _get_direction()
+	
 	current_speed = MAX_SPEED
 	speed_modifier = ACCELERATION
-	turn_done = false
+	
 	drive = false
+	
 	points = MAX_POINTS
+	
 	timer.stop()
+	
 	animationPlayer.play("DriveStraight")
 
 # returns true if the car is out of the screens view
@@ -107,32 +156,52 @@ func _out_of_view() -> bool:
 	var window_size = get_viewport_rect().size
 	
 	return (
-		self.position.y < -PADDING or
-		self.position.y > window_size.y + PADDING or
-		self.position.x < -PADDING or
-		self.position.x > window_size.x + PADDING
+		self.position.y < -5 or
+		self.position.y > 540 * 2 + 5 or
+		self.position.x < zero_corner.x - 5 or
+		self.position.x > zero_corner.x + 540 * 2 + 5
 	)
 
+func _make_a_turn():
+	match direction:
+		RIGHT:
+			animationPlayer.play("TurnRight")
+			current_speed = TURNING_SPEED_RIGHT
+			input_vector = input_vector.rotated(PI / 2)
+			
+		LEFT:
+			animationPlayer.play("TurnLeft")
+			current_speed = TURNING_SPEED_LEFT
+			input_vector = input_vector.rotated(3 * PI / 2)
+			
+		_:
+			animationPlayer.play("DriveStraight")
+			current_speed = MAX_SPEED
+			
+	speed_modifier = FRICTION
+	turn_state = TURNING
+
+func _finish_turning():
+	animationPlayer.play("DriveStraight")
+
+	current_speed = MAX_SPEED
+	speed_modifier = ACCELERATION
+
+	turn_state = STRAIGHT_AHEAD
+	direction = _get_direction()
+
 func _set_speed_and_direction():
-	if self.position.y <= 2 * OS.window_size.y / 3 and direction != DIRECTIONS[2]:
-		match direction:
-			RIGHT:
-				animationPlayer.play("TurnRight")
-			LEFT:
-				animationPlayer.play("TurnLeft")
-			_:
-				animationPlayer.play("DriveStraight")
-				
-		current_speed = TURNING_SPEED
-		speed_modifier = FRICTION
-	
-	if turn_done:
-		animationPlayer.play("DriveStraight")
-		current_speed = MAX_SPEED
-		speed_modifier = ACCELERATION
-		
-	if self.position.y <= OS.window_size.y / 2:
-		input_vector = direction
+	match turn_state:
+		STRAIGHT_AHEAD:
+			if randf() < .002:
+				_make_a_turn()
+
+		TURNING:
+			if velocity.normalized() == input_vector:
+				turn_state = TURNED
+
+		TURNED:
+			_finish_turning()
 
 func _move(delta):
 	velocity = velocity.move_toward(input_vector * current_speed, speed_modifier * delta)
@@ -142,12 +211,6 @@ func _move(delta):
 func _rotate():
 	var target_angle := atan2(velocity.x, velocity.y) - PI
 	self.rotation = -target_angle
-	
-	if (
-		stepify(self.rotation, .01) == stepify(PI / 2, .01) or
-		stepify(self.rotation, .01) == stepify(3 * PI / 2, .01)
-	):
-		turn_done = true
 
 func _physics_process(delta):
 	if not drive:

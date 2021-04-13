@@ -42,6 +42,10 @@ config/name="terrific-lights"
 run/main_scene="res://Map.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+Globals="*res://Globals.gd"
+
 [display]
 
 window/size/width=1920
