@@ -24,6 +24,7 @@ func setUpTiles():
 			tileIsRoad = false
 	var tile_scene = load("res://Tile.tscn")
 	var start = get_viewport_rect().size / 2 - Vector2(540, 540)
+	
 	var x_pos = start.x
 	var y_pos = start.y
 	for x in range(28):
@@ -35,8 +36,8 @@ func setUpTiles():
 				add_child(tile)
 				tile.position.x = x_pos
 				tile.position.y = y_pos
-			y_pos += 40
-		x_pos += 40
+			y_pos += Globals.TILE_SIDE_LEN
+		x_pos += Globals.TILE_SIDE_LEN
 	
 func _ready():
 	setUpTiles()
