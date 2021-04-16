@@ -11,3 +11,10 @@ func _ready():
 
 func isFree():
 	return free
+
+
+func _on_Tile_body_entered(body):
+	Globals.entered += 1
+#	var car = body as Car
+	body.ind += 1
+	print("ENTERED: ", Globals.entered)

@@ -22,8 +22,9 @@ func setUpTiles():
 				tileIsRoad = true
 			tiles[x].append(tileIsRoad)
 			tileIsRoad = false
-	var tile_scene = load("res://Road/Tile.tscn")
+	var tile_scene = load("res://Tile.tscn")
 	var start = get_viewport_rect().size / 2 - Vector2(540, 540)
+	
 	var x_pos = start.x
 	var y_pos = start.y
 	for x in range(28):
@@ -35,19 +36,22 @@ func setUpTiles():
 				add_child(tile)
 				tile.position.x = x_pos
 				tile.position.y = y_pos
-			y_pos += 40
-		x_pos += 40
+			y_pos += Globals.TILE_SIDE_LEN
+		x_pos += Globals.TILE_SIDE_LEN
 
 func setUpRoutes():
 	var list = []
 	for y in range(28):
 		list.append(tiles[8][y])
+#		print(8, " ", y, ": ", tiles[8][y].position)
 	var route = Route.new(list)
 	routes.append(route)
 	
 	list = []
 	for y in range(27):
 		list.append(tiles[9][27 - y])
+		print(9, " ", y, ": ", tiles[9][27 - y].position)
+#		print(9, " ", y, ": ", tiles[9][27 - y].global_position)
 	route = Route.new(list)
 	routes.append(route)
 	
@@ -63,11 +67,9 @@ func setUpRoutes():
 	route = Route.new(list)
 	routes.append(route)
 
-func randomRoute(car):
-	# set a random route for the car to follow
+func randomRoute():
 	var route = routes[randi() % routes.size()]
-	# car.setRoute(route) which also sets car ind at 0
-	pass
+	return route
 
 func _ready():
 	setUpTiles()

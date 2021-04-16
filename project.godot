@@ -27,12 +27,12 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "Route",
 "language": "GDScript",
-"path": "res://Road/Route.gd"
+"path": "res://Route.gd"
 }, {
 "base": "Area2D",
 "class": "Tile",
 "language": "GDScript",
-"path": "res://Road/Tile.gd"
+"path": "res://Tile.gd"
 } ]
 _global_script_class_icons={
 "Car": "",
@@ -47,6 +47,10 @@ _global_script_class_icons={
 config/name="terrific-lights"
 run/main_scene="res://Map/Map.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Globals="*res://Globals.gd"
 
 [display]
 

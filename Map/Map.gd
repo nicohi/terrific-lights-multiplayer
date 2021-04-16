@@ -1,7 +1,6 @@
 extends Node2D
 
-const N_CARS = 64
-
+const N_CARS = 1
 
 var cars = []
 var timer
@@ -10,6 +9,7 @@ var cars_passed = 0
 
 onready var pausePopUp = $PausePopup
 onready var scoreDisplay = $ScoreDisplay
+onready var road = $Road
 signal score_changed(total_score, cars_passed)
 
 func _init():
@@ -27,6 +27,7 @@ func _create_cars():
 		cars.push_back(car)
 		car.connect("car_exited", self, "_reset_car")
 		car.connect("game_over", self, "_game_over")
+		car.setRoute(road.randomRoute())
 		add_child(car)
 
 func _ready():
@@ -44,6 +45,7 @@ func _reset_car(car, points):
 	cars_passed += 1
 	
 	emit_signal("score_changed", total_points, cars_passed)
+	car.setRoute(road.randomRoute())
 
 func _game_over():
 	print("game over")

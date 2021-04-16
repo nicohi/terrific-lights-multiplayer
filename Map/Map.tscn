@@ -36,7 +36,7 @@
 [ext_resource path="res://Lights/Light_option_43_Light.jpg" type="Texture" id=34]
 [ext_resource path="res://Lights/Light_option_43.jpg" type="Texture" id=35]
 [ext_resource path="res://Lights/LightButtonGroup.tscn" type="PackedScene" id=36]
-[ext_resource path="res://Road/Road.gd" type="Script" id=37]
+[ext_resource path="res://Road.gd" type="Script" id=37]
 [ext_resource path="res://UI/ScoreDisplay.tscn" type="PackedScene" id=38]
 
 [node name="Map" type="Node2D"]
