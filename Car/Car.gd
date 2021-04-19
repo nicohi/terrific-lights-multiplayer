@@ -131,8 +131,8 @@ func _reduce_point():
 		
 func setRoute(r: Route):
 	route = r
-	ind = 0
-	self.position = route.getTileAtInd(ind).position
+	ind = -1
+	self.position = route.getTileAtInd(0).position
 	
 func getRoute():
 	return route
@@ -215,9 +215,13 @@ func _set_speed_and_direction(delta):
 #		TURNED:
 #			_finish_turning()
 	var nextTile = route.getTileAtInd(ind + 1)
-#	print(ind + 1)
-	input_vector = input_vector.direction_to(nextTile.position)
-	print(nextTile.position)
+	if nextTile == null:
+		emit_signal("car_exited", self, points)
+		_reset_car()
+	elif not nextTile.isFree():
+		input_vector = Vector2.ZERO
+	else:
+		input_vector = position.direction_to(nextTile.global_position).normalized()
 
 func _move(delta):
 	velocity = velocity.move_toward(input_vector * current_speed, speed_modifier * delta)

@@ -1,6 +1,6 @@
 extends Node2D
 
-const N_CARS = 1
+const N_CARS = 128
 
 var cars = []
 var timer

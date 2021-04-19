@@ -3,18 +3,27 @@ extends Area2D
 class_name Tile
 
 var free setget , isFree
-#export(NodePath) var node_path
-#onready var nextTile = get_node(node_path)
+var er: bool = true
+var el: bool = true
+var wr: bool = true
+var wl: bool = true
+var nr: bool = true
+var nl: bool = true
+var sr: bool = true
+var sl: bool = true
 
 func _ready():
 	free = true
 
-func isFree():
+func isFree() -> bool:
 	return free
 
 
 func _on_Tile_body_entered(body):
 	Globals.entered += 1
-#	var car = body as Car
 	body.ind += 1
-	print("ENTERED: ", Globals.entered)
+	self.free = false
+
+
+func _on_Tile_body_exited(body):
+	self.free = true

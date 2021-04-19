@@ -47,160 +47,160 @@ position = Vector2( 960, 540 )
 scale = Vector2( 0.8, 0.8 )
 texture = ExtResource( 7 )
 
-[node name="UpperLeft" parent="." instance=ExtResource( 36 )]
-
-[node name="NorthSouthRight" parent="UpperLeft" index="0"]
-position = Vector2( 862, 442 )
-
-[node name="LightOn" parent="UpperLeft/NorthSouthRight" index="0"]
-texture = ExtResource( 5 )
-
-[node name="LightOff" parent="UpperLeft/NorthSouthRight" index="1"]
-texture = ExtResource( 8 )
-
-[node name="NorthSouthLeft" parent="UpperLeft" index="1"]
-position = Vector2( 862, 238 )
-
-[node name="LightOn" parent="UpperLeft/NorthSouthLeft" index="0"]
-texture = ExtResource( 9 )
-
-[node name="LightOff" parent="UpperLeft/NorthSouthLeft" index="1"]
-texture = ExtResource( 1 )
-
-[node name="EastWestRight" parent="UpperLeft" index="2"]
-position = Vector2( 658, 442 )
-
-[node name="LightOn" parent="UpperLeft/EastWestRight" index="0"]
-texture = ExtResource( 15 )
-
-[node name="LightOff" parent="UpperLeft/EastWestRight" index="1"]
-texture = ExtResource( 4 )
-
-[node name="EastWestLeft" parent="UpperLeft" index="3"]
-position = Vector2( 658, 238 )
-
-[node name="LightOn" parent="UpperLeft/EastWestLeft" index="0"]
-texture = ExtResource( 3 )
-
-[node name="LightOff" parent="UpperLeft/EastWestLeft" index="1"]
-texture = ExtResource( 16 )
-
-[node name="UpperRight" parent="." instance=ExtResource( 36 )]
-
-[node name="NorthSouthRight" parent="UpperRight" index="0"]
-position = Vector2( 1262, 442 )
-
-[node name="LightOn" parent="UpperRight/NorthSouthRight" index="0"]
-texture = ExtResource( 22 )
-
-[node name="LightOff" parent="UpperRight/NorthSouthRight" index="1"]
-texture = ExtResource( 10 )
-
-[node name="NorthSouthLeft" parent="UpperRight" index="1"]
-position = Vector2( 1262, 238 )
-
-[node name="LightOn" parent="UpperRight/NorthSouthLeft" index="0"]
-texture = ExtResource( 17 )
-
-[node name="LightOff" parent="UpperRight/NorthSouthLeft" index="1"]
-texture = ExtResource( 19 )
-
-[node name="EastWestRight" parent="UpperRight" index="2"]
-position = Vector2( 1058, 442 )
-
-[node name="LightOn" parent="UpperRight/EastWestRight" index="0"]
-texture = ExtResource( 11 )
-
-[node name="LightOff" parent="UpperRight/EastWestRight" index="1"]
-texture = ExtResource( 20 )
-
-[node name="EastWestLeft" parent="UpperRight" index="3"]
-position = Vector2( 1058, 238 )
-
-[node name="LightOn" parent="UpperRight/EastWestLeft" index="0"]
-texture = ExtResource( 18 )
-
-[node name="LightOff" parent="UpperRight/EastWestLeft" index="1"]
-texture = ExtResource( 21 )
-
-[node name="LowerLeft" parent="." instance=ExtResource( 36 )]
-
-[node name="NorthSouthRight" parent="LowerLeft" index="0"]
-position = Vector2( 862, 843 )
-
-[node name="LightOn" parent="LowerLeft/NorthSouthRight" index="0"]
-texture = ExtResource( 23 )
-
-[node name="LightOff" parent="LowerLeft/NorthSouthRight" index="1"]
-texture = ExtResource( 25 )
-
-[node name="NorthSouthLeft" parent="LowerLeft" index="1"]
-position = Vector2( 862, 639 )
-
-[node name="LightOn" parent="LowerLeft/NorthSouthLeft" index="0"]
-texture = ExtResource( 30 )
-
-[node name="LightOff" parent="LowerLeft/NorthSouthLeft" index="1"]
-texture = ExtResource( 24 )
-
-[node name="EastWestRight" parent="LowerLeft" index="2"]
-position = Vector2( 658, 843 )
-
-[node name="LightOn" parent="LowerLeft/EastWestRight" index="0"]
-texture = ExtResource( 12 )
-
-[node name="LightOff" parent="LowerLeft/EastWestRight" index="1"]
-texture = ExtResource( 14 )
-
-[node name="EastWestLeft" parent="LowerLeft" index="3"]
-position = Vector2( 658, 639 )
-
-[node name="LightOn" parent="LowerLeft/EastWestLeft" index="0"]
-texture = ExtResource( 34 )
-
-[node name="LightOff" parent="LowerLeft/EastWestLeft" index="1"]
-texture = ExtResource( 35 )
-
-[node name="LowerRight" parent="." instance=ExtResource( 36 )]
-
-[node name="NorthSouthRight" parent="LowerRight" index="0"]
-position = Vector2( 1262, 843 )
-
-[node name="LightOn" parent="LowerRight/NorthSouthRight" index="0"]
-texture = ExtResource( 31 )
-
-[node name="LightOff" parent="LowerRight/NorthSouthRight" index="1"]
-texture = ExtResource( 13 )
-
-[node name="NorthSouthLeft" parent="LowerRight" index="1"]
-position = Vector2( 1262, 639 )
-
-[node name="LightOn" parent="LowerRight/NorthSouthLeft" index="0"]
-texture = ExtResource( 28 )
-
-[node name="LightOff" parent="LowerRight/NorthSouthLeft" index="1"]
-texture = ExtResource( 29 )
-
-[node name="EastWestRight" parent="LowerRight" index="2"]
-position = Vector2( 1058, 843 )
-
-[node name="LightOn" parent="LowerRight/EastWestRight" index="0"]
-texture = ExtResource( 33 )
-
-[node name="LightOff" parent="LowerRight/EastWestRight" index="1"]
-texture = ExtResource( 26 )
-
-[node name="EastWestLeft" parent="LowerRight" index="3"]
-position = Vector2( 1058, 639 )
-
-[node name="LightOn" parent="LowerRight/EastWestLeft" index="0"]
-texture = ExtResource( 32 )
-
-[node name="LightOff" parent="LowerRight/EastWestLeft" index="1"]
-texture = ExtResource( 27 )
-
 [node name="Road" type="Node2D" parent="."]
 script = ExtResource( 37 )
+
+[node name="UpperLeft" parent="Road" instance=ExtResource( 36 )]
+
+[node name="NorthSouthRight" parent="Road/UpperLeft" index="0"]
+position = Vector2( 862, 442 )
+
+[node name="LightOn" parent="Road/UpperLeft/NorthSouthRight" index="0"]
+texture = ExtResource( 5 )
+
+[node name="LightOff" parent="Road/UpperLeft/NorthSouthRight" index="1"]
+texture = ExtResource( 8 )
+
+[node name="NorthSouthLeft" parent="Road/UpperLeft" index="1"]
+position = Vector2( 862, 238 )
+
+[node name="LightOn" parent="Road/UpperLeft/NorthSouthLeft" index="0"]
+texture = ExtResource( 9 )
+
+[node name="LightOff" parent="Road/UpperLeft/NorthSouthLeft" index="1"]
+texture = ExtResource( 1 )
+
+[node name="EastWestRight" parent="Road/UpperLeft" index="2"]
+position = Vector2( 658, 442 )
+
+[node name="LightOn" parent="Road/UpperLeft/EastWestRight" index="0"]
+texture = ExtResource( 15 )
+
+[node name="LightOff" parent="Road/UpperLeft/EastWestRight" index="1"]
+texture = ExtResource( 4 )
+
+[node name="EastWestLeft" parent="Road/UpperLeft" index="3"]
+position = Vector2( 658, 238 )
+
+[node name="LightOn" parent="Road/UpperLeft/EastWestLeft" index="0"]
+texture = ExtResource( 3 )
+
+[node name="LightOff" parent="Road/UpperLeft/EastWestLeft" index="1"]
+texture = ExtResource( 16 )
+
+[node name="UpperRight" parent="Road" instance=ExtResource( 36 )]
+
+[node name="NorthSouthRight" parent="Road/UpperRight" index="0"]
+position = Vector2( 1262, 442 )
+
+[node name="LightOn" parent="Road/UpperRight/NorthSouthRight" index="0"]
+texture = ExtResource( 22 )
+
+[node name="LightOff" parent="Road/UpperRight/NorthSouthRight" index="1"]
+texture = ExtResource( 10 )
+
+[node name="NorthSouthLeft" parent="Road/UpperRight" index="1"]
+position = Vector2( 1262, 238 )
+
+[node name="LightOn" parent="Road/UpperRight/NorthSouthLeft" index="0"]
+texture = ExtResource( 17 )
+
+[node name="LightOff" parent="Road/UpperRight/NorthSouthLeft" index="1"]
+texture = ExtResource( 19 )
+
+[node name="EastWestRight" parent="Road/UpperRight" index="2"]
+position = Vector2( 1058, 442 )
+
+[node name="LightOn" parent="Road/UpperRight/EastWestRight" index="0"]
+texture = ExtResource( 11 )
+
+[node name="LightOff" parent="Road/UpperRight/EastWestRight" index="1"]
+texture = ExtResource( 20 )
+
+[node name="EastWestLeft" parent="Road/UpperRight" index="3"]
+position = Vector2( 1058, 238 )
+
+[node name="LightOn" parent="Road/UpperRight/EastWestLeft" index="0"]
+texture = ExtResource( 18 )
+
+[node name="LightOff" parent="Road/UpperRight/EastWestLeft" index="1"]
+texture = ExtResource( 21 )
+
+[node name="LowerRight" parent="Road" instance=ExtResource( 36 )]
+
+[node name="NorthSouthRight" parent="Road/LowerRight" index="0"]
+position = Vector2( 1262, 843 )
+
+[node name="LightOn" parent="Road/LowerRight/NorthSouthRight" index="0"]
+texture = ExtResource( 31 )
+
+[node name="LightOff" parent="Road/LowerRight/NorthSouthRight" index="1"]
+texture = ExtResource( 13 )
+
+[node name="NorthSouthLeft" parent="Road/LowerRight" index="1"]
+position = Vector2( 1262, 639 )
+
+[node name="LightOn" parent="Road/LowerRight/NorthSouthLeft" index="0"]
+texture = ExtResource( 28 )
+
+[node name="LightOff" parent="Road/LowerRight/NorthSouthLeft" index="1"]
+texture = ExtResource( 29 )
+
+[node name="EastWestRight" parent="Road/LowerRight" index="2"]
+position = Vector2( 1058, 843 )
+
+[node name="LightOn" parent="Road/LowerRight/EastWestRight" index="0"]
+texture = ExtResource( 33 )
+
+[node name="LightOff" parent="Road/LowerRight/EastWestRight" index="1"]
+texture = ExtResource( 26 )
+
+[node name="EastWestLeft" parent="Road/LowerRight" index="3"]
+position = Vector2( 1058, 639 )
+
+[node name="LightOn" parent="Road/LowerRight/EastWestLeft" index="0"]
+texture = ExtResource( 32 )
+
+[node name="LightOff" parent="Road/LowerRight/EastWestLeft" index="1"]
+texture = ExtResource( 27 )
+
+[node name="LowerLeft" parent="Road" instance=ExtResource( 36 )]
+
+[node name="NorthSouthRight" parent="Road/LowerLeft" index="0"]
+position = Vector2( 862, 843 )
+
+[node name="LightOn" parent="Road/LowerLeft/NorthSouthRight" index="0"]
+texture = ExtResource( 23 )
+
+[node name="LightOff" parent="Road/LowerLeft/NorthSouthRight" index="1"]
+texture = ExtResource( 25 )
+
+[node name="NorthSouthLeft" parent="Road/LowerLeft" index="1"]
+position = Vector2( 862, 639 )
+
+[node name="LightOn" parent="Road/LowerLeft/NorthSouthLeft" index="0"]
+texture = ExtResource( 30 )
+
+[node name="LightOff" parent="Road/LowerLeft/NorthSouthLeft" index="1"]
+texture = ExtResource( 24 )
+
+[node name="EastWestRight" parent="Road/LowerLeft" index="2"]
+position = Vector2( 658, 843 )
+
+[node name="LightOn" parent="Road/LowerLeft/EastWestRight" index="0"]
+texture = ExtResource( 12 )
+
+[node name="LightOff" parent="Road/LowerLeft/EastWestRight" index="1"]
+texture = ExtResource( 14 )
+
+[node name="EastWestLeft" parent="Road/LowerLeft" index="3"]
+position = Vector2( 658, 639 )
+
+[node name="LightOn" parent="Road/LowerLeft/EastWestLeft" index="0"]
+texture = ExtResource( 34 )
+
+[node name="LightOff" parent="Road/LowerLeft/EastWestLeft" index="1"]
+texture = ExtResource( 35 )
 
 [node name="PausePopup" type="Popup" parent="."]
 pause_mode = 2
@@ -236,42 +236,42 @@ margin_top = 72.0
 margin_right = 536.0
 margin_bottom = 112.0
 
-[editable path="UpperLeft"]
+[editable path="Road/UpperLeft"]
 
-[editable path="UpperLeft/NorthSouthRight"]
+[editable path="Road/UpperLeft/NorthSouthRight"]
 
-[editable path="UpperLeft/NorthSouthLeft"]
+[editable path="Road/UpperLeft/NorthSouthLeft"]
 
-[editable path="UpperLeft/EastWestRight"]
+[editable path="Road/UpperLeft/EastWestRight"]
 
-[editable path="UpperLeft/EastWestLeft"]
+[editable path="Road/UpperLeft/EastWestLeft"]
 
-[editable path="UpperRight"]
+[editable path="Road/UpperRight"]
 
-[editable path="UpperRight/NorthSouthRight"]
+[editable path="Road/UpperRight/NorthSouthRight"]
 
-[editable path="UpperRight/NorthSouthLeft"]
+[editable path="Road/UpperRight/NorthSouthLeft"]
 
-[editable path="UpperRight/EastWestRight"]
+[editable path="Road/UpperRight/EastWestRight"]
 
-[editable path="UpperRight/EastWestLeft"]
+[editable path="Road/UpperRight/EastWestLeft"]
 
-[editable path="LowerLeft"]
+[editable path="Road/LowerRight"]
 
-[editable path="LowerLeft/NorthSouthRight"]
+[editable path="Road/LowerRight/NorthSouthRight"]
 
-[editable path="LowerLeft/NorthSouthLeft"]
+[editable path="Road/LowerRight/NorthSouthLeft"]
 
-[editable path="LowerLeft/EastWestRight"]
+[editable path="Road/LowerRight/EastWestRight"]
 
-[editable path="LowerLeft/EastWestLeft"]
+[editable path="Road/LowerRight/EastWestLeft"]
 
-[editable path="LowerRight"]
+[editable path="Road/LowerLeft"]
 
-[editable path="LowerRight/NorthSouthRight"]
+[editable path="Road/LowerLeft/NorthSouthRight"]
 
-[editable path="LowerRight/NorthSouthLeft"]
+[editable path="Road/LowerLeft/NorthSouthLeft"]
 
-[editable path="LowerRight/EastWestRight"]
+[editable path="Road/LowerLeft/EastWestRight"]
 
-[editable path="LowerRight/EastWestLeft"]
+[editable path="Road/LowerLeft/EastWestLeft"]
