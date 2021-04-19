@@ -16,8 +16,17 @@ func _ready():
 	free = true
 
 func isFree() -> bool:
-	return free
-
+	return free and er and el and wr
+	
+func stopAllTraffic():
+	er = false
+	el = false
+	wr = false
+	wl = false
+	nr = false
+	nl = false
+	sr = false
+	sl = false
 
 func _on_Tile_body_entered(body):
 	Globals.entered += 1

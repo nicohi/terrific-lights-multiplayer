@@ -124,6 +124,10 @@ func _ready():
 	light_ll.begin()
 	light_ur.begin()
 	light_lr.begin()
+	
+	for x in range (8, 10):
+		for y in range(8, 10):
+			tiles[x][y].stopAllTraffic()
 
 func handle_lights(light: LightButton):
 	match light:
