@@ -225,5 +225,7 @@ func _physics_process(delta):
 	_set_speed_and_direction()
 	
 	_move(delta)
-	_rotate()
+	
+	if velocity != Vector2.ZERO:
+		_rotate()
 
