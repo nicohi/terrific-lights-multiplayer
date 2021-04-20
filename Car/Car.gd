@@ -96,6 +96,10 @@ onready var start_positions = [
 onready var sprite := $Sprite
 onready var animationPlayer := $AnimationPlayer
 onready var enginePlayer := $EngineAudioStreamPlayer
+onready var carHorn1 := $CarHorn1
+onready var carHorn2 := $CarHorn2
+
+var carHorns = []
 
 func _init():
 	timer = Timer.new()
@@ -106,6 +110,7 @@ func _ready():
 	_reset_car()
 	$EngineAudioStreamPlayer.stream.mix_rate = Globals.SAMPLE_HZ
 	playback = $EngineAudioStreamPlayer.get_stream_playback()
+	carHorns = [carHorn1, carHorn2]
 
 # called when the car should drive
 func _go():
@@ -258,6 +263,8 @@ func _physics_process(delta):
 		if enginePlayer.playing:
 			enginePlayer.stop()
 			Globals.car_engines_on -= 1
+		carHorns.shuffle()
+		carHorns[0].play()
 		_reset_car()
 
 	_set_speed_and_direction()

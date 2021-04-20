@@ -1,7 +1,9 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Car/Car.gd" type="Script" id=1]
 [ext_resource path="res://Car/TriotemplateOrangeTurns.png" type="Texture" id=2]
+[ext_resource path="res://Sounds/461679__15hpanska-ruttner-jan__05-horn_1.wav" type="AudioStream" id=3]
+[ext_resource path="res://Sounds/461679__15hpanska-ruttner-jan__05-horn_2.wav" type="AudioStream" id=4]
 
 [sub_resource type="Animation" id=1]
 resource_name = "DriveStraight"
@@ -75,3 +77,10 @@ anims/TurnRight = SubResource( 3 )
 stream = SubResource( 4 )
 volume_db = -30.0
 bus = "Cars"
+
+[node name="CarHorn1" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 3 )
+attenuation = 0.574349
+
+[node name="CarHorn2" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 4 )
