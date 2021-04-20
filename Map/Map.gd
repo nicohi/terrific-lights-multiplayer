@@ -10,6 +10,7 @@ var cars_passed = 0
 
 onready var pausePopUp = $PausePopup
 onready var scoreDisplay = $ScoreDisplay
+onready var backgroundMusic = $BackgroundMusic
 signal score_changed(total_score, cars_passed)
 
 func _init():
@@ -37,6 +38,7 @@ func _ready():
 	_create_cars()
 	
 	randomize()
+	backgroundMusic.play()
 	
 func _reset_car(car, points):
 	cars.push_back(car)
@@ -57,3 +59,6 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("ui_cancel"):
 		get_tree().paused = true
 		pausePopUp.popup_centered()
+
+func _on_BackgroundMusic_finished():
+	backgroundMusic.play()
