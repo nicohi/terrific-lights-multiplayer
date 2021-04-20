@@ -2,6 +2,7 @@ extends Area2D
 
 class_name Tile
 
+onready var timer = $Timer
 var free setget , isFree
 var er: bool = true
 var el: bool = true
@@ -15,7 +16,14 @@ var sl: bool = true
 func _ready():
 	free = true
 
+func freeTile():
+	timer.start(0.5)
+
 func isFree() -> bool:
+	if self.get_overlapping_bodies().size() == 0:
+		free = true
+	else:
+		free = false
 	return free and er and el and wr
 	
 func stopAllTraffic():
@@ -29,10 +37,9 @@ func stopAllTraffic():
 	sl = false
 
 func _on_Tile_body_entered(body):
-	Globals.entered += 1
+	body.getRoute().getTileAtInd(body.ind).freeTile()
 	body.ind += 1
 	self.free = false
 
-
-func _on_Tile_body_exited(body):
+func _on_Timer_timeout():
 	self.free = true

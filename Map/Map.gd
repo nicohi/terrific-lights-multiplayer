@@ -52,8 +52,11 @@ func _game_over():
 
 func _release_a_car():
 	if cars.size():
-		var car = cars.pop_front()
-		car._go()
+		for i in range(Globals.CARS_PER_SEC):
+			var car = cars.pop_front()
+			if car != null and car.getRoute().getTileAtInd(0).isFree():
+				car.position = car.getRoute().getTileAtInd(0).position
+				car._go()
 
 func _physics_process(delta):
 	if Input.is_action_just_pressed("ui_cancel"):

@@ -132,7 +132,7 @@ func _reduce_point():
 func setRoute(r: Route):
 	route = r
 	ind = -1
-	self.position = route.getTileAtInd(0).position
+#	self.position = route.getTileAtInd(0).position
 	
 func getRoute():
 	return route
@@ -160,6 +160,8 @@ func _reset_car():
 	points = MAX_POINTS
 	
 	timer.stop()
+	
+	self.position = Globals.VARIKKO
 	
 	animationPlayer.play("DriveStraight")
 
