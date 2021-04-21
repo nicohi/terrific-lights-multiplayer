@@ -40,6 +40,7 @@ var speed_modifier := ACCELERATION
 var drive := false # if true, the car can proceed
 var points := MAX_POINTS
 var turn_state := STRAIGHT_AHEAD
+var sfx = true
 
 var timer: Timer
 
@@ -142,7 +143,7 @@ func _get_start_direction() -> Vector2:
 		return LEFT
 
 func _fill_audio_buffer():
-	if engine_conf == null:
+	if engine_conf == null or not sfx:
 		return
 		
 	var increment = (engine_conf["baseHz"] + (velocity * .015).length() * engine_conf["hz"]) / Globals.SAMPLE_HZ
@@ -263,9 +264,11 @@ func _physics_process(delta):
 		if enginePlayer.playing:
 			enginePlayer.stop()
 			Globals.car_engines_on -= 1
-		carHorns.shuffle()
-		carHorns[0].play()
-		_reset_car()
+		
+		if sfx:
+			carHorns.shuffle()
+			carHorns[0].play()
+			_reset_car()
 
 	_set_speed_and_direction()
 	

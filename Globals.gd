@@ -1,7 +1,7 @@
 extends Node
 
 const TILE_SIDE_LEN = 40
-const MAX_CAR_ENGINES_ON = 8
+const MAX_CAR_ENGINES_ON = 5
 const SAMPLE_HZ = 22050.0
 
 var engine_idx = 0

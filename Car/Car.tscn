@@ -75,7 +75,7 @@ anims/TurnRight = SubResource( 3 )
 
 [node name="EngineAudioStreamPlayer" type="AudioStreamPlayer2D" parent="."]
 stream = SubResource( 4 )
-volume_db = -30.0
+volume_db = -24.0
 bus = "Cars"
 
 [node name="CarHorn1" type="AudioStreamPlayer2D" parent="."]
