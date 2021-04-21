@@ -12,6 +12,10 @@ enum {
 	TURNED
 }
 
+var playback: AudioStreamPlayback
+var phase = 0.0
+var engine_conf = null
+
 # direction vectors
 const LEFT = Vector2(-1, 0)
 const RIGHT = Vector2(1, 0)
@@ -36,6 +40,7 @@ var speed_modifier := ACCELERATION
 var drive := false # if true, the car can proceed
 var points := MAX_POINTS
 var turn_state := STRAIGHT_AHEAD
+var sfx = true
 
 var timer: Timer
 
@@ -91,6 +96,11 @@ onready var start_positions = [
 
 onready var sprite := $Sprite
 onready var animationPlayer := $AnimationPlayer
+onready var enginePlayer := $EngineAudioStreamPlayer
+onready var carHorn1 := $CarHorn1
+onready var carHorn2 := $CarHorn2
+
+var carHorns = []
 
 func _init():
 	timer = Timer.new()
@@ -99,11 +109,18 @@ func _init():
 
 func _ready():
 	_reset_car()
+	$EngineAudioStreamPlayer.stream.mix_rate = Globals.SAMPLE_HZ
+	playback = $EngineAudioStreamPlayer.get_stream_playback()
+	carHorns = [carHorn1, carHorn2]
 
 # called when the car should drive
 func _go():
 	drive = true
 	timer.start()
+	engine_conf = Globals.get_engine_conf()
+	
+	if engine_conf != null:
+		enginePlayer.play()
 
 func _reduce_point():
 	points -= 1
@@ -124,7 +141,30 @@ func _get_start_direction() -> Vector2:
 		return UP
 	else:
 		return LEFT
+
+func _fill_audio_buffer():
+	if engine_conf == null or not sfx:
+		return
 		
+	var increment = (engine_conf["baseHz"] + (velocity * .015).length() * engine_conf["hz"]) / Globals.SAMPLE_HZ
+	
+	var to_fill = playback.get_frames_available()
+	
+	while to_fill > 0:
+		var vec = Vector2.ONE
+		
+		if phase < .25:
+			vec *= (.25 - phase) / .25
+		elif phase < .50:
+			vec *= 1.0 - (.25 - phase) / .25
+		elif phase < .75:
+			vec *= -((.25 - phase) / .25)
+		else:
+			vec *= (.25 - phase) / .25 - 1
+			
+		playback.push_frame(vec)
+		phase = fmod(phase + increment, 1.0)
+		to_fill -= 1
 
 # resets the car to be ready to head for a new adventure
 func _reset_car():
@@ -213,6 +253,7 @@ func _rotate():
 	self.rotation = -target_angle
 
 func _physics_process(delta):
+	_fill_audio_buffer()
 	if not drive:
 		# stand still
 		velocity = Vector2.ZERO
@@ -220,7 +261,14 @@ func _physics_process(delta):
 
 	if _out_of_view():
 		emit_signal("car_exited", self, points)
-		_reset_car()
+		if enginePlayer.playing:
+			enginePlayer.stop()
+			Globals.car_engines_on -= 1
+		
+		if sfx:
+			carHorns.shuffle()
+			carHorns[0].play()
+			_reset_car()
 
 	_set_speed_and_direction()
 	

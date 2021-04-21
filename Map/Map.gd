@@ -2,6 +2,8 @@ extends Node2D
 
 const N_CARS = 128
 
+export var sfx = true setget setSFX
+export var music = false setget setMusic
 
 var cars = []
 var timer
@@ -10,6 +12,7 @@ var cars_passed = 0
 
 onready var pausePopUp = $PausePopup
 onready var scoreDisplay = $ScoreDisplay
+onready var backgroundMusic = $BackgroundMusic
 signal score_changed(total_score, cars_passed)
 
 func _init():
@@ -18,6 +21,22 @@ func _init():
 	timer.connect("timeout", self, "_release_a_car")
 	timer.autostart = true
 
+func setSFX(value: bool):
+	sfx = value
+	
+	for car in cars:
+		car.sfx(value)
+
+func playMusic():
+	if music and backgroundMusic != null and not backgroundMusic.playing:
+		backgroundMusic.play()
+	elif not music and (backgroundMusic != null and backgroundMusic.playing):
+		backgroundMusic.stop()
+
+func setMusic(value: bool):
+	music = value
+	
+	playMusic()
 
 func _create_cars():
 	var car_scene = load("res://Car/Car.tscn")
@@ -38,6 +57,8 @@ func _ready():
 	
 	randomize()
 	
+	playMusic()
+	
 func _reset_car(car, points):
 	cars.push_back(car)
 	total_points += points
@@ -57,3 +78,6 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("ui_cancel"):
 		get_tree().paused = true
 		pausePopUp.popup_centered()
+
+func _on_BackgroundMusic_finished():
+	playMusic()
