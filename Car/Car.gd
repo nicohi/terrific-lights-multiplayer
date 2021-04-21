@@ -131,7 +131,7 @@ func _reduce_point():
 		
 func setRoute(r: Route):
 	route = r
-	ind = -1
+	ind = 0
 #	self.position = route.getTileAtInd(0).position
 	
 func getRoute():

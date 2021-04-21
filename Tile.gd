@@ -37,9 +37,10 @@ func stopAllTraffic():
 	sl = false
 
 func _on_Tile_body_entered(body):
-	body.getRoute().getTileAtInd(body.ind).freeTile()
-	body.ind += 1
-	self.free = false
+	if self == body.getRoute().getTileAtInd(body.ind + 1):
+		body.getRoute().getTileAtInd(body.ind).freeTile()
+		body.ind += 1
+		self.free = false
 
 func _on_Timer_timeout():
 	self.free = true
