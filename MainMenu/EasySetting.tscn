@@ -1,0 +1,11 @@
+[gd_scene format=2]
+
+[node name="EasySetting" type="Button"]
+margin_left = 52.0
+margin_top = 122.0
+margin_right = 359.0
+margin_bottom = 431.0
+flat = true
+__meta__ = {
+"_edit_use_anchors_": false
+}

@@ -1,0 +1,62 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://DifficultyMenu.gd" type="Script" id=1]
+[ext_resource path="res://MainMenu/Label.tscn" type="PackedScene" id=2]
+[ext_resource path="res://MainMenu/MenuLights.png" type="Texture" id=3]
+[ext_resource path="res://MainMenu/OnOffDiffEasy.png" type="Texture" id=4]
+[ext_resource path="res://MainMenu/OnOffDiffHard.png" type="Texture" id=5]
+[ext_resource path="res://MainMenu/OnOffDiffMedium.png" type="Texture" id=6]
+[ext_resource path="res://MainMenu/HardSetting.tscn" type="PackedScene" id=7]
+[ext_resource path="res://MainMenu/MediumSetting.tscn" type="PackedScene" id=8]
+[ext_resource path="res://MainMenu/EasySetting.tscn" type="PackedScene" id=9]
+
+[node name="DifficultyMenu" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 970.469, 502.186 )
+texture = ExtResource( 3 )
+
+[node name="Control" type="Control" parent="."]
+margin_left = 391.0
+margin_top = 227.0
+margin_right = 1548.0
+margin_bottom = 778.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DiffEasy2D" type="Node2D" parent="Control"]
+
+[node name="EasyDiff" type="Sprite" parent="Control/DiffEasy2D"]
+position = Vector2( 206.475, 275.772 )
+texture = ExtResource( 4 )
+hframes = 2
+frame = 1
+
+[node name="EasySetting" parent="Control/DiffEasy2D" instance=ExtResource( 9 )]
+
+[node name="DiffMedium2D" type="Node2D" parent="Control"]
+
+[node name="MediumDiff" type="Sprite" parent="Control/DiffMedium2D"]
+position = Vector2( 579.828, 275.772 )
+texture = ExtResource( 6 )
+hframes = 2
+frame = 1
+
+[node name="MediumSetting" parent="Control/DiffMedium2D" instance=ExtResource( 8 )]
+
+[node name="DiffHard2D" type="Node2D" parent="Control"]
+
+[node name="HardDiff" type="Sprite" parent="Control/DiffHard2D"]
+position = Vector2( 956.009, 275.772 )
+texture = ExtResource( 5 )
+hframes = 2
+frame = 1
+
+[node name="HardSetting" parent="Control/DiffHard2D" instance=ExtResource( 7 )]
+
+[node name="Designers" parent="." instance=ExtResource( 2 )]
+[connection signal="pressed" from="Control/DiffEasy2D/EasySetting" to="." method="_on_EasySetting_pressed"]
+[connection signal="pressed" from="Control/DiffMedium2D/MediumSetting" to="." method="_on_MediumSetting_pressed"]
+[connection signal="pressed" from="Control/DiffHard2D/HardSetting" to="." method="_on_HardSetting_pressed"]

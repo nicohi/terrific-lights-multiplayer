@@ -1,9 +1,7 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Car/Car.gd" type="Script" id=1]
 [ext_resource path="res://Car/TriotemplateOrangeTurns.png" type="Texture" id=2]
-[ext_resource path="res://Sounds/461679__15hpanska-ruttner-jan__05-horn_1.wav" type="AudioStream" id=3]
-[ext_resource path="res://Sounds/461679__15hpanska-ruttner-jan__05-horn_2.wav" type="AudioStream" id=4]
 
 [sub_resource type="Animation" id=1]
 resource_name = "DriveStraight"
@@ -54,9 +52,11 @@ tracks/0/keys = {
 "values": [ 0, 2 ]
 }
 
-[sub_resource type="AudioStreamGenerator" id=4]
+[sub_resource type="CapsuleShape2D" id=4]
+radius = 7.0
 
 [node name="Car" type="KinematicBody2D"]
+collision_layer = 2
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_group_": true
@@ -66,21 +66,11 @@ __meta__ = {
 scale = Vector2( 0.2, 0.2 )
 texture = ExtResource( 2 )
 hframes = 3
-frame = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/DriveStraight = SubResource( 1 )
 anims/TurnLeft = SubResource( 2 )
 anims/TurnRight = SubResource( 3 )
 
-[node name="EngineAudioStreamPlayer" type="AudioStreamPlayer2D" parent="."]
-stream = SubResource( 4 )
-volume_db = -24.0
-bus = "Cars"
-
-[node name="CarHorn1" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource( 3 )
-attenuation = 0.574349
-
-[node name="CarHorn2" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource( 4 )
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 4 )

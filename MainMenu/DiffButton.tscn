@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://MainMenu/DiffButton.gd" type="Script" id=1]
+
+[node name="DiffButton" type="Button"]
+margin_left = 426.0
+margin_top = 119.0
+margin_right = 735.0
+margin_bottom = 430.0
+flat = true
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+scene_to_load = "res://DifficultyMenu.tscn"
