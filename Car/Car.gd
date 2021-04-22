@@ -258,6 +258,16 @@ func _set_speed_and_direction(delta):
 #			_finish_turning()
 	var tile = route.getTileAtInd(ind)
 	var nextTile = route.getTileAtInd(ind + 1)
+	var nextTurn = route.getNextTurnAtInd(ind)
+	
+	match nextTurn:
+		Globals.STRAIGHT:
+			animationPlayer.play("DriveStraight")
+		Globals.LEFT:
+			animationPlayer.play("TurnLeft")
+		Globals.RIGHT:
+			animationPlayer.play("TurnRight")
+		
 	if nextTile == null:
 		if tile != null:
 			tile.takingCar = null

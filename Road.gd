@@ -24,12 +24,6 @@ onready var lr_ewr = $LowerRight/EastWestRight
 onready var lr_nsr = $LowerRight/NorthSouthRight
 onready var lr_nsl = $LowerRight/NorthSouthLeft
 
-enum {
-	LEFT,
-	RIGHT,
-	STRAIGHT,
-}
-
 const NORTH = Vector2(0, -1)
 const NORTHEAST = Vector2(1, -1)
 const EAST = Vector2(1, 0)
@@ -47,6 +41,10 @@ const SEE_START_POS = Vector2(27, 18)
 const SES_START_POS = Vector2(19, 27)
 const SWS_START_POS = Vector2(9, 27)
 const SWW_START_POS = Vector2(0, 19)
+
+var LEFT = Globals.LEFT
+var RIGHT = Globals.RIGHT
+var STRAIGHT = Globals.STRAIGHT
 
 var routeSetup = [
 	{
@@ -170,16 +168,20 @@ func setUpTiles():
 			y_pos += Globals.TILE_SIDE_LEN
 		x_pos += Globals.TILE_SIDE_LEN
 
-func _straight(targetArray: Array, steps: int, from: Vector2, toDir: Vector2) -> Vector2:
+func _straight(targetArray: Array, steps: int, from: Vector2, toDir: Vector2, nextTurn) -> Vector2:
 	var pos = from
 	
-	for i in steps:
+	for i in 2:
 		pos += toDir
-		targetArray.push_back(tiles[pos.x][pos.y])
+		targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": STRAIGHT})
+		
+	for i in steps - 2:
+		pos += toDir
+		targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": nextTurn})
 		
 	return pos
 		
-func _turn_left(targetArray: Array, from: Vector2, toDir: Vector2) -> Vector2:
+func _turn_left(targetArray: Array, from: Vector2, toDir: Vector2, nextTurn) -> Vector2:
 	var pos = from
 	
 	for i in 2:
@@ -193,15 +195,18 @@ func _turn_left(targetArray: Array, from: Vector2, toDir: Vector2) -> Vector2:
 			WEST:
 				pos += NORTHWEST
 				
-		targetArray.push_back(tiles[pos.x][pos.y])
-		
-	for i in 7:
+		targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": LEFT})
+	
+	pos += toDir
+	targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": LEFT})
+	
+	for i in 6:
 		pos += toDir
-		targetArray.push_back(tiles[pos.x][pos.y])
+		targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": nextTurn})
 	
 	return pos
 
-func _turn_right(targetArray: Array, from: Vector2, toDir: Vector2) -> Vector2:
+func _turn_right(targetArray: Array, from: Vector2, toDir: Vector2, nextTurn) -> Vector2:
 	var pos = from
 	
 	match toDir:
@@ -214,11 +219,13 @@ func _turn_right(targetArray: Array, from: Vector2, toDir: Vector2) -> Vector2:
 		WEST:
 			pos += SOUTH
 			
-	targetArray.push_back(tiles[pos.x][pos.y])
+	targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": RIGHT})
+	pos += toDir
+	targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": RIGHT})
 	
-	for i in 8:
+	for i in 7:
 		pos += toDir
-		targetArray.push_back(tiles[pos.x][pos.y])
+		targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": nextTurn})
 		
 	return pos
 
@@ -255,22 +262,32 @@ func _get_turn_vector(turnTo, directionFrom: Vector2) -> Vector2:
 
 func setUpRoutes():	
 	for route in routeSetup:
+		var turnPos = 0
+		var nextTurn = route["turns"][turnPos]
+		
 		var pos = route["startPos"]
 		var dir = route["startDir"]
-		var arr = [tiles[pos.x][pos.y]]
+		var arr = [{"tile": tiles[pos.x][pos.y], "turn": nextTurn}]
 
-		pos = _straight(arr, 7, pos, dir)
+		pos = _straight(arr, 7, pos, dir, nextTurn)
 
 		for turn in route["turns"]:
+			turnPos += 1
+			
+			nextTurn = STRAIGHT
+			
+			if turnPos < route["turns"].size():
+				nextTurn = route["turns"][turnPos]
+			
 			match turn:
 				STRAIGHT:
-					pos = _straight(arr, 10, pos, dir)
+					pos = _straight(arr, 10, pos, dir, nextTurn)
 				LEFT:
 					dir = _get_turn_vector(turn, dir)
-					pos = _turn_left(arr, pos, dir)
+					pos = _turn_left(arr, pos, dir, nextTurn)
 				RIGHT:
 					dir = _get_turn_vector(turn, dir)
-					pos = _turn_right(arr, pos, dir)
+					pos = _turn_right(arr, pos, dir, nextTurn)
 
 		routes.append(Route.new(arr))
 #
