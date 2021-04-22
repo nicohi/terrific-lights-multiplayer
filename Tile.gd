@@ -3,43 +3,54 @@ extends Area2D
 class_name Tile
 
 onready var timer = $Timer
-var free setget , isFree
-var er: bool = true
-var el: bool = true
-var wr: bool = true
-var wl: bool = true
-var nr: bool = true
-var nl: bool = true
-var sr: bool = true
-var sl: bool = true
+var coordinates = Vector2.ZERO
+var is_crossing: bool
+var takingCar: Car
+
+enum { NONE, ALL, NORTH, EAST, SOUTH, WEST }
+enum { STRAIGHT_OR_RIGHT, LEFT_TURN }
+var incoming
+var leaving
 
 func _ready():
-	free = true
+	takingCar = null
+	is_crossing = false
+	incoming = ALL
+	leaving = STRAIGHT_OR_RIGHT
 
-func freeTile():
-	timer.start(0.5)
+func setCoordinates(x, y):
+	coordinates = Vector2(x, y)
 
 func isFree() -> bool:
-	if self.get_overlapping_bodies().size() == 0:
-		free = true
+	if self.get_overlapping_bodies().size() == 0 and takingCar == null:
+		return true
 	else:
-		free = false
-	return free and er and el and wr
-	
-func stopAllTraffic():
-	er = false
-	el = false
-	wr = false
-	wl = false
-	nr = false
-	nl = false
-	sr = false
-	sl = false
+		return false
+
+func mayEnter(movingFrom, turningTo) -> bool:
+	var movingFromOK
+	if incoming == ALL:
+		movingFromOK = true
+	elif incoming == NONE:
+		movingFromOK = false
+	else:
+		movingFromOK = movingFrom == incoming
+#	print(turningTo,leaving)
+	return movingFromOK and turningTo == leaving
 
 func _on_Tile_body_entered(body):
-	body.getRoute().getTileAtInd(body.ind).freeTile()
+	body.getRoute().getTileAtInd(body.ind).takingCar = null
 	body.ind += 1
-	self.free = false
+	self.takingCar = body
+#	self.free = false
 
-func _on_Timer_timeout():
-	self.free = true
+func positionFromTile(tile: Tile):
+#	print(self.coordinates.x, " ", tile.coordinates.x)
+	if self.coordinates.x < tile.coordinates.x:
+		return WEST
+	elif self.coordinates.x > tile.coordinates.x:
+		return EAST
+	elif self.coordinates.y < tile.coordinates.y:
+		return NORTH
+	elif self.coordinates.y > tile.coordinates.y:
+		return SOUTH

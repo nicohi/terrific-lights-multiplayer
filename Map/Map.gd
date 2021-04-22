@@ -33,7 +33,7 @@ func _create_cars():
 func _ready():
 	self.connect("score_changed", scoreDisplay, "update_score")
 	
-	var window_size = get_viewport().get_visible_rect().size
+	var _window_size = get_viewport().get_visible_rect().size
 
 	_create_cars()
 	
@@ -52,7 +52,7 @@ func _game_over():
 
 func _release_a_car():
 	if cars.size():
-		for i in range(Globals.CARS_PER_SEC):
+		for _i in range(Globals.CARS_PER_SEC):
 			var car = cars.pop_front()
 			if car != null and car.getRoute().getTileAtInd(0).isFree():
 				car.position = car.getRoute().getTileAtInd(0).position

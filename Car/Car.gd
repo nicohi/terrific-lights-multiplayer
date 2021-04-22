@@ -11,6 +11,8 @@ enum {
 	TURNING,
 	TURNED
 }
+enum { NONE, ALL, NORTH, EAST, SOUTH, WEST }
+enum { STRAIGHT_OR_RIGHT, LEFT_TURN }
 
 # direction vectors
 const LEFT = Vector2(-1, 0)
@@ -19,11 +21,11 @@ const UP = Vector2(0, -1)
 const DOWN = Vector2(0, 1)
 
 # constants for car control
-const ACCELERATION := Globals.TILE_SIDE_LEN / 2
+const ACCELERATION := Globals.TILE_SIDE_LEN * 0.6
 const MAX_SPEED := Globals.TILE_SIDE_LEN
 const TURNING_SPEED_LEFT := Globals.TILE_SIDE_LEN * .875
 const TURNING_SPEED_RIGHT := Globals.TILE_SIDE_LEN * .625
-const FRICTION := Globals.TILE_SIDE_LEN / 2
+const FRICTION := Globals.TILE_SIDE_LEN * 0.6
 const DIRECTIONS := [LEFT, RIGHT, UP]
 const START_DIR := UP
 const MAX_POINTS := 99
@@ -67,30 +69,30 @@ var carTextures = [
 ]
 
 onready var zero_corner := get_viewport_rect().size / 2 - Vector2(540, 540)
-onready var start_pos_nwn := zero_corner + Vector2(8 * Globals.TILE_SIDE_LEN, 0)
-onready var start_pos_nww := zero_corner + Vector2(0, 9 * Globals.TILE_SIDE_LEN)
-onready var start_pos_nen := zero_corner + Vector2(18 * Globals.TILE_SIDE_LEN, 0)
-onready var start_pos_nee := zero_corner + Vector2(27 * Globals.TILE_SIDE_LEN, 8 * Globals.TILE_SIDE_LEN)
-onready var start_pos_sww := zero_corner + Vector2(0, 19 * Globals.TILE_SIDE_LEN)
-onready var start_pos_sws := zero_corner + Vector2(9 * Globals.TILE_SIDE_LEN, 27 * Globals.TILE_SIDE_LEN)
-onready var start_pos_ses := zero_corner + Vector2(19 * Globals.TILE_SIDE_LEN, 27 * Globals.TILE_SIDE_LEN)
-onready var start_pos_see := zero_corner + Vector2(27 * Globals.TILE_SIDE_LEN, 18 * Globals.TILE_SIDE_LEN)
-
-onready var south_facing_start_positions = [start_pos_nwn, start_pos_nen]
-onready var east_facing_start_positions = [start_pos_nww, start_pos_sww]
-onready var north_facing_start_positions = [start_pos_ses, start_pos_sws]
-onready var west_facing_start_positions = [start_pos_nee, start_pos_see]
-
-onready var start_positions = [
-	start_pos_nwn,
-	start_pos_nww,
-	start_pos_nen,
-	start_pos_nee,
-	start_pos_see,
-	start_pos_ses,
-	start_pos_sws,
-	start_pos_sww
-]
+#onready var start_pos_nwn := zero_corner + Vector2(8 * Globals.TILE_SIDE_LEN, 0)
+#onready var start_pos_nww := zero_corner + Vector2(0, 9 * Globals.TILE_SIDE_LEN)
+#onready var start_pos_nen := zero_corner + Vector2(18 * Globals.TILE_SIDE_LEN, 0)
+#onready var start_pos_nee := zero_corner + Vector2(27 * Globals.TILE_SIDE_LEN, 8 * Globals.TILE_SIDE_LEN)
+#onready var start_pos_sww := zero_corner + Vector2(0, 19 * Globals.TILE_SIDE_LEN)
+#onready var start_pos_sws := zero_corner + Vector2(9 * Globals.TILE_SIDE_LEN, 27 * Globals.TILE_SIDE_LEN)
+#onready var start_pos_ses := zero_corner + Vector2(19 * Globals.TILE_SIDE_LEN, 27 * Globals.TILE_SIDE_LEN)
+#onready var start_pos_see := zero_corner + Vector2(27 * Globals.TILE_SIDE_LEN, 18 * Globals.TILE_SIDE_LEN)
+#
+#onready var south_facing_start_positions = [start_pos_nwn, start_pos_nen]
+#onready var east_facing_start_positions = [start_pos_nww, start_pos_sww]
+#onready var north_facing_start_positions = [start_pos_ses, start_pos_sws]
+#onready var west_facing_start_positions = [start_pos_nee, start_pos_see]
+#
+#onready var start_positions = [
+#	start_pos_nwn,
+#	start_pos_nww,
+#	start_pos_nen,
+#	start_pos_nee,
+#	start_pos_see,
+#	start_pos_ses,
+#	start_pos_sws,
+#	start_pos_sww
+#]
 
 onready var sprite := $Sprite
 onready var animationPlayer := $AnimationPlayer
@@ -129,11 +131,53 @@ func _reduce_point():
 #	else:
 #		return LEFT
 		
-func setRoute(r: Route):
+func setRoute(r):
 	route = r
 	ind = -1
-#	self.position = route.getTileAtInd(0).position
+
+func movingInDirection():
+#	print("IND IS ", ind)
+	var dir
+	if  getRoute().getTileAtInd(ind + 1) != null:
+		dir = getRoute().getTileAtInd(ind + 1).positionFromTile(getRoute().getTileAtInd(ind))
+#		print("DIR IS ", dir)
+	else:
+		dir = getRoute().getTileAtInd(ind).positionFromTile(getRoute().getTileAtInd(ind - 1))
 	
+	return dir
+
+func turningDirection():
+#	print("CHECKING TURNING")
+	var goingToTurnDir
+	if getRoute().getTileAtInd(ind + 2) != null:
+		goingToTurnDir = getRoute().getTileAtInd(ind + 2).positionFromTile(getRoute().getTileAtInd(ind + 1))
+	else:
+		return STRAIGHT_OR_RIGHT
+	var movingInDir = movingInDirection()
+	var turn
+	if movingInDir == NORTH:
+		if goingToTurnDir == NORTH or goingToTurnDir == EAST:
+			turn = STRAIGHT_OR_RIGHT
+		else:
+			turn = LEFT_TURN
+	elif movingInDir == EAST:
+		if goingToTurnDir == EAST or goingToTurnDir == SOUTH:
+			turn = STRAIGHT_OR_RIGHT
+		else:
+			turn = LEFT_TURN
+	elif movingInDir == SOUTH:
+		if goingToTurnDir == SOUTH or goingToTurnDir == WEST:
+			turn = STRAIGHT_OR_RIGHT
+		else:
+			turn = LEFT_TURN
+	elif movingInDir == WEST:
+		if goingToTurnDir == WEST or goingToTurnDir == NORTH:
+			turn = STRAIGHT_OR_RIGHT
+		else:
+			turn = LEFT_TURN
+#	print("TURN: ", turn)
+	return turn
+
 func getRoute():
 	return route
 	
@@ -167,7 +211,7 @@ func _reset_car():
 
 # returns true if the car is out of the screens view
 func _out_of_view() -> bool:
-	var window_size = get_viewport_rect().size
+	var _window_size = get_viewport_rect().size
 	
 	return (
 		self.position.y < -5 or
@@ -203,7 +247,7 @@ func _finish_turning():
 
 	turn_state = STRAIGHT_AHEAD
 #	direction = _get_direction()
-
+var counterForPrint = 0
 func _set_speed_and_direction(delta):
 #	match turn_state:
 #		STRAIGHT_AHEAD:
@@ -216,14 +260,33 @@ func _set_speed_and_direction(delta):
 #
 #		TURNED:
 #			_finish_turning()
+	var tile = route.getTileAtInd(ind)
 	var nextTile = route.getTileAtInd(ind + 1)
 	if nextTile == null:
+		if tile != null:
+			tile.takingCar = null
 		emit_signal("car_exited", self, points)
 		_reset_car()
-	elif not nextTile.isFree():
-		input_vector = Vector2.ZERO
-	else:
+	elif (nextTile.takingCar == self or nextTile.isFree()) and nextTile.mayEnter(movingInDirection(), turningDirection()):
+		var next_nextTile = route.getTileAtInd(ind + 2)
+		if (nextTile.is_crossing and next_nextTile.is_crossing and next_nextTile.takingCar == null) or not nextTile.is_crossing or not next_nextTile.is_crossing:
+			if nextTile.takingCar == null:
+				nextTile.takingCar = self
+			speed_modifier = ACCELERATION
+			input_vector = position.direction_to(nextTile.global_position).normalized()
+	elif nextTile.takingCar == self:
+		speed_modifier = ACCELERATION
 		input_vector = position.direction_to(nextTile.global_position).normalized()
+	elif tile.is_crossing and nextTile.isFree() and nextTile.is_crossing and not nextTile.mayEnter(movingInDirection(), turningDirection()):
+		if nextTile.takingCar == null:
+			nextTile.takingCar = self
+		speed_modifier = ACCELERATION
+		input_vector = position.direction_to(nextTile.global_position).normalized()
+	else:
+		if nextTile.takingCar == self:
+			nextTile.takingCar = null
+		speed_modifier = FRICTION
+		input_vector = Vector2.ZERO
 
 func _move(delta):
 	velocity = velocity.move_toward(input_vector * current_speed, speed_modifier * delta)
@@ -236,7 +299,6 @@ func _rotate():
 
 func _physics_process(delta):
 	if not drive or not route:
-		# stand still
 		velocity = Vector2.ZERO
 		return
 

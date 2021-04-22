@@ -53,10 +53,13 @@ func setUpTiles():
 		for y in range(0, ml):
 			if tiles[x][y]:
 				var tile = tile_scene.instance()
+				tile.setCoordinates(x, y)
 				tiles[x][y] = tile
 				add_child(tile)
 				tile.position.x = x_pos
 				tile.position.y = y_pos
+				if (x == 8 || x == 9 || x == 18 || x == 19) and (y == 8 || y == 9 || y == 18 || y == 19):
+					tile.is_crossing = true
 			y_pos += Globals.TILE_SIDE_LEN
 		x_pos += Globals.TILE_SIDE_LEN
 
@@ -124,43 +127,131 @@ func _ready():
 	light_ll.begin()
 	light_ur.begin()
 	light_lr.begin()
-	
-	for x in range (8, 10):
-		for y in range(8, 10):
-			tiles[x][y].stopAllTraffic()
+
+enum { NONE, ALL, NORTH, EAST, SOUTH, WEST }
+enum { STRAIGHT_OR_RIGHT, LEFT_TURN }
 
 func handle_lights(light: LightButton):
 	match light:
 		ul_ewl:
-			print("ul_ewl")
+			tiles[8][8].incoming = NONE
+			tiles[8][8].leaving = STRAIGHT_OR_RIGHT
+			
+			tiles[8][9].incoming = WEST
+			tiles[8][9].leaving = LEFT_TURN
+			
+			tiles[9][8].incoming = EAST
+			tiles[9][8].leaving = LEFT_TURN
+			
+			tiles[9][8].incoming = NONE
+			tiles[9][8].leaving = STRAIGHT_OR_RIGHT
 		ul_ewr:
-			print("ul_ewr")
+			tiles[8][8].incoming = WEST
+			tiles[8][8].leaving = STRAIGHT_OR_RIGHT
+			
+			tiles[8][9].incoming = EAST
+			tiles[8][9].leaving = STRAIGHT_OR_RIGHT
+			
+			tiles[9][8].incoming = WEST
+			tiles[9][8].leaving = STRAIGHT_OR_RIGHT
+			
+			tiles[9][9].incoming = EAST
+			tiles[9][9].leaving = STRAIGHT_OR_RIGHT
 		ul_nsl:
-			print("ul_nwl")
+			pass
 		ul_nsr:
-			print("ul_nwr")
+			tiles[8][8].incoming = SOUTH
+			tiles[8][8].leaving = STRAIGHT_OR_RIGHT
+			
+			tiles[8][9].incoming = SOUTH
+			tiles[8][9].leaving = STRAIGHT_OR_RIGHT
+			
+			tiles[9][8].incoming = NORTH
+			tiles[9][8].leaving = STRAIGHT_OR_RIGHT
+			
+			tiles[9][9].incoming = NORTH
+			tiles[9][9].leaving = STRAIGHT_OR_RIGHT
 		ll_ewl:
-			print()
+			pass
 		ll_ewr:
-			print()
+			tiles[8][18].incoming = WEST
+			tiles[8][18].leaving = STRAIGHT_OR_RIGHT
+			
+			tiles[8][19].incoming = EAST
+			tiles[8][19].leaving = STRAIGHT_OR_RIGHT
+			
+			tiles[9][18].incoming = WEST
+			tiles[9][18].leaving = STRAIGHT_OR_RIGHT
+			
+			tiles[9][19].incoming = EAST
+			tiles[9][19].leaving = STRAIGHT_OR_RIGHT
 		ll_nsl:
-			print()
+			pass
 		ll_nsr:
-			print()
+			tiles[8][18].incoming = SOUTH
+			tiles[8][18].leaving = STRAIGHT_OR_RIGHT
+			
+			tiles[8][19].incoming = SOUTH
+			tiles[8][19].leaving = STRAIGHT_OR_RIGHT
+			
+			tiles[9][18].incoming = NORTH
+			tiles[9][18].leaving = STRAIGHT_OR_RIGHT
+			
+			tiles[9][19].incoming = NORTH
+			tiles[9][19].leaving = STRAIGHT_OR_RIGHT
 		ur_ewl:
-			print()
+			pass
 		ur_ewr:
-			print()
+			tiles[18][8].incoming = WEST
+			tiles[18][8].leaving = STRAIGHT_OR_RIGHT
+			
+			tiles[18][9].incoming = EAST
+			tiles[18][9].leaving = STRAIGHT_OR_RIGHT
+			
+			tiles[19][8].incoming = WEST
+			tiles[19][8].leaving = STRAIGHT_OR_RIGHT
+			
+			tiles[19][9].incoming = EAST
+			tiles[19][9].leaving = STRAIGHT_OR_RIGHT
 		ur_nsl:
-			print()
+			pass
 		ur_nsr:
-			print()
+			tiles[18][8].incoming = SOUTH
+			tiles[18][8].leaving = STRAIGHT_OR_RIGHT
+			
+			tiles[18][9].incoming = SOUTH
+			tiles[18][9].leaving = STRAIGHT_OR_RIGHT
+			
+			tiles[19][8].incoming = NORTH
+			tiles[19][8].leaving = STRAIGHT_OR_RIGHT
+			
+			tiles[19][9].incoming = NORTH
+			tiles[19][9].leaving = STRAIGHT_OR_RIGHT
 		lr_ewl:
-			print()
+			pass
 		lr_ewr:
-			print()
+			tiles[18][18].incoming = WEST
+			tiles[18][18].leaving = STRAIGHT_OR_RIGHT
+			
+			tiles[18][19].incoming = EAST
+			tiles[18][19].leaving = STRAIGHT_OR_RIGHT
+			
+			tiles[19][18].incoming = WEST
+			tiles[19][18].leaving = STRAIGHT_OR_RIGHT
+			
+			tiles[19][19].incoming = EAST
+			tiles[19][19].leaving = STRAIGHT_OR_RIGHT
 		lr_nsl:
-			print()
+			pass
 		lr_nsr:
-			print()
-
+			tiles[18][18].incoming = SOUTH
+			tiles[18][18].leaving = STRAIGHT_OR_RIGHT
+			
+			tiles[18][19].incoming = SOUTH
+			tiles[18][19].leaving = STRAIGHT_OR_RIGHT
+			
+			tiles[19][18].incoming = NORTH
+			tiles[19][18].leaving = STRAIGHT_OR_RIGHT
+			
+			tiles[19][19].incoming = NORTH
+			tiles[19][19].leaving = STRAIGHT_OR_RIGHT
