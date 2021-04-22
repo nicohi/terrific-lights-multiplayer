@@ -11,8 +11,6 @@ enum {
 	TURNING,
 	TURNED
 }
-enum { NONE, ALL, NORTH, EAST, SOUTH, WEST }
-enum { STRAIGHT_OR_RIGHT, LEFT_TURN }
 
 # direction vectors
 const LEFT = Vector2(-1, 0)
@@ -133,7 +131,7 @@ func _reduce_point():
 		
 func setRoute(r):
 	route = r
-	ind = -1
+	ind = 0
 
 func movingInDirection():
 #	print("IND IS ", ind)
@@ -143,7 +141,6 @@ func movingInDirection():
 #		print("DIR IS ", dir)
 	else:
 		dir = getRoute().getTileAtInd(ind).positionFromTile(getRoute().getTileAtInd(ind - 1))
-	
 	return dir
 
 func turningDirection():
@@ -152,30 +149,29 @@ func turningDirection():
 	if getRoute().getTileAtInd(ind + 2) != null:
 		goingToTurnDir = getRoute().getTileAtInd(ind + 2).positionFromTile(getRoute().getTileAtInd(ind + 1))
 	else:
-		return STRAIGHT_OR_RIGHT
+		return Globals.STRAIGHT_OR_RIGHT
 	var movingInDir = movingInDirection()
 	var turn
-	if movingInDir == NORTH:
-		if goingToTurnDir == NORTH or goingToTurnDir == EAST:
-			turn = STRAIGHT_OR_RIGHT
+	if movingInDir == Globals.NORTH:
+		if goingToTurnDir == Globals.NORTH or goingToTurnDir == Globals.EAST:
+			turn = Globals.STRAIGHT_OR_RIGHT
 		else:
-			turn = LEFT_TURN
-	elif movingInDir == EAST:
-		if goingToTurnDir == EAST or goingToTurnDir == SOUTH:
-			turn = STRAIGHT_OR_RIGHT
+			turn = Globals.LEFT_TURN
+	elif movingInDir == Globals.EAST:
+		if goingToTurnDir == Globals.EAST or goingToTurnDir == Globals.SOUTH:
+			turn = Globals.STRAIGHT_OR_RIGHT
 		else:
-			turn = LEFT_TURN
-	elif movingInDir == SOUTH:
-		if goingToTurnDir == SOUTH or goingToTurnDir == WEST:
-			turn = STRAIGHT_OR_RIGHT
+			turn = Globals.LEFT_TURN
+	elif movingInDir == Globals.SOUTH:
+		if goingToTurnDir == Globals.SOUTH or goingToTurnDir == Globals.WEST:
+			turn = Globals.STRAIGHT_OR_RIGHT
 		else:
-			turn = LEFT_TURN
-	elif movingInDir == WEST:
-		if goingToTurnDir == WEST or goingToTurnDir == NORTH:
-			turn = STRAIGHT_OR_RIGHT
+			turn = Globals.LEFT_TURN
+	elif movingInDir == Globals.WEST:
+		if goingToTurnDir == Globals.WEST or goingToTurnDir == Globals.NORTH:
+			turn = Globals.STRAIGHT_OR_RIGHT
 		else:
-			turn = LEFT_TURN
-#	print("TURN: ", turn)
+			turn = Globals.LEFT_TURN
 	return turn
 
 func getRoute():

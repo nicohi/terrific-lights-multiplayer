@@ -24,6 +24,113 @@ onready var lr_ewr = $LowerRight/EastWestRight
 onready var lr_nsr = $LowerRight/NorthSouthRight
 onready var lr_nsl = $LowerRight/NorthSouthLeft
 
+enum {
+	LEFT,
+	RIGHT,
+	STRAIGHT,
+}
+
+const NORTH = Vector2(0, -1)
+const NORTHEAST = Vector2(1, -1)
+const EAST = Vector2(1, 0)
+const SOUTHEAST = Vector2(1, 1)
+const SOUTH = Vector2(0, 1)
+const SOUTHWEST = Vector2(-1, 1)
+const WEST = Vector2(-1, 0)
+const NORTHWEST = Vector2(-1, -1)
+
+const NWW_START_POS = Vector2(0, 9)
+const NWN_START_POS = Vector2(8, 0)
+const NEN_START_POS = Vector2(18, 0)
+const NEE_START_POS = Vector2(27, 8)
+const SEE_START_POS = Vector2(27, 18)
+const SES_START_POS = Vector2(19, 27)
+const SWS_START_POS = Vector2(9, 27)
+const SWW_START_POS = Vector2(0, 19)
+
+var routeSetup = [
+	{
+		"startPos": NWN_START_POS,
+		"startDir": SOUTH,
+		"turns": [LEFT, RIGHT, LEFT],
+	},
+	{
+		"startPos": NEE_START_POS,
+		"startDir": WEST,
+		"turns": [LEFT, RIGHT, LEFT],
+	},
+	{
+		"startPos": SES_START_POS,
+		"startDir": NORTH,
+		"turns": [LEFT, RIGHT, LEFT],
+	},
+	{
+		"startPos": SWW_START_POS,
+		"startDir": EAST,
+		"turns": [LEFT, RIGHT, LEFT],
+	},
+	{
+		"startPos": NWN_START_POS,
+		"startDir": SOUTH,
+		"turns": [STRAIGHT, LEFT, RIGHT],
+	},
+	{
+		"startPos": NEE_START_POS,
+		"startDir": WEST,
+		"turns": [STRAIGHT, LEFT, RIGHT],
+	},
+	{
+		"startPos": SES_START_POS,
+		"startDir": NORTH,
+		"turns": [STRAIGHT, LEFT, RIGHT],
+	},
+	{
+		"startPos": SWW_START_POS,
+		"startDir": EAST,
+		"turns": [STRAIGHT, LEFT, RIGHT],
+	},
+	{
+		"startPos": NEN_START_POS,
+		"startDir": SOUTH,
+		"turns": [STRAIGHT, RIGHT, STRAIGHT],
+	},
+	{
+		"startPos": SEE_START_POS,
+		"startDir": WEST,
+		"turns": [STRAIGHT, RIGHT, STRAIGHT],
+	},
+	{
+		"startPos": SWS_START_POS,
+		"startDir": NORTH,
+		"turns": [STRAIGHT, RIGHT, STRAIGHT],
+	},
+	{
+		"startPos": NWW_START_POS,
+		"startDir": EAST,
+		"turns": [STRAIGHT, RIGHT, STRAIGHT],
+	},
+	{
+		"startPos": NEN_START_POS,
+		"startDir": SOUTH,
+		"turns": [STRAIGHT, RIGHT, STRAIGHT],
+	},
+	{
+		"startPos": SEE_START_POS,
+		"startDir": WEST,
+		"turns": [STRAIGHT, RIGHT, STRAIGHT],
+	},
+	{
+		"startPos": SWS_START_POS,
+		"startDir": NORTH,
+		"turns": [STRAIGHT, RIGHT, STRAIGHT],
+	},
+	{
+		"startPos": NWW_START_POS,
+		"startDir": EAST,
+		"turns": [STRAIGHT, RIGHT, STRAIGHT],
+	},
+]
+
 func setUpTiles():
 	var tileIsRoad = false
 	var keepOn = false
@@ -63,54 +170,157 @@ func setUpTiles():
 			y_pos += Globals.TILE_SIDE_LEN
 		x_pos += Globals.TILE_SIDE_LEN
 
-func setUpRoutes():
-	var list = []
-	for y in range(0, ml):
-		list.append(tiles[8][y])
-	var route = Route.new(list)
-	routes.append(route)
+func _straight(targetArray: Array, steps: int, from: Vector2, toDir: Vector2) -> Vector2:
+	var pos = from
 	
-	list = []
-	for y in range(0, ml):
-		list.append(tiles[9][ml-1 - y])
-	route = Route.new(list)
-	routes.append(route)
+	for i in steps:
+		pos += toDir
+		targetArray.push_back(tiles[pos.x][pos.y])
+		
+	return pos
+		
+func _turn_left(targetArray: Array, from: Vector2, toDir: Vector2) -> Vector2:
+	var pos = from
 	
-	list = []
-	for y in range(0, ml):
-		list.append(tiles[18][y])
-	route = Route.new(list)
-	routes.append(route)
+	for i in 2:
+		match toDir:
+			NORTH:
+				pos += NORTHEAST
+			EAST:
+				pos += SOUTHEAST
+			SOUTH:
+				pos += SOUTHWEST
+			WEST:
+				pos += NORTHWEST
+				
+		targetArray.push_back(tiles[pos.x][pos.y])
+		
+	for i in 7:
+		pos += toDir
+		targetArray.push_back(tiles[pos.x][pos.y])
 	
-	list = []
-	for y in range(0, ml):
-		list.append(tiles[19][ml-1 - y])
-	route = Route.new(list)
-	routes.append(route)
+	return pos
+
+func _turn_right(targetArray: Array, from: Vector2, toDir: Vector2) -> Vector2:
+	var pos = from
 	
-	list = []
-	for x in range(0, ml):
-		list.append(tiles[x][9])
-	route = Route.new(list)
-	routes.append(route)
+	match toDir:
+		NORTH:
+			pos += WEST
+		EAST:
+			pos += NORTH
+		SOUTH:
+			pos += EAST
+		WEST:
+			pos += SOUTH
+			
+	targetArray.push_back(tiles[pos.x][pos.y])
 	
-	list = []
-	for x in range(0, ml):
-		list.append(tiles[ml- 1 - x][8])
-	route = Route.new(list)
-	routes.append(route)
-	
-	list = []
-	for x in range(0, ml):
-		list.append(tiles[x][19])
-	route = Route.new(list)
-	routes.append(route)
-	
-	list = []
-	for x in range(0, ml):
-		list.append(tiles[ml- 1 - x][18])
-	route = Route.new(list)
-	routes.append(route)
+	for i in 8:
+		pos += toDir
+		targetArray.push_back(tiles[pos.x][pos.y])
+		
+	return pos
+
+func _left_from(dir: Vector2) -> Vector2:
+	match dir:
+		NORTH:
+			return WEST
+		EAST:
+			return NORTH
+		SOUTH:
+			return EAST
+		_:
+			return SOUTH
+
+func _right_from(dir: Vector2) -> Vector2:
+	match dir:
+		NORTH:
+			return EAST
+		EAST:
+			return SOUTH
+		SOUTH:
+			return WEST
+		_:
+			return NORTH
+
+func _get_turn_vector(turnTo, directionFrom: Vector2) -> Vector2:
+	match turnTo:
+		LEFT:
+			return _left_from(directionFrom)
+		RIGHT:
+			return _right_from(directionFrom)
+		_:
+			return directionFrom
+
+func setUpRoutes():	
+	for route in routeSetup:
+		var pos = route["startPos"]
+		var dir = route["startDir"]
+		var arr = [tiles[pos.x][pos.y]]
+
+		pos = _straight(arr, 7, pos, dir)
+
+		for turn in route["turns"]:
+			match turn:
+				STRAIGHT:
+					pos = _straight(arr, 10, pos, dir)
+				LEFT:
+					dir = _get_turn_vector(turn, dir)
+					pos = _turn_left(arr, pos, dir)
+				RIGHT:
+					dir = _get_turn_vector(turn, dir)
+					pos = _turn_right(arr, pos, dir)
+
+		routes.append(Route.new(arr))
+#
+#	var list = []
+#	for y in range(0, ml):
+#		list.append(tiles[8][y])
+#	var route = Route.new(list)
+#	routes.append(route)
+#
+#	list = []
+#	for y in range(0, ml):
+#		list.append(tiles[9][ml-1 - y])
+#	route = Route.new(list)
+#	routes.append(route)
+#
+#	list = []
+#	for y in range(0, ml):
+#		list.append(tiles[18][y])
+#	route = Route.new(list)
+#	routes.append(route)
+#
+#	list = []
+#	for y in range(0, ml):
+#		list.append(tiles[19][ml-1 - y])
+#	route = Route.new(list)
+#	routes.append(route)
+#
+#	list = []
+#	for x in range(0, ml):
+#		list.append(tiles[x][9])
+#	route = Route.new(list)
+#	routes.append(route)
+#
+#	list = []
+#	for x in range(0, ml):
+#		list.append(tiles[ml- 1 - x][8])
+#	route = Route.new(list)
+#	routes.append(route)
+#
+#	list = []
+#	for x in range(0, ml):
+#		list.append(tiles[x][19])
+#	route = Route.new(list)
+#	routes.append(route)
+#
+#	list = []
+#	for x in range(0, ml):
+#		list.append(tiles[ml- 1 - x][18])
+#	route = Route.new(list)
+#	routes.append(route)
 
 func randomRoute():
 	var route = routes[randi() % routes.size()]
@@ -127,131 +337,77 @@ func _ready():
 	light_ll.begin()
 	light_ur.begin()
 	light_lr.begin()
-
-enum { NONE, ALL, NORTH, EAST, SOUTH, WEST }
-enum { STRAIGHT_OR_RIGHT, LEFT_TURN }
+	
+func switchLights(t1, t2, t3, t4, light):
+	match light:
+		"ewr":
+			t1.incoming = Globals.WEST
+			t1.leaving = Globals.STRAIGHT_OR_RIGHT
+			t2.incoming = Globals.EAST
+			t2.leaving = Globals.STRAIGHT_OR_RIGHT
+			t3.incoming = Globals.WEST
+			t3.leaving = Globals.STRAIGHT_OR_RIGHT
+			t4.incoming = Globals.EAST
+			t4.leaving = Globals.STRAIGHT_OR_RIGHT
+		"nsr":
+			t1.incoming = Globals.SOUTH
+			t1.leaving = Globals.STRAIGHT_OR_RIGHT
+			t2.incoming = Globals.SOUTH
+			t2.leaving = Globals.STRAIGHT_OR_RIGHT
+			t3.incoming = Globals.NORTH
+			t3.leaving = Globals.STRAIGHT_OR_RIGHT
+			t4.incoming = Globals.NORTH
+			t4.leaving = Globals.STRAIGHT_OR_RIGHT
+		"ewl":
+			t1.incoming = Globals.WEST
+			t1.leaving = Globals.LEFT_TURN
+			t2.incoming = Globals.EAST
+			t2.leaving = Globals.LEFT_TURN
+			t3.incoming = Globals.WEST
+			t3.leaving = Globals.LEFT_TURN
+			t4.incoming = Globals.EAST
+			t4.leaving = Globals.LEFT_TURN
+		"nsl":
+			t1.incoming = Globals.SOUTH
+			t1.leaving = Globals.LEFT_TURN
+			t2.incoming = Globals.NORTH
+			t2.leaving = Globals.LEFT_TURN
+			t3.incoming = Globals.SOUTH
+			t3.leaving = Globals.LEFT_TURN
+			t4.incoming = Globals.NORTH
+			t4.leaving = Globals.LEFT_TURN
 
 func handle_lights(light: LightButton):
 	match light:
 		ul_ewl:
-			tiles[8][8].incoming = NONE
-			tiles[8][8].leaving = STRAIGHT_OR_RIGHT
-			
-			tiles[8][9].incoming = WEST
-			tiles[8][9].leaving = LEFT_TURN
-			
-			tiles[9][8].incoming = EAST
-			tiles[9][8].leaving = LEFT_TURN
-			
-			tiles[9][8].incoming = NONE
-			tiles[9][8].leaving = STRAIGHT_OR_RIGHT
+			switchLights(tiles[8][8], tiles[8][9], tiles[9][8], tiles[9][9], "ewl")
 		ul_ewr:
-			tiles[8][8].incoming = WEST
-			tiles[8][8].leaving = STRAIGHT_OR_RIGHT
-			
-			tiles[8][9].incoming = EAST
-			tiles[8][9].leaving = STRAIGHT_OR_RIGHT
-			
-			tiles[9][8].incoming = WEST
-			tiles[9][8].leaving = STRAIGHT_OR_RIGHT
-			
-			tiles[9][9].incoming = EAST
-			tiles[9][9].leaving = STRAIGHT_OR_RIGHT
+			switchLights(tiles[8][8], tiles[8][9], tiles[9][8], tiles[9][9], "ewr")
 		ul_nsl:
-			pass
+			switchLights(tiles[8][8], tiles[8][9], tiles[9][8], tiles[9][9], "nsl")
 		ul_nsr:
-			tiles[8][8].incoming = SOUTH
-			tiles[8][8].leaving = STRAIGHT_OR_RIGHT
-			
-			tiles[8][9].incoming = SOUTH
-			tiles[8][9].leaving = STRAIGHT_OR_RIGHT
-			
-			tiles[9][8].incoming = NORTH
-			tiles[9][8].leaving = STRAIGHT_OR_RIGHT
-			
-			tiles[9][9].incoming = NORTH
-			tiles[9][9].leaving = STRAIGHT_OR_RIGHT
+			switchLights(tiles[8][8], tiles[8][9], tiles[9][8], tiles[9][9], "nsr")
 		ll_ewl:
-			pass
+			switchLights(tiles[8][18], tiles[8][19], tiles[9][18], tiles[9][19], "ewl")
 		ll_ewr:
-			tiles[8][18].incoming = WEST
-			tiles[8][18].leaving = STRAIGHT_OR_RIGHT
-			
-			tiles[8][19].incoming = EAST
-			tiles[8][19].leaving = STRAIGHT_OR_RIGHT
-			
-			tiles[9][18].incoming = WEST
-			tiles[9][18].leaving = STRAIGHT_OR_RIGHT
-			
-			tiles[9][19].incoming = EAST
-			tiles[9][19].leaving = STRAIGHT_OR_RIGHT
+			switchLights(tiles[8][18], tiles[8][19], tiles[9][18], tiles[9][19], "ewr")
 		ll_nsl:
-			pass
+			switchLights(tiles[8][18], tiles[8][19], tiles[9][18], tiles[9][19], "nsl")
 		ll_nsr:
-			tiles[8][18].incoming = SOUTH
-			tiles[8][18].leaving = STRAIGHT_OR_RIGHT
-			
-			tiles[8][19].incoming = SOUTH
-			tiles[8][19].leaving = STRAIGHT_OR_RIGHT
-			
-			tiles[9][18].incoming = NORTH
-			tiles[9][18].leaving = STRAIGHT_OR_RIGHT
-			
-			tiles[9][19].incoming = NORTH
-			tiles[9][19].leaving = STRAIGHT_OR_RIGHT
+			switchLights(tiles[8][18], tiles[8][19], tiles[9][18], tiles[9][19], "nsr")
 		ur_ewl:
-			pass
+			switchLights(tiles[18][8], tiles[18][9], tiles[19][8], tiles[19][9], "ewl")
 		ur_ewr:
-			tiles[18][8].incoming = WEST
-			tiles[18][8].leaving = STRAIGHT_OR_RIGHT
-			
-			tiles[18][9].incoming = EAST
-			tiles[18][9].leaving = STRAIGHT_OR_RIGHT
-			
-			tiles[19][8].incoming = WEST
-			tiles[19][8].leaving = STRAIGHT_OR_RIGHT
-			
-			tiles[19][9].incoming = EAST
-			tiles[19][9].leaving = STRAIGHT_OR_RIGHT
+			switchLights(tiles[18][8], tiles[18][9], tiles[19][8], tiles[19][9], "ewr")
 		ur_nsl:
-			pass
+			switchLights(tiles[18][8], tiles[18][9], tiles[19][8], tiles[19][9], "nsl")
 		ur_nsr:
-			tiles[18][8].incoming = SOUTH
-			tiles[18][8].leaving = STRAIGHT_OR_RIGHT
-			
-			tiles[18][9].incoming = SOUTH
-			tiles[18][9].leaving = STRAIGHT_OR_RIGHT
-			
-			tiles[19][8].incoming = NORTH
-			tiles[19][8].leaving = STRAIGHT_OR_RIGHT
-			
-			tiles[19][9].incoming = NORTH
-			tiles[19][9].leaving = STRAIGHT_OR_RIGHT
+			switchLights(tiles[18][8], tiles[18][9], tiles[19][8], tiles[19][9], "nsr")
 		lr_ewl:
-			pass
+			switchLights(tiles[18][18], tiles[18][19], tiles[19][18], tiles[19][19], "ewl")
 		lr_ewr:
-			tiles[18][18].incoming = WEST
-			tiles[18][18].leaving = STRAIGHT_OR_RIGHT
-			
-			tiles[18][19].incoming = EAST
-			tiles[18][19].leaving = STRAIGHT_OR_RIGHT
-			
-			tiles[19][18].incoming = WEST
-			tiles[19][18].leaving = STRAIGHT_OR_RIGHT
-			
-			tiles[19][19].incoming = EAST
-			tiles[19][19].leaving = STRAIGHT_OR_RIGHT
+			switchLights(tiles[18][18], tiles[18][19], tiles[19][18], tiles[19][19], "ewr")
 		lr_nsl:
-			pass
+			switchLights(tiles[18][18], tiles[18][19], tiles[19][18], tiles[19][19], "nsl")
 		lr_nsr:
-			tiles[18][18].incoming = SOUTH
-			tiles[18][18].leaving = STRAIGHT_OR_RIGHT
-			
-			tiles[18][19].incoming = SOUTH
-			tiles[18][19].leaving = STRAIGHT_OR_RIGHT
-			
-			tiles[19][18].incoming = NORTH
-			tiles[19][18].leaving = STRAIGHT_OR_RIGHT
-			
-			tiles[19][19].incoming = NORTH
-			tiles[19][19].leaving = STRAIGHT_OR_RIGHT
+			switchLights(tiles[18][18], tiles[18][19], tiles[19][18], tiles[19][19], "nsr")
