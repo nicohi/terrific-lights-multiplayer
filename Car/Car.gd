@@ -21,8 +21,8 @@ const DOWN = Vector2(0, 1)
 # constants for car control
 const ACCELERATION := Globals.TILE_SIDE_LEN * 0.6
 const MAX_SPEED := Globals.TILE_SIDE_LEN
-const TURNING_SPEED_LEFT := Globals.TILE_SIDE_LEN * .875
-const TURNING_SPEED_RIGHT := Globals.TILE_SIDE_LEN * .625
+const TURNING_SPEED_LEFT := Globals.TILE_SIDE_LEN * .9
+const TURNING_SPEED_RIGHT := Globals.TILE_SIDE_LEN * .8
 const FRICTION := Globals.TILE_SIDE_LEN * 0.6
 const DIRECTIONS := [LEFT, RIGHT, UP]
 const START_DIR := UP
@@ -216,20 +216,17 @@ func _out_of_view() -> bool:
 		self.position.x > zero_corner.x + 540 * 2 + 5
 	)
 
-func _make_a_turn():
-	match direction:
-		RIGHT:
-			animationPlayer.play("TurnRight")
+func _make_a_turn(turnDirection):
+	match turnDirection:
+		Globals.RIGHT:
 			current_speed = TURNING_SPEED_RIGHT
 			input_vector = input_vector.rotated(PI / 2)
 			
-		LEFT:
-			animationPlayer.play("TurnLeft")
+		Globals.LEFT:
 			current_speed = TURNING_SPEED_LEFT
 			input_vector = input_vector.rotated(3 * PI / 2)
 			
 		_:
-			animationPlayer.play("DriveStraight")
 			current_speed = MAX_SPEED
 			
 	speed_modifier = FRICTION
@@ -267,7 +264,12 @@ func _set_speed_and_direction(delta):
 			animationPlayer.play("TurnLeft")
 		Globals.RIGHT:
 			animationPlayer.play("TurnRight")
-		
+	
+	if route.isTurningAtInd(ind):
+		_make_a_turn(nextTurn)
+	else:
+		_make_a_turn(Globals.STRAIGHT)
+	
 	if nextTile == null:
 		if tile != null:
 			tile.takingCar = null

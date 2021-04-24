@@ -173,11 +173,11 @@ func _straight(targetArray: Array, steps: int, from: Vector2, toDir: Vector2, ne
 	
 	for i in 2:
 		pos += toDir
-		targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": STRAIGHT})
+		targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": STRAIGHT, "doTurn": false})
 		
 	for i in steps - 2:
 		pos += toDir
-		targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": nextTurn})
+		targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": nextTurn, "doTurn": false})
 		
 	return pos
 		
@@ -195,14 +195,14 @@ func _turn_left(targetArray: Array, from: Vector2, toDir: Vector2, nextTurn) -> 
 			WEST:
 				pos += NORTHWEST
 				
-		targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": LEFT})
+		targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": LEFT, "doTurn": true})
 	
 	pos += toDir
-	targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": LEFT})
+	targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": LEFT, "doTurn": false})
 	
 	for i in 6:
 		pos += toDir
-		targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": nextTurn})
+		targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": nextTurn, "doTurn": false})
 	
 	return pos
 
@@ -219,13 +219,13 @@ func _turn_right(targetArray: Array, from: Vector2, toDir: Vector2, nextTurn) ->
 		WEST:
 			pos += SOUTH
 			
-	targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": RIGHT})
+	targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": RIGHT, "doTurn": true})
 	pos += toDir
-	targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": RIGHT})
+	targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": RIGHT, "doTurn": true})
 	
 	for i in 7:
 		pos += toDir
-		targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": nextTurn})
+		targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": nextTurn, "doTurn": false})
 		
 	return pos
 
@@ -267,7 +267,7 @@ func setUpRoutes():
 		
 		var pos = route["startPos"]
 		var dir = route["startDir"]
-		var arr = [{"tile": tiles[pos.x][pos.y], "turn": nextTurn}]
+		var arr = [{"tile": tiles[pos.x][pos.y], "turn": nextTurn, "doTurn": false}]
 
 		pos = _straight(arr, 7, pos, dir, nextTurn)
 

@@ -18,3 +18,9 @@ func getNextTurnAtInd(ind: int):
 		return Globals.STRAIGHT
 	
 	return tiles[ind]["turn"]
+
+func isTurningAtInd(ind: int) -> bool:
+	if (ind >= tiles.size()):
+		return false
+	
+	return tiles[ind]["doTurn"]
