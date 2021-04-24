@@ -67,9 +67,9 @@ margin_bottom = 428.172
 [node name="Designers" parent="." instance=ExtResource( 2 )]
 
 [node name="Title" parent="." instance=ExtResource( 2 )]
-margin_left = 574.492
-margin_top = 251.929
-margin_right = 1382.49
+margin_left = 500.0
+margin_top = 235.0
+margin_right = 1450.0
 margin_bottom = 287.929
 custom_fonts/font = ExtResource( 7 )
 text = "Terrific Lights"

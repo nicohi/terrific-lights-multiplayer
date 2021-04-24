@@ -3,27 +3,24 @@ extends Node
 class_name Route
 
 var tiles = []
-#var cars = []
 
 func _init(tileList):
 	tiles = tileList
-#	for i in range(tiles.size()):
-#		cars.append([])
 
-func getTileAtInd(ind: int) -> Tile:
+func getTileAtInd(ind: int):
 	if (ind >= tiles.size()):
 		return null
-	return tiles[ind]
 
-func _ready():
-	pass
+	return tiles[ind]["tile"]
 
-#func _process(delta):
-#	for i in range(cars.size()):
-#		if cars[i] != null:
-#			if i + 1 < cars.size():
-#				# signal for 
-#				pass
-#			else:
-#				# end reached; despawn car
-#				pass
+func getNextTurnAtInd(ind: int):
+	if (ind >= tiles.size()):
+		return Globals.STRAIGHT
+
+	return tiles[ind]["turn"]
+
+func isTurningAtInd(ind: int) -> bool:
+	if (ind >= tiles.size()):
+		return false
+
+	return tiles[ind]["doTurn"]

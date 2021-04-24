@@ -3,44 +3,56 @@ extends Area2D
 class_name Tile
 
 onready var timer = $Timer
-var free setget , isFree
-var er: bool = true
-var el: bool = true
-var wr: bool = true
-var wl: bool = true
-var nr: bool = true
-var nl: bool = true
-var sr: bool = true
-var sl: bool = true
+var coordinates = Vector2.ZERO
+var is_crossing: bool
+var takingCar: Car
+
+var incoming
+var leaving
 
 func _ready():
-	free = true
+	takingCar = null
+	is_crossing = false
+	incoming = Globals.ALL
+	leaving = Globals.ALL_TURN
 
-func freeTile():
-	timer.start(0.5)
+func setCoordinates(x, y):
+	coordinates = Vector2(x, y)
 
 func isFree() -> bool:
-	if self.get_overlapping_bodies().size() == 0:
-		free = true
+	if self.get_overlapping_bodies().size() == 0 and takingCar == null:
+		return true
 	else:
-		free = false
-	return free and er and el and wr
-	
-func stopAllTraffic():
-	er = false
-	el = false
-	wr = false
-	wl = false
-	nr = false
-	nl = false
-	sr = false
-	sl = false
+		return false
+
+func mayEnter(movingFrom, turningTo) -> bool:
+	var movingFromOK
+	if incoming == Globals.ALL:
+		movingFromOK = true
+	elif incoming == Globals.NONE:
+		movingFromOK = false
+	else:
+		movingFromOK = movingFrom == incoming
+	var turningToOK
+	if leaving == Globals.ALL_TURN:
+		turningToOK = true
+	else:
+		turningToOK = turningTo == leaving
+	return movingFromOK and turningToOK
 
 func _on_Tile_body_entered(body):
 	if self == body.getRoute().getTileAtInd(body.ind + 1):
-		body.getRoute().getTileAtInd(body.ind).freeTile()
+		body.getRoute().getTileAtInd(body.ind).takingCar = null
 		body.ind += 1
-		self.free = false
+		self.takingCar = body
 
-func _on_Timer_timeout():
-	self.free = true
+func positionFromTile(tile: Tile):
+#	print(self.coordinates.x, " ", tile.coordinates.x)
+	if self.coordinates.x < tile.coordinates.x:
+		return Globals.WEST
+	elif self.coordinates.x > tile.coordinates.x:
+		return Globals.EAST
+	elif self.coordinates.y < tile.coordinates.y:
+		return Globals.NORTH
+	elif self.coordinates.y > tile.coordinates.y:
+		return Globals.SOUTH

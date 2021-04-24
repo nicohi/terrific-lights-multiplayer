@@ -24,12 +24,6 @@ onready var lr_ewr = $LowerRight/EastWestRight
 onready var lr_nsr = $LowerRight/NorthSouthRight
 onready var lr_nsl = $LowerRight/NorthSouthLeft
 
-enum {
-	LEFT,
-	RIGHT,
-	STRAIGHT,
-}
-
 const NORTH = Vector2(0, -1)
 const NORTHEAST = Vector2(1, -1)
 const EAST = Vector2(1, 0)
@@ -47,6 +41,10 @@ const SEE_START_POS = Vector2(27, 18)
 const SES_START_POS = Vector2(19, 27)
 const SWS_START_POS = Vector2(9, 27)
 const SWW_START_POS = Vector2(0, 19)
+
+var LEFT = Globals.LEFT
+var RIGHT = Globals.RIGHT
+var STRAIGHT = Globals.STRAIGHT
 
 var routeSetup = [
 	{
@@ -152,7 +150,7 @@ func setUpTiles():
 			tileIsRoad = false
 	var tile_scene = load("res://Tile.tscn")
 	var start = get_viewport_rect().size / 2 - Vector2(540, 540)
-	
+
 	var x_pos = start.x
 	var y_pos = start.y
 	for x in range(0, ml):
@@ -160,25 +158,32 @@ func setUpTiles():
 		for y in range(0, ml):
 			if tiles[x][y]:
 				var tile = tile_scene.instance()
+				tile.setCoordinates(x, y)
 				tiles[x][y] = tile
 				add_child(tile)
 				tile.position.x = x_pos
 				tile.position.y = y_pos
+				if (x == 8 || x == 9 || x == 18 || x == 19) and (y == 8 || y == 9 || y == 18 || y == 19):
+					tile.is_crossing = true
 			y_pos += Globals.TILE_SIDE_LEN
 		x_pos += Globals.TILE_SIDE_LEN
 
-func _straight(targetArray: Array, steps: int, from: Vector2, toDir: Vector2) -> Vector2:
+func _straight(targetArray: Array, steps: int, from: Vector2, toDir: Vector2, nextTurn) -> Vector2:
 	var pos = from
-	
-	for i in steps:
+
+	for i in 2:
 		pos += toDir
-		targetArray.push_back(tiles[pos.x][pos.y])
-		
+		targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": STRAIGHT, "doTurn": false})
+
+	for i in steps - 2:
+		pos += toDir
+		targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": nextTurn, "doTurn": false})
+
 	return pos
-		
-func _turn_left(targetArray: Array, from: Vector2, toDir: Vector2) -> Vector2:
+
+func _turn_left(targetArray: Array, from: Vector2, toDir: Vector2, nextTurn) -> Vector2:
 	var pos = from
-	
+
 	for i in 2:
 		match toDir:
 			NORTH:
@@ -189,18 +194,21 @@ func _turn_left(targetArray: Array, from: Vector2, toDir: Vector2) -> Vector2:
 				pos += SOUTHWEST
 			WEST:
 				pos += NORTHWEST
-				
-		targetArray.push_back(tiles[pos.x][pos.y])
-		
-	for i in 7:
+
+		targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": LEFT, "doTurn": true})
+
+	pos += toDir
+	targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": LEFT, "doTurn": false})
+
+	for i in 6:
 		pos += toDir
-		targetArray.push_back(tiles[pos.x][pos.y])
-	
+		targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": nextTurn, "doTurn": false})
+
 	return pos
 
-func _turn_right(targetArray: Array, from: Vector2, toDir: Vector2) -> Vector2:
+func _turn_right(targetArray: Array, from: Vector2, toDir: Vector2, nextTurn) -> Vector2:
 	var pos = from
-	
+
 	match toDir:
 		NORTH:
 			pos += WEST
@@ -210,13 +218,15 @@ func _turn_right(targetArray: Array, from: Vector2, toDir: Vector2) -> Vector2:
 			pos += EAST
 		WEST:
 			pos += SOUTH
-			
-	targetArray.push_back(tiles[pos.x][pos.y])
-	
-	for i in 8:
+
+	targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": RIGHT, "doTurn": true})
+	pos += toDir
+	targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": RIGHT, "doTurn": true})
+
+	for i in 7:
 		pos += toDir
-		targetArray.push_back(tiles[pos.x][pos.y])
-		
+		targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": nextTurn, "doTurn": false})
+
 	return pos
 
 func _left_from(dir: Vector2) -> Vector2:
@@ -250,74 +260,36 @@ func _get_turn_vector(turnTo, directionFrom: Vector2) -> Vector2:
 		_:
 			return directionFrom
 
-func setUpRoutes():	
+func setUpRoutes():
 	for route in routeSetup:
+		var turnPos = 0
+		var nextTurn = route["turns"][turnPos]
+
 		var pos = route["startPos"]
 		var dir = route["startDir"]
-		var arr = [tiles[pos.x][pos.y]]
-		
-		pos = _straight(arr, 7, pos, dir)
-		
+		var arr = [{"tile": tiles[pos.x][pos.y], "turn": nextTurn, "doTurn": false}]
+
+		pos = _straight(arr, 7, pos, dir, nextTurn)
+
 		for turn in route["turns"]:
+			turnPos += 1
+
+			nextTurn = STRAIGHT
+
+			if turnPos < route["turns"].size():
+				nextTurn = route["turns"][turnPos]
+
 			match turn:
 				STRAIGHT:
-					pos = _straight(arr, 10, pos, dir)
+					pos = _straight(arr, 10, pos, dir, nextTurn)
 				LEFT:
 					dir = _get_turn_vector(turn, dir)
-					pos = _turn_left(arr, pos, dir)
+					pos = _turn_left(arr, pos, dir, nextTurn)
 				RIGHT:
 					dir = _get_turn_vector(turn, dir)
-					pos = _turn_right(arr, pos, dir)
-			
+					pos = _turn_right(arr, pos, dir, nextTurn)
+
 		routes.append(Route.new(arr))
-#
-#	var list = []
-#	for y in range(0, ml):
-#		list.append(tiles[8][y])
-#	var route = Route.new(list)
-#	routes.append(route)
-#
-#	list = []
-#	for y in range(0, ml):
-#		list.append(tiles[9][ml-1 - y])
-#	route = Route.new(list)
-#	routes.append(route)
-#
-#	list = []
-#	for y in range(0, ml):
-#		list.append(tiles[18][y])
-#	route = Route.new(list)
-#	routes.append(route)
-#
-#	list = []
-#	for y in range(0, ml):
-#		list.append(tiles[19][ml-1 - y])
-#	route = Route.new(list)
-#	routes.append(route)
-#
-#	list = []
-#	for x in range(0, ml):
-#		list.append(tiles[x][9])
-#	route = Route.new(list)
-#	routes.append(route)
-#
-#	list = []
-#	for x in range(0, ml):
-#		list.append(tiles[ml- 1 - x][8])
-#	route = Route.new(list)
-#	routes.append(route)
-#
-#	list = []
-#	for x in range(0, ml):
-#		list.append(tiles[x][19])
-#	route = Route.new(list)
-#	routes.append(route)
-#
-#	list = []
-#	for x in range(0, ml):
-#		list.append(tiles[ml- 1 - x][18])
-#	route = Route.new(list)
-#	routes.append(route)
 
 func randomRoute():
 	var route = routes[randi() % routes.size()]
@@ -334,40 +306,77 @@ func _ready():
 	light_ll.begin()
 	light_ur.begin()
 	light_lr.begin()
-	
+
+func switchLights(t1, t2, t3, t4, light):
+	match light:
+		"ewr":
+			t1.incoming = Globals.WEST
+			t1.leaving = Globals.STRAIGHT_OR_RIGHT
+			t2.incoming = Globals.EAST
+			t2.leaving = Globals.STRAIGHT_OR_RIGHT
+			t3.incoming = Globals.WEST
+			t3.leaving = Globals.STRAIGHT_OR_RIGHT
+			t4.incoming = Globals.EAST
+			t4.leaving = Globals.STRAIGHT_OR_RIGHT
+		"nsr":
+			t1.incoming = Globals.SOUTH
+			t1.leaving = Globals.STRAIGHT_OR_RIGHT
+			t2.incoming = Globals.SOUTH
+			t2.leaving = Globals.STRAIGHT_OR_RIGHT
+			t3.incoming = Globals.NORTH
+			t3.leaving = Globals.STRAIGHT_OR_RIGHT
+			t4.incoming = Globals.NORTH
+			t4.leaving = Globals.STRAIGHT_OR_RIGHT
+		"ewl":
+			t1.incoming = Globals.EAST
+			t1.leaving = Globals.STRAIGHT_OR_RIGHT
+			t2.incoming = Globals.NONE
+			t2.leaving = Globals.STRAIGHT_OR_RIGHT
+			t3.incoming = Globals.NONE
+			t3.leaving = Globals.STRAIGHT_OR_RIGHT
+			t4.incoming = Globals.WEST
+			t4.leaving = Globals.STRAIGHT_OR_RIGHT
+		"nsl":
+			t1.incoming = Globals.NONE
+			t1.leaving = Globals.STRAIGHT_OR_RIGHT
+			t2.incoming = Globals.WEST
+			t2.leaving = Globals.STRAIGHT_OR_RIGHT
+			t3.incoming = Globals.EAST
+			t3.leaving = Globals.STRAIGHT_OR_RIGHT
+			t4.incoming = Globals.NONE
+			t4.leaving = Globals.STRAIGHT_OR_RIGHT
 
 func handle_lights(light: LightButton):
 	match light:
 		ul_ewl:
-			print("ul_ewl")
+			switchLights(tiles[8][8], tiles[8][9], tiles[9][8], tiles[9][9], "ewl")
 		ul_ewr:
-			print("ul_ewr")
+			switchLights(tiles[8][8], tiles[8][9], tiles[9][8], tiles[9][9], "ewr")
 		ul_nsl:
-			print("ul_nwl")
+			switchLights(tiles[8][8], tiles[8][9], tiles[9][8], tiles[9][9], "nsl")
 		ul_nsr:
-			print("ul_nwr")
+			switchLights(tiles[8][8], tiles[8][9], tiles[9][8], tiles[9][9], "nsr")
 		ll_ewl:
-			print()
+			switchLights(tiles[8][18], tiles[8][19], tiles[9][18], tiles[9][19], "ewl")
 		ll_ewr:
-			print()
+			switchLights(tiles[8][18], tiles[8][19], tiles[9][18], tiles[9][19], "ewr")
 		ll_nsl:
-			print()
+			switchLights(tiles[8][18], tiles[8][19], tiles[9][18], tiles[9][19], "nsl")
 		ll_nsr:
-			print()
+			switchLights(tiles[8][18], tiles[8][19], tiles[9][18], tiles[9][19], "nsr")
 		ur_ewl:
-			print()
+			switchLights(tiles[18][8], tiles[18][9], tiles[19][8], tiles[19][9], "ewl")
 		ur_ewr:
-			print()
+			switchLights(tiles[18][8], tiles[18][9], tiles[19][8], tiles[19][9], "ewr")
 		ur_nsl:
-			print()
+			switchLights(tiles[18][8], tiles[18][9], tiles[19][8], tiles[19][9], "nsl")
 		ur_nsr:
-			print()
+			switchLights(tiles[18][8], tiles[18][9], tiles[19][8], tiles[19][9], "nsr")
 		lr_ewl:
-			print()
+			switchLights(tiles[18][18], tiles[18][19], tiles[19][18], tiles[19][19], "ewl")
 		lr_ewr:
-			print()
+			switchLights(tiles[18][18], tiles[18][19], tiles[19][18], tiles[19][19], "ewr")
 		lr_nsl:
-			print()
+			switchLights(tiles[18][18], tiles[18][19], tiles[19][18], tiles[19][19], "nsl")
 		lr_nsr:
-			print()
-
+			switchLights(tiles[18][18], tiles[18][19], tiles[19][18], tiles[19][19], "nsr")

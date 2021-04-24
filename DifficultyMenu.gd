@@ -17,12 +17,15 @@ func _ready():
 
 
 func _on_EasySetting_pressed():
+	Globals.CARS_PER_SEC = 1
 	get_tree().change_scene("res://MainMenuEasy.tscn") # Replace with function body.
 	
 
 func _on_MediumSetting_pressed():
+	Globals.CARS_PER_SEC = 2
 	get_tree().change_scene("res://MainMenuMedium.tscn")
 
 
 func _on_HardSetting_pressed():
+	Globals.CARS_PER_SEC = 3
 	get_tree().change_scene("res://MainMenuHard.tscn")
