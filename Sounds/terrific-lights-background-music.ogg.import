@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/terrific-lights-background-music.ogg-7b70efb6329125477fb60a3a6f36a07c.oggstr"
+
+[deps]
+
+source_file="res://Sounds/terrific-lights-background-music.ogg"
+dest_files=[ "res://.import/terrific-lights-background-music.ogg-7b70efb6329125477fb60a3a6f36a07c.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

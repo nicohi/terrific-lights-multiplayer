@@ -1,31 +1,27 @@
 extends Node2D
 
+signal difficulty_set(difficulty)
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
+onready var diffEasy = $DiffEasy
+onready var diffMedium = $DiffMedium
+onready var diffHard = $DiffHard
 
-
-# Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+	diffEasy.connect("button_pressed", self, "_on_EasySetting_pressed")
+	diffMedium.connect("button_pressed", self, "_on_MediumSetting_pressed")
+	diffHard.connect("button_pressed", self, "_on_HardSetting_pressed")
 
 
 func _on_EasySetting_pressed():
 	Globals.CARS_PER_SEC = 1
-	get_tree().change_scene("res://MainMenuEasy.tscn") # Replace with function body.
+	emit_signal("difficulty_set", Globals.DIFFICULTY_EASY)
 	
 
 func _on_MediumSetting_pressed():
 	Globals.CARS_PER_SEC = 2
-	get_tree().change_scene("res://MainMenuMedium.tscn")
+	emit_signal("difficulty_set", Globals.DIFFICULTY_MEDIUM)
 
 
 func _on_HardSetting_pressed():
 	Globals.CARS_PER_SEC = 3
-	get_tree().change_scene("res://MainMenuHard.tscn")
+	emit_signal("difficulty_set", Globals.DIFFICULTY_HARD)

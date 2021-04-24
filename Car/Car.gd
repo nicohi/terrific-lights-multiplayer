@@ -12,6 +12,10 @@ enum {
 	TURNED
 }
 
+var playback: AudioStreamPlayback
+var phase = 0.0
+var engine_conf = null
+
 # direction vectors
 const LEFT = Vector2(-1, 0)
 const RIGHT = Vector2(1, 0)
@@ -52,6 +56,8 @@ var purpleCar = preload("res://Car/TriotemplatePurpleTurns.png")
 var tealCar = preload("res://Car/TriotemplateTealTurns.png")
 var whiteCar1 = preload("res://Car/TriotemplateWhite1Turns.png")
 var whiteCar2 = preload("res://Car/TriotemplateWhite2Turns.png")
+
+var beeped = false
 
 var carTextures = [
 	blackCar,
@@ -94,6 +100,14 @@ onready var zero_corner := get_viewport_rect().size / 2 - Vector2(540, 540)
 
 onready var sprite := $Sprite
 onready var animationPlayer := $AnimationPlayer
+onready var enginePlayer := $EngineAudioStreamPlayer
+
+onready var carHorn1 := $CarHorn1
+onready var carHorn2 := $CarHorn2
+
+onready var carHorns = [carHorn1, carHorn2]
+
+onready var honkTimer = $HonkTimer
 
 func _init():
 	timer = Timer.new()
@@ -101,13 +115,19 @@ func _init():
 	timer.connect("timeout", self, "_reduce_point")
 
 func _ready():
-	randomize()
+	$EngineAudioStreamPlayer.stream.mix_rate = Globals.SAMPLE_HZ
+	playback = $EngineAudioStreamPlayer.get_stream_playback()
 	_reset_car()
 
 # called when the car should drive
 func _go():
 	drive = true
 	timer.start()
+	
+	engine_conf = Globals.get_engine_conf()
+	
+	if engine_conf != null:
+		enginePlayer.play()
 
 func _reduce_point():
 	points -= 1
@@ -173,6 +193,30 @@ func turningDirection():
 
 func getRoute():
 	return route
+
+func _fill_audio_buffer():
+	if engine_conf == null:
+		return
+		
+	var increment = (engine_conf["baseHz"] + (velocity * .015).length() * engine_conf["hz"]) / Globals.SAMPLE_HZ
+	
+	var to_fill = playback.get_frames_available()
+	
+	while to_fill > 0:
+		var vec = Vector2.ONE
+		
+		if phase < .25:
+			vec *= (.25 - phase) / .25
+		elif phase < .50:
+			vec *= 1.0 - (.25 - phase) / .25
+		elif phase < .75:
+			vec *= -((.25 - phase) / .25)
+		else:
+			vec *= (.25 - phase) / .25 - 1
+			
+		playback.push_frame(vec)
+		phase = fmod(phase + increment, 1.0)
+		to_fill -= 1
 
 # resets the car to be ready to head for a new adventure
 func _reset_car():
@@ -270,6 +314,9 @@ func _set_speed_and_direction(delta):
 		if tile != null:
 			tile.takingCar = null
 		emit_signal("car_exited", self, points)
+		if enginePlayer.playing:
+			enginePlayer.stop()
+			Globals.car_engines_on -= 1
 		_reset_car()
 	elif (nextTile.takingCar == self or nextTile.isFree()) and nextTile.mayEnter(movingInDirection(), turningDirection()):
 		var next_nextTile = route.getTileAtInd(ind + 2)
@@ -302,13 +349,18 @@ func _rotate():
 	self.rotation = -target_angle
 
 func _physics_process(delta):
+	_fill_audio_buffer()
+	
 	if not drive or not route:
 		velocity = Vector2.ZERO
 		return
 
-	if _out_of_view():
-		emit_signal("car_exited", self, points)
-		_reset_car()
+	if drive and velocity == Vector2.ZERO and input_vector == Vector2.ZERO and not beeped:
+		beeped = true
+		honkTimer.start(2.0)
+	elif drive and velocity != Vector2.ZERO:
+		beeped = false
+		honkTimer.stop()
 
 	_set_speed_and_direction(delta)
 
@@ -316,3 +368,8 @@ func _physics_process(delta):
 
 	if velocity != Vector2.ZERO:
 		_rotate()
+
+
+func _on_HonkTimer_timeout():
+	carHorns.shuffle()
+	carHorns[0].play()
