@@ -13,6 +13,7 @@ onready var timeDisplay = $TimeDisplay
 signal score_changed(total_score, cars_passed)
 
 func _init():
+	randomize()
 	timer = Timer.new()
 	add_child(timer)
 	timer.connect("timeout", self, "_release_a_car")
@@ -51,7 +52,7 @@ func _reset_car(car, points):
 	car.setRoute(road.randomRoute())
 
 func _game_over():
-	get_tree().change_scene("res://MainMenuEasy.tscn")
+	get_tree().change_scene("res://MainMenu/MainMenu.tscn")
 
 func _release_a_car():
 	if gameTimer.is_stopped():
@@ -73,4 +74,4 @@ func _physics_process(delta):
 
 
 func _on_GameTimer_timeout():
-	get_tree().change_scene("res://MainMenuEasy.tscn")
+	get_tree().change_scene("res://MainMenu/MainMenu.tscn")

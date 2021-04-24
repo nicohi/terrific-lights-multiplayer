@@ -1,7 +1,9 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Car/Car.gd" type="Script" id=1]
 [ext_resource path="res://Car/TriotemplateOrangeTurns.png" type="Texture" id=2]
+[ext_resource path="res://Sounds/461679__15hpanska-ruttner-jan__05-horn_1.wav" type="AudioStream" id=3]
+[ext_resource path="res://Sounds/461679__15hpanska-ruttner-jan__05-horn_2.wav" type="AudioStream" id=4]
 
 [sub_resource type="Animation" id=1]
 resource_name = "DriveStraight"
@@ -56,6 +58,8 @@ tracks/0/keys = {
 radius = 7.0
 height = 18.0
 
+[sub_resource type="AudioStreamGenerator" id=5]
+
 [node name="Car" type="KinematicBody2D"]
 collision_layer = 2
 script = ExtResource( 1 )
@@ -75,3 +79,21 @@ anims/TurnRight = SubResource( 3 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 4 )
+
+[node name="EngineAudioStreamPlayer" type="AudioStreamPlayer2D" parent="."]
+stream = SubResource( 5 )
+volume_db = -24.0
+bus = "Cars"
+
+[node name="CarHorn1" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 3 )
+bus = "Horns"
+
+[node name="CarHorn2" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 4 )
+bus = "Horns"
+
+[node name="HonkTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+[connection signal="timeout" from="HonkTimer" to="." method="_on_HonkTimer_timeout"]

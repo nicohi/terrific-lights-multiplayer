@@ -1,0 +1,44 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Sounds/terrific-lights-background-music.ogg" type="AudioStream" id=1]
+[ext_resource path="res://DifficultyMenu.tscn" type="PackedScene" id=2]
+[ext_resource path="res://MainMenuEasy.tscn" type="PackedScene" id=4]
+[ext_resource path="res://MainMenu/MainMenu.gd" type="Script" id=5]
+
+[node name="MainMenu" type="Node2D"]
+script = ExtResource( 5 )
+
+[node name="DifficultyMenu" parent="." instance=ExtResource( 2 )]
+visible = false
+
+[node name="MainMenuEasy" parent="." instance=ExtResource( 4 )]
+
+[node name="StartButton" parent="MainMenuEasy" index="1"]
+position = Vector2( 439.847, 348.291 )
+
+[node name="Sprite" parent="MainMenuEasy/StartButton/Button" index="0"]
+position = Vector2( 157, 154 )
+
+[node name="DifficultyButton" parent="MainMenuEasy" index="2"]
+position = Vector2( 816.282, 350.646 )
+
+[node name="Sprite" parent="MainMenuEasy/DifficultyButton/Button" index="0"]
+position = Vector2( 157, 154 )
+
+[node name="ExitButton" parent="MainMenuEasy" index="3"]
+position = Vector2( 1191.41, 349.704 )
+
+[node name="Sprite" parent="MainMenuEasy/ExitButton/Button" index="0"]
+position = Vector2( 157, 154 )
+
+[node name="MenuMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 1 )
+autoplay = true
+
+[editable path="MainMenuEasy"]
+
+[editable path="MainMenuEasy/StartButton"]
+
+[editable path="MainMenuEasy/DifficultyButton"]
+
+[editable path="MainMenuEasy/ExitButton"]
