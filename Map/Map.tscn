@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=2]
+[gd_scene load_steps=40 format=2]
 
 [ext_resource path="res://Lights/Light_option_31.jpg" type="Texture" id=1]
 [ext_resource path="res://PauseMenu/PausePopup.gd" type="Script" id=2]
@@ -38,6 +38,7 @@
 [ext_resource path="res://Lights/LightButtonGroup.tscn" type="PackedScene" id=36]
 [ext_resource path="res://Road.gd" type="Script" id=37]
 [ext_resource path="res://UI/ScoreDisplay.tscn" type="PackedScene" id=38]
+[ext_resource path="res://UI/TimerDisplay.tscn" type="PackedScene" id=39]
 
 [node name="Map" type="Node2D"]
 script = ExtResource( 6 )
@@ -235,6 +236,16 @@ margin_left = 496.0
 margin_top = 72.0
 margin_right = 536.0
 margin_bottom = 112.0
+
+[node name="GameTimer" type="Timer" parent="."]
+wait_time = 300.0
+
+[node name="TimeDisplay" parent="." instance=ExtResource( 39 )]
+margin_left = 1329.0
+margin_top = 70.0
+margin_right = 1369.0
+margin_bottom = 110.0
+[connection signal="timeout" from="GameTimer" to="." method="_on_GameTimer_timeout"]
 
 [editable path="Road/UpperLeft"]
 

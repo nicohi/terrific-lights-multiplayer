@@ -111,7 +111,7 @@ func _go():
 
 func _reduce_point():
 	points -= 1
-	
+
 	if points <= 0:
 		emit_signal("game_over")
 
@@ -128,7 +128,7 @@ func _reduce_point():
 #		return UP
 #	else:
 #		return LEFT
-		
+
 func setRoute(r):
 	route = r
 	ind = 0
@@ -173,39 +173,39 @@ func turningDirection():
 
 func getRoute():
 	return route
-	
+
 # resets the car to be ready to head for a new adventure
 func _reset_car():
 	turn_state = STRAIGHT_AHEAD
-	
+
 	sprite.texture = carTextures[randi() % carTextures.size()]
-	
+
 #	self.position = start_positions[randi() % start_positions.size()]
-	
+
 #	self.input_vector = _get_start_direction()
 
-	
+
 	velocity = Vector2.ZERO
-	
+
 #	direction = _get_direction()
-	
+
 	current_speed = MAX_SPEED
 	speed_modifier = ACCELERATION
-	
+
 	drive = false
-	
+
 	points = MAX_POINTS
-	
+
 	timer.stop()
-	
+
 	self.position = Globals.VARIKKO
-	
+
 	animationPlayer.play("DriveStraight")
 
 # returns true if the car is out of the screens view
 func _out_of_view() -> bool:
 	var _window_size = get_viewport_rect().size
-	
+
 	return (
 		self.position.y < -5 or
 		self.position.y > 540 * 2 + 5 or
@@ -218,14 +218,14 @@ func _make_a_turn(turnDirection):
 		Globals.RIGHT:
 			current_speed = TURNING_SPEED_RIGHT
 			input_vector = input_vector.rotated(PI / 2)
-			
+
 		Globals.LEFT:
 			current_speed = TURNING_SPEED_LEFT
 			input_vector = input_vector.rotated(3 * PI / 2)
-			
+
 		_:
 			current_speed = MAX_SPEED
-			
+
 	speed_modifier = FRICTION
 	turn_state = TURNING
 
@@ -237,7 +237,6 @@ func _finish_turning():
 
 	turn_state = STRAIGHT_AHEAD
 #	direction = _get_direction()
-var counterForPrint = 0
 func _set_speed_and_direction(delta):
 #	match turn_state:
 #		STRAIGHT_AHEAD:
@@ -253,7 +252,7 @@ func _set_speed_and_direction(delta):
 	var tile = route.getTileAtInd(ind)
 	var nextTile = route.getTileAtInd(ind + 1)
 	var nextTurn = route.getNextTurnAtInd(ind)
-	
+
 	match nextTurn:
 		Globals.STRAIGHT:
 			animationPlayer.play("DriveStraight")
@@ -261,12 +260,12 @@ func _set_speed_and_direction(delta):
 			animationPlayer.play("TurnLeft")
 		Globals.RIGHT:
 			animationPlayer.play("TurnRight")
-	
+
 	if route.isTurningAtInd(ind):
 		_make_a_turn(nextTurn)
 	else:
 		_make_a_turn(Globals.STRAIGHT)
-	
+
 	if nextTile == null:
 		if tile != null:
 			tile.takingCar = null
@@ -295,7 +294,7 @@ func _set_speed_and_direction(delta):
 
 func _move(delta):
 	velocity = velocity.move_toward(input_vector * current_speed, speed_modifier * delta)
-	
+
 	velocity = move_and_slide(velocity)
 
 func _rotate():
@@ -312,9 +311,8 @@ func _physics_process(delta):
 		_reset_car()
 
 	_set_speed_and_direction(delta)
-	
+
 	_move(delta)
-	
+
 	if velocity != Vector2.ZERO:
 		_rotate()
-

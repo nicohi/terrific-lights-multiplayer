@@ -150,7 +150,7 @@ func setUpTiles():
 			tileIsRoad = false
 	var tile_scene = load("res://Tile.tscn")
 	var start = get_viewport_rect().size / 2 - Vector2(540, 540)
-	
+
 	var x_pos = start.x
 	var y_pos = start.y
 	for x in range(0, ml):
@@ -170,20 +170,20 @@ func setUpTiles():
 
 func _straight(targetArray: Array, steps: int, from: Vector2, toDir: Vector2, nextTurn) -> Vector2:
 	var pos = from
-	
+
 	for i in 2:
 		pos += toDir
 		targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": STRAIGHT, "doTurn": false})
-		
+
 	for i in steps - 2:
 		pos += toDir
 		targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": nextTurn, "doTurn": false})
-		
+
 	return pos
-		
+
 func _turn_left(targetArray: Array, from: Vector2, toDir: Vector2, nextTurn) -> Vector2:
 	var pos = from
-	
+
 	for i in 2:
 		match toDir:
 			NORTH:
@@ -194,21 +194,21 @@ func _turn_left(targetArray: Array, from: Vector2, toDir: Vector2, nextTurn) -> 
 				pos += SOUTHWEST
 			WEST:
 				pos += NORTHWEST
-				
+
 		targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": LEFT, "doTurn": true})
-	
+
 	pos += toDir
 	targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": LEFT, "doTurn": false})
-	
+
 	for i in 6:
 		pos += toDir
 		targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": nextTurn, "doTurn": false})
-	
+
 	return pos
 
 func _turn_right(targetArray: Array, from: Vector2, toDir: Vector2, nextTurn) -> Vector2:
 	var pos = from
-	
+
 	match toDir:
 		NORTH:
 			pos += WEST
@@ -218,15 +218,15 @@ func _turn_right(targetArray: Array, from: Vector2, toDir: Vector2, nextTurn) ->
 			pos += EAST
 		WEST:
 			pos += SOUTH
-			
+
 	targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": RIGHT, "doTurn": true})
 	pos += toDir
 	targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": RIGHT, "doTurn": true})
-	
+
 	for i in 7:
 		pos += toDir
 		targetArray.push_back({"tile": tiles[pos.x][pos.y], "turn": nextTurn, "doTurn": false})
-		
+
 	return pos
 
 func _left_from(dir: Vector2) -> Vector2:
@@ -260,11 +260,11 @@ func _get_turn_vector(turnTo, directionFrom: Vector2) -> Vector2:
 		_:
 			return directionFrom
 
-func setUpRoutes():	
+func setUpRoutes():
 	for route in routeSetup:
 		var turnPos = 0
 		var nextTurn = route["turns"][turnPos]
-		
+
 		var pos = route["startPos"]
 		var dir = route["startDir"]
 		var arr = [{"tile": tiles[pos.x][pos.y], "turn": nextTurn, "doTurn": false}]
@@ -273,12 +273,12 @@ func setUpRoutes():
 
 		for turn in route["turns"]:
 			turnPos += 1
-			
+
 			nextTurn = STRAIGHT
-			
+
 			if turnPos < route["turns"].size():
 				nextTurn = route["turns"][turnPos]
-			
+
 			match turn:
 				STRAIGHT:
 					pos = _straight(arr, 10, pos, dir, nextTurn)
@@ -306,7 +306,7 @@ func _ready():
 	light_ll.begin()
 	light_ur.begin()
 	light_lr.begin()
-	
+
 func switchLights(t1, t2, t3, t4, light):
 	match light:
 		"ewr":
