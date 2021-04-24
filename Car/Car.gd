@@ -134,17 +134,14 @@ func setRoute(r):
 	ind = 0
 
 func movingInDirection():
-#	print("IND IS ", ind)
 	var dir
 	if  getRoute().getTileAtInd(ind + 1) != null:
 		dir = getRoute().getTileAtInd(ind + 1).positionFromTile(getRoute().getTileAtInd(ind))
-#		print("DIR IS ", dir)
 	else:
 		dir = getRoute().getTileAtInd(ind).positionFromTile(getRoute().getTileAtInd(ind - 1))
 	return dir
 
 func turningDirection():
-#	print("CHECKING TURNING")
 	var goingToTurnDir
 	if getRoute().getTileAtInd(ind + 2) != null:
 		goingToTurnDir = getRoute().getTileAtInd(ind + 2).positionFromTile(getRoute().getTileAtInd(ind + 1))

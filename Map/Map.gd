@@ -14,6 +14,7 @@ signal score_changed(total_score, cars_passed)
 
 func _init():
 	timer = Timer.new()
+	timer.wait_time = 5
 	add_child(timer)
 	timer.connect("timeout", self, "_release_a_car")
 	timer.autostart = true

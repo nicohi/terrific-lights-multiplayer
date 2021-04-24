@@ -14,7 +14,7 @@ func _ready():
 	takingCar = null
 	is_crossing = false
 	incoming = Globals.ALL
-	leaving = Globals.STRAIGHT_OR_RIGHT
+	leaving = Globals.ALL_TURN
 
 func setCoordinates(x, y):
 	coordinates = Vector2(x, y)
@@ -33,7 +33,12 @@ func mayEnter(movingFrom, turningTo) -> bool:
 		movingFromOK = false
 	else:
 		movingFromOK = movingFrom == incoming
-	return movingFromOK and turningTo == leaving
+	var turningToOK
+	if leaving == Globals.ALL_TURN:
+		turningToOK = true
+	else:
+		turningToOK = turningTo == leaving
+	return movingFromOK and turningToOK
 
 func _on_Tile_body_entered(body):
 	if self == body.getRoute().getTileAtInd(body.ind + 1):
