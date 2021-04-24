@@ -2,9 +2,6 @@ extends Node2D
 
 const N_CARS = 128
 
-export var sfx = true setget setSFX
-export var music = false setget setMusic
-
 var cars = []
 var timer
 var total_points = 0
@@ -12,7 +9,7 @@ var cars_passed = 0
 
 onready var pausePopUp = $PausePopup
 onready var scoreDisplay = $ScoreDisplay
-onready var backgroundMusic = $BackgroundMusic
+onready var road = $Road
 signal score_changed(total_score, cars_passed)
 
 func _init():
@@ -21,22 +18,6 @@ func _init():
 	timer.connect("timeout", self, "_release_a_car")
 	timer.autostart = true
 
-func setSFX(value: bool):
-	sfx = value
-	
-	for car in cars:
-		car.sfx(value)
-
-func playMusic():
-	if music and backgroundMusic != null and not backgroundMusic.playing:
-		backgroundMusic.play()
-	elif not music and (backgroundMusic != null and backgroundMusic.playing):
-		backgroundMusic.stop()
-
-func setMusic(value: bool):
-	music = value
-	
-	playMusic()
 
 func _create_cars():
 	var car_scene = load("res://Car/Car.tscn")
@@ -46,6 +27,7 @@ func _create_cars():
 		cars.push_back(car)
 		car.connect("car_exited", self, "_reset_car")
 		car.connect("game_over", self, "_game_over")
+		car.setRoute(road.randomRoute())
 		add_child(car)
 
 func _ready():
@@ -57,27 +39,26 @@ func _ready():
 	
 	randomize()
 	
-	playMusic()
-	
 func _reset_car(car, points):
 	cars.push_back(car)
 	total_points += points
 	cars_passed += 1
 	
 	emit_signal("score_changed", total_points, cars_passed)
+	car.setRoute(road.randomRoute())
 
 func _game_over():
 	print("game over")
 
 func _release_a_car():
 	if cars.size():
-		var car = cars.pop_front()
-		car._go()
+		for i in range(Globals.CARS_PER_SEC):
+			var car = cars.pop_front()
+			if car != null and car.getRoute().getTileAtInd(0).isFree():
+				car.position = car.getRoute().getTileAtInd(0).position
+				car._go()
 
 func _physics_process(delta):
 	if Input.is_action_just_pressed("ui_cancel"):
 		get_tree().paused = true
 		pausePopUp.popup_centered()
-
-func _on_BackgroundMusic_finished():
-	playMusic()

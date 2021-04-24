@@ -1,0 +1,85 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://MainMenu/MenuLights.png" type="Texture" id=1]
+[ext_resource path="res://MainMenu/Label.tscn" type="PackedScene" id=2]
+[ext_resource path="res://MainMenu/OnOffStart.png" type="Texture" id=3]
+[ext_resource path="res://MainMenu/OnOffExit.png" type="Texture" id=4]
+[ext_resource path="res://MainMenu/OnOffDiffHard.png" type="Texture" id=5]
+[ext_resource path="res://MainMenuHard.gd" type="Script" id=6]
+[ext_resource path="res://MainMenu/Title.tres" type="DynamicFont" id=7]
+[ext_resource path="res://MainMenu/DiffButton.tscn" type="PackedScene" id=8]
+[ext_resource path="res://MainMenu/StartButton.tscn" type="PackedScene" id=9]
+[ext_resource path="res://MainMenu/ExitButton.tscn" type="PackedScene" id=10]
+[ext_resource path="res://UI/ScoreDisplay.tscn" type="PackedScene" id=11]
+
+[node name="MainMenuHard" type="Node2D"]
+script = ExtResource( 6 )
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 970.469, 502.186 )
+texture = ExtResource( 1 )
+
+[node name="Control" type="Control" parent="."]
+margin_left = 391.0
+margin_top = 227.0
+margin_right = 1548.0
+margin_bottom = 778.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Start" type="Node2D" parent="Control"]
+
+[node name="StartSprite" type="Sprite" parent="Control/Start"]
+position = Vector2( 206.475, 275.772 )
+texture = ExtResource( 3 )
+hframes = 2
+frame = 1
+
+[node name="Difficulty" type="Node2D" parent="Control"]
+
+[node name="DifficultySprite" type="Sprite" parent="Control/Difficulty"]
+position = Vector2( 579.828, 275.772 )
+texture = ExtResource( 5 )
+hframes = 2
+frame = 1
+
+[node name="Exit" type="Node2D" parent="Control"]
+
+[node name="ExitSprite" type="Sprite" parent="Control/Exit"]
+position = Vector2( 956.009, 275.772 )
+texture = ExtResource( 4 )
+hframes = 2
+frame = 1
+
+[node name="Buttons" type="Node2D" parent="Control"]
+
+[node name="ExitButton" parent="Control/Buttons" instance=ExtResource( 10 )]
+
+[node name="DiffButton" parent="Control/Buttons" instance=ExtResource( 8 )]
+margin_left = 428.828
+margin_right = 737.828
+
+[node name="StartButton" parent="Control/Buttons" instance=ExtResource( 9 )]
+margin_top = 119.172
+margin_bottom = 428.172
+
+[node name="Designers" parent="." instance=ExtResource( 2 )]
+
+[node name="Title" parent="." instance=ExtResource( 2 )]
+margin_left = 574.492
+margin_top = 251.929
+margin_right = 1382.49
+margin_bottom = 287.929
+custom_fonts/font = ExtResource( 7 )
+text = "Terrific Lights"
+align = 1
+
+[node name="ScoreDisplay" parent="." instance=ExtResource( 11 )]
+margin_left = 901.612
+margin_top = 296.704
+margin_right = 1161.61
+margin_bottom = 334.704
+[connection signal="pressed" from="Control/Buttons/ExitButton" to="." method="_on_ExitButton_pressed"]
+[connection signal="pressed" from="Control/Buttons/DiffButton" to="." method="_on_DiffButton_pressed"]
+[connection signal="pressed" from="Control/Buttons/StartButton" to="." method="_on_StartButton_pressed"]

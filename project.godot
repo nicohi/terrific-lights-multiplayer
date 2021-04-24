@@ -24,22 +24,28 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Lights/LightButtonGroup.gd"
 }, {
+"base": "Node",
+"class": "Route",
+"language": "GDScript",
+"path": "res://Route.gd"
+}, {
 "base": "Area2D",
 "class": "Tile",
 "language": "GDScript",
-"path": "res://Map/Tile.gd"
+"path": "res://Tile.gd"
 } ]
 _global_script_class_icons={
 "Car": "",
 "LightButton": "",
 "LightButtonGroup": "",
+"Route": "",
 "Tile": ""
 }
 
 [application]
 
 config/name="terrific-lights"
-run/main_scene="res://Map.tscn"
+run/main_scene="res://Map/Map.tscn"
 config/icon="res://icon.png"
 
 [autoload]

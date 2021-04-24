@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://MainMenu/Title.tres" type="DynamicFont" id=1]
+
+[node name="Label" type="Label"]
+margin_left = 426.0
+margin_top = 738.0
+margin_right = 863.0
+margin_bottom = 776.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_fonts/font = ExtResource( 1 )
+text = "Designers: Lauri Linna, Lauri Halttunen, Petri Kallio"
+__meta__ = {
+"_edit_use_anchors_": false
+}

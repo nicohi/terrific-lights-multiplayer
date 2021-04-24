@@ -12,10 +12,6 @@ enum {
 	TURNED
 }
 
-var playback: AudioStreamPlayback
-var phase = 0.0
-var engine_conf = null
-
 # direction vectors
 const LEFT = Vector2(-1, 0)
 const RIGHT = Vector2(1, 0)
@@ -40,9 +36,11 @@ var speed_modifier := ACCELERATION
 var drive := false # if true, the car can proceed
 var points := MAX_POINTS
 var turn_state := STRAIGHT_AHEAD
-var sfx = true
 
 var timer: Timer
+
+var route setget setRoute, getRoute
+var ind: int
 
 var blackCar = preload("res://Car/TriotemplateBlackTurns.png")
 var blueCar = preload("res://Car/TriotemplateBlueTurns.png")
@@ -96,11 +94,6 @@ onready var start_positions = [
 
 onready var sprite := $Sprite
 onready var animationPlayer := $AnimationPlayer
-onready var enginePlayer := $EngineAudioStreamPlayer
-onready var carHorn1 := $CarHorn1
-onready var carHorn2 := $CarHorn2
-
-var carHorns = []
 
 func _init():
 	timer = Timer.new()
@@ -108,19 +101,13 @@ func _init():
 	timer.connect("timeout", self, "_reduce_point")
 
 func _ready():
+	randomize()
 	_reset_car()
-	$EngineAudioStreamPlayer.stream.mix_rate = Globals.SAMPLE_HZ
-	playback = $EngineAudioStreamPlayer.get_stream_playback()
-	carHorns = [carHorn1, carHorn2]
 
 # called when the car should drive
 func _go():
 	drive = true
 	timer.start()
-	engine_conf = Globals.get_engine_conf()
-	
-	if engine_conf != null:
-		enginePlayer.play()
 
 func _reduce_point():
 	points -= 1
@@ -129,56 +116,41 @@ func _reduce_point():
 		emit_signal("game_over")
 
 # get a random direction to turn to
-func _get_direction() -> Vector2:
-	return DIRECTIONS[randi() % DIRECTIONS.size()]
-
-func _get_start_direction() -> Vector2:
-	if south_facing_start_positions.has(self.position):
-		return DOWN
-	elif east_facing_start_positions.has(self.position):
-		return RIGHT
-	elif north_facing_start_positions.has(self.position):
-		return UP
-	else:
-		return LEFT
-
-func _fill_audio_buffer():
-	if engine_conf == null or not sfx:
-		return
+#func _get_direction() -> Vector2:
+#	return DIRECTIONS[randi() % DIRECTIONS.size()]
+#
+#func _get_start_direction() -> Vector2:
+#	if south_facing_start_positions.has(self.position):
+#		return DOWN
+#	elif east_facing_start_positions.has(self.position):
+#		return RIGHT
+#	elif north_facing_start_positions.has(self.position):
+#		return UP
+#	else:
+#		return LEFT
 		
-	var increment = (engine_conf["baseHz"] + (velocity * .015).length() * engine_conf["hz"]) / Globals.SAMPLE_HZ
+func setRoute(r: Route):
+	route = r
+	ind = 0
+#	self.position = route.getTileAtInd(0).position
 	
-	var to_fill = playback.get_frames_available()
+func getRoute():
+	return route
 	
-	while to_fill > 0:
-		var vec = Vector2.ONE
-		
-		if phase < .25:
-			vec *= (.25 - phase) / .25
-		elif phase < .50:
-			vec *= 1.0 - (.25 - phase) / .25
-		elif phase < .75:
-			vec *= -((.25 - phase) / .25)
-		else:
-			vec *= (.25 - phase) / .25 - 1
-			
-		playback.push_frame(vec)
-		phase = fmod(phase + increment, 1.0)
-		to_fill -= 1
-
 # resets the car to be ready to head for a new adventure
 func _reset_car():
 	turn_state = STRAIGHT_AHEAD
 	
 	sprite.texture = carTextures[randi() % carTextures.size()]
 	
-	self.position = start_positions[randi() % start_positions.size()]
+#	self.position = start_positions[randi() % start_positions.size()]
 	
-	self.input_vector = _get_start_direction()
+#	self.input_vector = _get_start_direction()
+
 	
 	velocity = Vector2.ZERO
 	
-	direction = _get_direction()
+#	direction = _get_direction()
 	
 	current_speed = MAX_SPEED
 	speed_modifier = ACCELERATION
@@ -188,6 +160,8 @@ func _reset_car():
 	points = MAX_POINTS
 	
 	timer.stop()
+	
+	self.position = Globals.VARIKKO
 	
 	animationPlayer.play("DriveStraight")
 
@@ -228,20 +202,28 @@ func _finish_turning():
 	speed_modifier = ACCELERATION
 
 	turn_state = STRAIGHT_AHEAD
-	direction = _get_direction()
+#	direction = _get_direction()
 
-func _set_speed_and_direction():
-	match turn_state:
-		STRAIGHT_AHEAD:
-			if randf() < .002:
-				_make_a_turn()
-
-		TURNING:
-			if velocity.normalized() == input_vector:
-				turn_state = TURNED
-
-		TURNED:
-			_finish_turning()
+func _set_speed_and_direction(delta):
+#	match turn_state:
+#		STRAIGHT_AHEAD:
+#			if randf() < .002:
+#				_make_a_turn()
+#
+#		TURNING:
+#			if velocity.normalized() == input_vector:
+#				turn_state = TURNED
+#
+#		TURNED:
+#			_finish_turning()
+	var nextTile = route.getTileAtInd(ind + 1)
+	if nextTile == null:
+		emit_signal("car_exited", self, points)
+		_reset_car()
+	elif not nextTile.isFree():
+		input_vector = Vector2.ZERO
+	else:
+		input_vector = position.direction_to(nextTile.global_position).normalized()
 
 func _move(delta):
 	velocity = velocity.move_toward(input_vector * current_speed, speed_modifier * delta)
@@ -253,24 +235,16 @@ func _rotate():
 	self.rotation = -target_angle
 
 func _physics_process(delta):
-	_fill_audio_buffer()
-	if not drive:
+	if not drive or not route:
 		# stand still
 		velocity = Vector2.ZERO
 		return
 
 	if _out_of_view():
 		emit_signal("car_exited", self, points)
-		if enginePlayer.playing:
-			enginePlayer.stop()
-			Globals.car_engines_on -= 1
-		
-		if sfx:
-			carHorns.shuffle()
-			carHorns[0].play()
-			_reset_car()
+		_reset_car()
 
-	_set_speed_and_direction()
+	_set_speed_and_direction(delta)
 	
 	_move(delta)
 	

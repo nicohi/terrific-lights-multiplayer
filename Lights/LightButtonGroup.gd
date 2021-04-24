@@ -16,5 +16,8 @@ func _ready():
 	
 	emit_signal("lit", eastWestLeft)
 
+func begin():
+	emit_signal("lit", eastWestLeft)
+
 func handle_light_clicked(light: LightButton):
 	emit_signal("lit", light)

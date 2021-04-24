@@ -1,0 +1,11 @@
+[gd_scene format=2]
+
+[node name="HardSetting" type="Button"]
+margin_left = 803.0
+margin_top = 123.0
+margin_right = 1116.0
+margin_bottom = 432.0
+flat = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
