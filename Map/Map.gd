@@ -10,6 +10,8 @@ onready var scoreDisplay = $ScoreDisplay
 onready var road = $Road
 onready var gameTimer = $GameTimer
 onready var timeDisplay = $TimeDisplay
+onready var carExitAudio = $CarExitAudio
+
 signal score_changed(total_score, cars_passed)
 
 func _init():
@@ -44,6 +46,7 @@ func _ready():
 	randomize()
 
 func _reset_car(car, points):
+	carExitAudio.play()
 	cars.push_back(car)
 	Globals.score += points
 	Globals.cars_passed += 1

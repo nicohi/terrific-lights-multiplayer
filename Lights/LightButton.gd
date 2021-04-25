@@ -6,9 +6,15 @@ signal light_clicked(light)
 
 onready var lightOn = $LightOn
 onready var lightOff = $LightOff
+onready var btnPressedAudio = $BtnPressedAudio
+
+var sound = false
+
 
 func handle_light_up(light: LightButton):
 	if light == self:
+		if sound:
+			btnPressedAudio.play()
 		lightOn.visible = true
 		lightOff.visible = false
 	else:
@@ -16,7 +22,7 @@ func handle_light_up(light: LightButton):
 		lightOn.visible = false
 
 func _input(event: InputEvent):
-	if event is InputEventMouseButton:
+	if event is InputEventMouseButton and event.pressed:
 		if lightOn == null or lightOn.texture == null:
 			return
 		

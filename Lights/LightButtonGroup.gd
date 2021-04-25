@@ -13,10 +13,11 @@ func _ready():
 	for light in [northSouthRight, northSouthLeft, eastWestRight, eastWestLeft]:
 		self.connect("lit", light, "handle_light_up")
 		light.connect("light_clicked", self, "handle_light_clicked")
-	
-	emit_signal("lit", eastWestLeft)
 
 func begin():
+	for light in [northSouthRight, northSouthLeft, eastWestRight, eastWestLeft]:
+		light.sound = true
+
 	emit_signal("lit", eastWestLeft)
 
 func handle_light_clicked(light: LightButton):
