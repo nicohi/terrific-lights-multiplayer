@@ -260,6 +260,7 @@ func _get_turn_vector(turnTo, directionFrom: Vector2) -> Vector2:
 		_:
 			return directionFrom
 
+# creates routes for the cars to follow
 func setUpRoutes():
 	for route in routeSetup:
 		var turnPos = 0
@@ -291,6 +292,7 @@ func setUpRoutes():
 
 		routes.append(Route.new(arr))
 
+# used when setting up a car's route when spawning
 func randomRoute():
 	var route = routes[randi() % routes.size()]
 	return route
@@ -307,44 +309,30 @@ func _ready():
 	light_ur.begin()
 	light_lr.begin()
 
+# changes the entering permissions for tiles in the given crossing
+# t1 is the upper left tile, t2 lower left, t3 upper right and t4 lower right
 func switchLights(t1, t2, t3, t4, light):
 	match light:
 		"ewr":
 			t1.incoming = Globals.WEST
-			t1.leaving = Globals.STRAIGHT_OR_RIGHT
 			t2.incoming = Globals.EAST
-			t2.leaving = Globals.STRAIGHT_OR_RIGHT
 			t3.incoming = Globals.WEST
-			t3.leaving = Globals.STRAIGHT_OR_RIGHT
 			t4.incoming = Globals.EAST
-			t4.leaving = Globals.STRAIGHT_OR_RIGHT
 		"nsr":
 			t1.incoming = Globals.SOUTH
-			t1.leaving = Globals.STRAIGHT_OR_RIGHT
 			t2.incoming = Globals.SOUTH
-			t2.leaving = Globals.STRAIGHT_OR_RIGHT
 			t3.incoming = Globals.NORTH
-			t3.leaving = Globals.STRAIGHT_OR_RIGHT
 			t4.incoming = Globals.NORTH
-			t4.leaving = Globals.STRAIGHT_OR_RIGHT
 		"ewl":
 			t1.incoming = Globals.EAST
-			t1.leaving = Globals.STRAIGHT_OR_RIGHT
 			t2.incoming = Globals.NONE
-			t2.leaving = Globals.STRAIGHT_OR_RIGHT
 			t3.incoming = Globals.NONE
-			t3.leaving = Globals.STRAIGHT_OR_RIGHT
 			t4.incoming = Globals.WEST
-			t4.leaving = Globals.STRAIGHT_OR_RIGHT
 		"nsl":
 			t1.incoming = Globals.NONE
-			t1.leaving = Globals.STRAIGHT_OR_RIGHT
 			t2.incoming = Globals.WEST
-			t2.leaving = Globals.STRAIGHT_OR_RIGHT
 			t3.incoming = Globals.EAST
-			t3.leaving = Globals.STRAIGHT_OR_RIGHT
 			t4.incoming = Globals.NONE
-			t4.leaving = Globals.STRAIGHT_OR_RIGHT
 
 func handle_lights(light: LightButton):
 	match light:

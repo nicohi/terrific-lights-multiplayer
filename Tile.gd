@@ -8,13 +8,11 @@ var is_crossing: bool
 var takingCar: Car
 
 var incoming
-var leaving
 
 func _ready():
 	takingCar = null
 	is_crossing = false
 	incoming = Globals.ALL
-	leaving = Globals.ALL_TURN
 
 func setCoordinates(x, y):
 	coordinates = Vector2(x, y)
@@ -24,21 +22,14 @@ func isFree() -> bool:
 		return true
 	else:
 		return false
-
-func mayEnter(movingFrom, turningTo) -> bool:
-	var movingFromOK
+	
+func mayEnter(movingFrom) -> bool:
 	if incoming == Globals.ALL:
-		movingFromOK = true
+		return true
 	elif incoming == Globals.NONE:
-		movingFromOK = false
+		return false
 	else:
-		movingFromOK = movingFrom == incoming
-	var turningToOK
-	if leaving == Globals.ALL_TURN:
-		turningToOK = true
-	else:
-		turningToOK = turningTo == leaving
-	return movingFromOK and turningToOK
+		return movingFrom == incoming
 
 func _on_Tile_body_entered(body):
 	if self == body.getRoute().getTileAtInd(body.ind + 1):
@@ -47,7 +38,6 @@ func _on_Tile_body_entered(body):
 		self.takingCar = body
 
 func positionFromTile(tile: Tile):
-#	print(self.coordinates.x, " ", tile.coordinates.x)
 	if self.coordinates.x < tile.coordinates.x:
 		return Globals.WEST
 	elif self.coordinates.x > tile.coordinates.x:

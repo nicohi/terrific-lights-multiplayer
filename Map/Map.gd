@@ -11,6 +11,7 @@ onready var road = $Road
 onready var gameTimer = $GameTimer
 onready var timeDisplay = $TimeDisplay
 onready var carExitAudio = $CarExitAudio
+onready var gameOverPopUp = $GameOverPopupMenu
 
 signal score_changed(total_score, cars_passed)
 
@@ -55,13 +56,14 @@ func _reset_car(car, points):
 	car.setRoute(road.randomRoute())
 
 func _game_over():
-	get_tree().change_scene("res://MainMenu/MainMenu.tscn")
+	get_tree().paused = true
+	gameOverPopUp.popup_centered()
 
 func _release_a_car():
 	if gameTimer.is_stopped():
 		gameTimer.start(300.0)
 
-	timer.wait_time = 5
+	timer.wait_time = 12
 	if cars.size():
 		for _i in range(Globals.CARS_PER_SEC):
 			var car = cars.pop_front()
@@ -77,4 +79,8 @@ func _physics_process(delta):
 
 
 func _on_GameTimer_timeout():
+	get_tree().change_scene("res://MainMenu/MainMenu.tscn")
+
+func _on_ReturnToMenuButton_pressed():
+	get_tree().paused = false
 	get_tree().change_scene("res://MainMenu/MainMenu.tscn")
