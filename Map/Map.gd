@@ -93,10 +93,8 @@ func _on_ReturnToMenuButton_pressed():
 
 # TODO Functionality
 func _on_RetryButton_pressed():
-#	get_tree().reload_current_scene()
-#	_init()
-#	_create_cars()
-	pass
+	get_tree().change_scene("res://Map/Map.tscn")
+	get_tree().paused = false
 
 
 func _on_ResumeButton_pressed():
