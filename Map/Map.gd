@@ -1,6 +1,7 @@
 extends Node2D
 
 const N_CARS = 128
+const GAME_TIME = 300.0
 
 var cars = []
 var timer
@@ -12,6 +13,8 @@ onready var gameTimer = $GameTimer
 onready var timeDisplay = $TimeDisplay
 onready var carExitAudio = $CarExitAudio
 onready var gameOverPopUp = $GameOverPopupMenu
+onready var darken = $Darken
+onready var carStorage = $Cars
 
 signal score_changed(total_score, cars_passed)
 
@@ -34,12 +37,12 @@ func _create_cars():
 		car.connect("car_exited", self, "_reset_car")
 		car.connect("game_over", self, "_game_over")
 		car.setRoute(road.randomRoute())
-		add_child(car)
+		add_child_below_node(carStorage, car)
 
 func _ready():
 	self.connect("score_changed", scoreDisplay, "update_score")
 
-	timeDisplay.updateTime(300.0)
+	timeDisplay.updateTime(GAME_TIME)
 	var _window_size = get_viewport().get_visible_rect().size
 
 	_create_cars()
@@ -56,12 +59,13 @@ func _reset_car(car, points):
 	car.setRoute(road.randomRoute())
 
 func _game_over():
+	darken.show()
 	get_tree().paused = true
 	gameOverPopUp.popup_centered()
 
 func _release_a_car():
 	if gameTimer.is_stopped():
-		gameTimer.start(300.0)
+		gameTimer.start(GAME_TIME)
 
 	timer.wait_time = 12
 	if cars.size():
@@ -75,12 +79,27 @@ func _physics_process(delta):
 	timeDisplay.updateTime(gameTimer.time_left)
 	if Input.is_action_just_pressed("ui_cancel"):
 		get_tree().paused = true
+		darken.show()
 		pausePopUp.popup_centered()
 
 
 func _on_GameTimer_timeout():
-	get_tree().change_scene("res://MainMenu/MainMenu.tscn")
+	_game_over()
 
 func _on_ReturnToMenuButton_pressed():
+	darken.hide()
 	get_tree().paused = false
 	get_tree().change_scene("res://MainMenu/MainMenu.tscn")
+
+# TODO Functionality
+func _on_RetryButton_pressed():
+#	get_tree().reload_current_scene()
+#	_init()
+#	_create_cars()
+	pass
+
+
+func _on_ResumeButton_pressed():
+	darken.hide()
+	pausePopUp.hide()
+	get_tree().paused = false
