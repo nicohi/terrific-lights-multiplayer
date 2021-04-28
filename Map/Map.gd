@@ -98,6 +98,19 @@ func _on_RetryButton_pressed():
 
 
 func _on_ResumeButton_pressed():
+	#resumes game from where it was when pause was pressed, hiding pausemenu.
 	darken.hide()
 	pausePopUp.hide()
 	get_tree().paused = false
+
+
+func _on_RestartButton_pressed():
+	#Restarts the map by reloading the scene and removing the pause-paralysis.
+	get_tree().change_scene("res://Map/Map.tscn")
+	get_tree().paused = false
+
+
+func _on_QuitButton_pressed():
+	#Returns to main menu. Pause flased in order to return from pause-paralysis.
+	get_tree().paused = false
+	get_tree().change_scene("res://MainMenu/MainMenu.tscn")
