@@ -27,7 +27,7 @@ func _init():
 	Globals.score = 0
 	Globals.cars_passed = 0
 
-
+# Spawns all the Cars right at the beginning, but outside the map
 func _create_cars():
 	var car_scene = load("res://Car/Car.tscn")
 
@@ -63,6 +63,7 @@ func _game_over():
 	get_tree().paused = true
 	gameOverPopUp.popup_centered()
 
+# Every 12 seconds, release a number of Cars dependent on the difficulty level
 func _release_a_car():
 	if gameTimer.is_stopped():
 		gameTimer.start(GAME_TIME)
@@ -77,7 +78,7 @@ func _release_a_car():
 
 func _physics_process(delta):
 	timeDisplay.updateTime(gameTimer.time_left)
-	if Input.is_action_just_pressed("ui_cancel"):
+	if Input.is_action_just_pressed("ui_cancel"): # Checks for pausing
 		get_tree().paused = true
 		darken.show()
 		pausePopUp.popup_centered()
@@ -91,8 +92,9 @@ func _on_ReturnToMenuButton_pressed():
 	get_tree().paused = false
 	get_tree().change_scene("res://MainMenu/MainMenu.tscn")
 
-# TODO Functionality
+# Starts the current game mode from the beginning
 func _on_RetryButton_pressed():
+	Globals.engine_idx = 0
 	get_tree().change_scene("res://Map/Map.tscn")
 	get_tree().paused = false
 

@@ -113,7 +113,7 @@ func setRoute(r):
 	route = r
 	ind = 0
 
-# determines the car's direction, used when checking if the car may enter a crossing area
+# Determines the car's direction. Used when checking if the Car may enter a crossing
 func movingInDirection():
 	var dir
 	if  getRoute().getTileAtInd(ind + 1) != null:
@@ -163,7 +163,7 @@ func _reset_car():
 
 	timer.stop()
 
-	self.position = Globals.VARIKKO
+	self.position = Globals.VARIKKO # Car is initially spawned in a space outside the map
 
 	animationPlayer.play("DriveStraight")
 
@@ -183,6 +183,7 @@ func _make_a_turn(turnDirection):
 	speed_modifier = FRICTION
 	turn_state = TURNING
 
+# Primary movement. Checks the Tiles on the Route to see whether to move or stop
 func _set_speed_and_direction(delta):
 	var tile = route.getTileAtInd(ind)
 	var nextTile = route.getTileAtInd(ind + 1)
@@ -201,6 +202,7 @@ func _set_speed_and_direction(delta):
 	else:
 		_make_a_turn(Globals.STRAIGHT)
 
+	# If the Route ends, Car exits and resets
 	if nextTile == null:
 		if tile != null:
 			tile.takingCar = null
@@ -209,6 +211,9 @@ func _set_speed_and_direction(delta):
 			enginePlayer.stop()
 			Globals.car_engines_on -= 1
 		_reset_car()
+	# If the next Tile on the Route is available (has no other Car on it and traffic lights allow passage to it)
+	# then the Car will move onto it, marking it as taken by itself if it is in a crossing
+	# to prevent other Cars from entering it simultaneously.
 	elif (nextTile.takingCar == self or nextTile.isFree()) and nextTile.mayEnter(movingInDirection()):
 		var next_nextTile = route.getTileAtInd(ind + 2)
 		if (nextTile.is_crossing and next_nextTile.is_crossing and next_nextTile.takingCar == null) or not nextTile.is_crossing or not next_nextTile.is_crossing:
@@ -216,14 +221,20 @@ func _set_speed_and_direction(delta):
 				nextTile.takingCar = self
 			speed_modifier = ACCELERATION
 			input_vector = position.direction_to(nextTile.global_position).normalized()
+	# The Car will always move onto a tile it has previously marked as taken
 	elif nextTile.takingCar == self:
 		speed_modifier = ACCELERATION
 		input_vector = position.direction_to(nextTile.global_position).normalized()
+	# If the traffic lights are changed when the Car is still in the crossing,
+	# the Car will continue moving out of the way and mark the next Tile as taken
+	# so that deadlocks do not occur
 	elif tile.is_crossing and nextTile.isFree() and nextTile.is_crossing and not nextTile.mayEnter(movingInDirection()):
 		if nextTile.takingCar == null:
 			nextTile.takingCar = self
 		speed_modifier = ACCELERATION
 		input_vector = position.direction_to(nextTile.global_position).normalized()
+	# In the case that the Car may not move onto the next Tile,
+	# then it will stop, and if it had marked the next Tile as taken, unmark it to free it for others
 	else:
 		if nextTile.takingCar == self:
 			nextTile.takingCar = null
