@@ -13,15 +13,15 @@ func _ready():
 
 
 func _on_EasySetting_pressed():
-	Globals.CARS_PER_SEC = 1
+	Globals.CARS_PER_SEC = 2
 	emit_signal("difficulty_set", Globals.DIFFICULTY_EASY)
 	
 
 func _on_MediumSetting_pressed():
-	Globals.CARS_PER_SEC = 2
+	Globals.CARS_PER_SEC = 3
 	emit_signal("difficulty_set", Globals.DIFFICULTY_MEDIUM)
 
 
 func _on_HardSetting_pressed():
-	Globals.CARS_PER_SEC = 3
+	Globals.CARS_PER_SEC = 4
 	emit_signal("difficulty_set", Globals.DIFFICULTY_HARD)

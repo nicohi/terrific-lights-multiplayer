@@ -2,7 +2,7 @@ extends KinematicBody2D
 
 class_name Car
 
-# this signal is emitted when the car goes out of view
+# this signal is emitted when the car leaves the route
 signal car_exited(car, points)
 signal game_over
 
@@ -72,32 +72,6 @@ var carTextures = [
 	whiteCar2
 ]
 
-onready var zero_corner := get_viewport_rect().size / 2 - Vector2(540, 540)
-#onready var start_pos_nwn := zero_corner + Vector2(8 * Globals.TILE_SIDE_LEN, 0)
-#onready var start_pos_nww := zero_corner + Vector2(0, 9 * Globals.TILE_SIDE_LEN)
-#onready var start_pos_nen := zero_corner + Vector2(18 * Globals.TILE_SIDE_LEN, 0)
-#onready var start_pos_nee := zero_corner + Vector2(27 * Globals.TILE_SIDE_LEN, 8 * Globals.TILE_SIDE_LEN)
-#onready var start_pos_sww := zero_corner + Vector2(0, 19 * Globals.TILE_SIDE_LEN)
-#onready var start_pos_sws := zero_corner + Vector2(9 * Globals.TILE_SIDE_LEN, 27 * Globals.TILE_SIDE_LEN)
-#onready var start_pos_ses := zero_corner + Vector2(19 * Globals.TILE_SIDE_LEN, 27 * Globals.TILE_SIDE_LEN)
-#onready var start_pos_see := zero_corner + Vector2(27 * Globals.TILE_SIDE_LEN, 18 * Globals.TILE_SIDE_LEN)
-#
-#onready var south_facing_start_positions = [start_pos_nwn, start_pos_nen]
-#onready var east_facing_start_positions = [start_pos_nww, start_pos_sww]
-#onready var north_facing_start_positions = [start_pos_ses, start_pos_sws]
-#onready var west_facing_start_positions = [start_pos_nee, start_pos_see]
-#
-#onready var start_positions = [
-#	start_pos_nwn,
-#	start_pos_nww,
-#	start_pos_nen,
-#	start_pos_nee,
-#	start_pos_see,
-#	start_pos_ses,
-#	start_pos_sws,
-#	start_pos_sww
-#]
-
 onready var sprite := $Sprite
 onready var animationPlayer := $AnimationPlayer
 onready var enginePlayer := $EngineAudioStreamPlayer
@@ -135,24 +109,11 @@ func _reduce_point():
 	if points <= 0:
 		emit_signal("game_over")
 
-# get a random direction to turn to
-#func _get_direction() -> Vector2:
-#	return DIRECTIONS[randi() % DIRECTIONS.size()]
-#
-#func _get_start_direction() -> Vector2:
-#	if south_facing_start_positions.has(self.position):
-#		return DOWN
-#	elif east_facing_start_positions.has(self.position):
-#		return RIGHT
-#	elif north_facing_start_positions.has(self.position):
-#		return UP
-#	else:
-#		return LEFT
-
 func setRoute(r):
 	route = r
 	ind = 0
 
+# Determines the car's direction. Used when checking if the Car may enter a crossing
 func movingInDirection():
 	var dir
 	if  getRoute().getTileAtInd(ind + 1) != null:
@@ -160,36 +121,6 @@ func movingInDirection():
 	else:
 		dir = getRoute().getTileAtInd(ind).positionFromTile(getRoute().getTileAtInd(ind - 1))
 	return dir
-
-func turningDirection():
-	var goingToTurnDir
-	if getRoute().getTileAtInd(ind + 2) != null:
-		goingToTurnDir = getRoute().getTileAtInd(ind + 2).positionFromTile(getRoute().getTileAtInd(ind + 1))
-	else:
-		return Globals.STRAIGHT_OR_RIGHT
-	var movingInDir = movingInDirection()
-	var turn
-	if movingInDir == Globals.NORTH:
-		if goingToTurnDir == Globals.NORTH or goingToTurnDir == Globals.EAST:
-			turn = Globals.STRAIGHT_OR_RIGHT
-		else:
-			turn = Globals.LEFT_TURN
-	elif movingInDir == Globals.EAST:
-		if goingToTurnDir == Globals.EAST or goingToTurnDir == Globals.SOUTH:
-			turn = Globals.STRAIGHT_OR_RIGHT
-		else:
-			turn = Globals.LEFT_TURN
-	elif movingInDir == Globals.SOUTH:
-		if goingToTurnDir == Globals.SOUTH or goingToTurnDir == Globals.WEST:
-			turn = Globals.STRAIGHT_OR_RIGHT
-		else:
-			turn = Globals.LEFT_TURN
-	elif movingInDir == Globals.WEST:
-		if goingToTurnDir == Globals.WEST or goingToTurnDir == Globals.NORTH:
-			turn = Globals.STRAIGHT_OR_RIGHT
-		else:
-			turn = Globals.LEFT_TURN
-	return turn
 
 func getRoute():
 	return route
@@ -218,44 +149,23 @@ func _fill_audio_buffer():
 		phase = fmod(phase + increment, 1.0)
 		to_fill -= 1
 
-# resets the car to be ready to head for a new adventure
 func _reset_car():
 	turn_state = STRAIGHT_AHEAD
 
 	sprite.texture = carTextures[randi() % carTextures.size()]
-
-#	self.position = start_positions[randi() % start_positions.size()]
-
-#	self.input_vector = _get_start_direction()
-
-
+	
 	velocity = Vector2.ZERO
-
-#	direction = _get_direction()
-
 	current_speed = MAX_SPEED
 	speed_modifier = ACCELERATION
-
 	drive = false
 
 	points = MAX_POINTS
 
 	timer.stop()
 
-	self.position = Globals.VARIKKO
+	self.position = Globals.VARIKKO # Car is initially spawned in a space outside the map
 
 	animationPlayer.play("DriveStraight")
-
-# returns true if the car is out of the screens view
-func _out_of_view() -> bool:
-	var _window_size = get_viewport_rect().size
-
-	return (
-		self.position.y < -5 or
-		self.position.y > 540 * 2 + 5 or
-		self.position.x < zero_corner.x - 5 or
-		self.position.x > zero_corner.x + 540 * 2 + 5
-	)
 
 func _make_a_turn(turnDirection):
 	match turnDirection:
@@ -273,26 +183,8 @@ func _make_a_turn(turnDirection):
 	speed_modifier = FRICTION
 	turn_state = TURNING
 
-func _finish_turning():
-	animationPlayer.play("DriveStraight")
-
-	current_speed = MAX_SPEED
-	speed_modifier = ACCELERATION
-
-	turn_state = STRAIGHT_AHEAD
-#	direction = _get_direction()
+# Primary movement. Checks the Tiles on the Route to see whether to move or stop
 func _set_speed_and_direction(delta):
-#	match turn_state:
-#		STRAIGHT_AHEAD:
-#			if randf() < .002:
-#				_make_a_turn()
-#
-#		TURNING:
-#			if velocity.normalized() == input_vector:
-#				turn_state = TURNED
-#
-#		TURNED:
-#			_finish_turning()
 	var tile = route.getTileAtInd(ind)
 	var nextTile = route.getTileAtInd(ind + 1)
 	var nextTurn = route.getNextTurnAtInd(ind)
@@ -310,6 +202,7 @@ func _set_speed_and_direction(delta):
 	else:
 		_make_a_turn(Globals.STRAIGHT)
 
+	# If the Route ends, Car exits and resets
 	if nextTile == null:
 		if tile != null:
 			tile.takingCar = null
@@ -318,21 +211,30 @@ func _set_speed_and_direction(delta):
 			enginePlayer.stop()
 			Globals.car_engines_on -= 1
 		_reset_car()
-	elif (nextTile.takingCar == self or nextTile.isFree()) and nextTile.mayEnter(movingInDirection(), turningDirection()):
+	# If the next Tile on the Route is available (has no other Car on it and traffic lights allow passage to it)
+	# then the Car will move onto it, marking it as taken by itself if it is in a crossing
+	# to prevent other Cars from entering it simultaneously.
+	elif (nextTile.takingCar == self or nextTile.isFree()) and nextTile.mayEnter(movingInDirection()):
 		var next_nextTile = route.getTileAtInd(ind + 2)
 		if (nextTile.is_crossing and next_nextTile.is_crossing and next_nextTile.takingCar == null) or not nextTile.is_crossing or not next_nextTile.is_crossing:
 			if nextTile.takingCar == null:
 				nextTile.takingCar = self
 			speed_modifier = ACCELERATION
 			input_vector = position.direction_to(nextTile.global_position).normalized()
+	# The Car will always move onto a tile it has previously marked as taken
 	elif nextTile.takingCar == self:
 		speed_modifier = ACCELERATION
 		input_vector = position.direction_to(nextTile.global_position).normalized()
-	elif tile.is_crossing and nextTile.isFree() and nextTile.is_crossing and not nextTile.mayEnter(movingInDirection(), turningDirection()):
+	# If the traffic lights are changed when the Car is still in the crossing,
+	# the Car will continue moving out of the way and mark the next Tile as taken
+	# so that deadlocks do not occur
+	elif tile.is_crossing and nextTile.isFree() and nextTile.is_crossing and not nextTile.mayEnter(movingInDirection()):
 		if nextTile.takingCar == null:
 			nextTile.takingCar = self
 		speed_modifier = ACCELERATION
 		input_vector = position.direction_to(nextTile.global_position).normalized()
+	# In the case that the Car may not move onto the next Tile,
+	# then it will stop, and if it had marked the next Tile as taken, unmark it to free it for others
 	else:
 		if nextTile.takingCar == self:
 			nextTile.takingCar = null
@@ -341,7 +243,6 @@ func _set_speed_and_direction(delta):
 
 func _move(delta):
 	velocity = velocity.move_toward(input_vector * current_speed, speed_modifier * delta)
-
 	velocity = move_and_slide(velocity)
 
 func _rotate():

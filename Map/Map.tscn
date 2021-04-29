@@ -1,7 +1,6 @@
 [gd_scene load_steps=41 format=2]
 
 [ext_resource path="res://Lights/Light_option_31.jpg" type="Texture" id=1]
-[ext_resource path="res://PauseMenu/PausePopup.gd" type="Script" id=2]
 [ext_resource path="res://Lights/Light_option_41_Light.jpg" type="Texture" id=3]
 [ext_resource path="res://Lights/Light_option_21.jpg" type="Texture" id=4]
 [ext_resource path="res://Lights/Light_option_11_Light.jpg" type="Texture" id=5]
@@ -40,6 +39,7 @@
 [ext_resource path="res://UI/ScoreDisplay.tscn" type="PackedScene" id=38]
 [ext_resource path="res://UI/TimerDisplay.tscn" type="PackedScene" id=39]
 [ext_resource path="res://Sounds/1_CarExit.wav" type="AudioStream" id=40]
+[ext_resource path="res://MainMenu/Title.tres" type="DynamicFont" id=41]
 
 [node name="Map" type="Node2D"]
 script = ExtResource( 6 )
@@ -204,30 +204,77 @@ texture = ExtResource( 34 )
 [node name="LightOff" parent="Road/LowerLeft/EastWestLeft" index="1"]
 texture = ExtResource( 35 )
 
+[node name="Cars" type="Node" parent="."]
+
+[node name="Darken" type="ColorRect" parent="."]
+visible = false
+margin_right = 1901.0
+margin_bottom = 1075.0
+color = Color( 0, 0, 0, 0.392157 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="PausePopup" type="Popup" parent="."]
 pause_mode = 2
-margin_right = 180.0
-margin_bottom = 90.0
-script = ExtResource( 2 )
+margin_left = 802.0
+margin_top = 382.0
+margin_right = 1118.0
+margin_bottom = 699.0
+mouse_filter = 2
+popup_exclusive = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="PausedLabel" type="Label" parent="PausePopup"]
-margin_left = 30.0
-margin_top = 17.0
-margin_right = 118.0
-margin_bottom = 31.0
-text = "Game paused"
+margin_top = 60.0
+margin_right = 304.0
+margin_bottom = 112.0
+custom_fonts/font = ExtResource( 41 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_outline_modulate = Color( 1, 1, 1, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Paused"
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="ResumeButton" type="Button" parent="PausePopup"]
-margin_left = 44.0
-margin_top = 52.0
-margin_right = 108.0
-margin_bottom = 72.0
+[node name="VBoxContainer" type="VBoxContainer" parent="PausePopup"]
+margin_left = 60.0
+margin_top = 120.0
+margin_right = 253.0
+margin_bottom = 178.0
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="ResumeButton" type="Button" parent="PausePopup/VBoxContainer"]
+margin_right = 193.0
+margin_bottom = 58.0
+custom_fonts/font = ExtResource( 41 )
 text = "Resume"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RestartButton" type="Button" parent="PausePopup/VBoxContainer"]
+margin_right = 193.0
+margin_bottom = 58.0
+custom_fonts/font = ExtResource( 41 )
+text = "Restart"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="QuitButton" type="Button" parent="PausePopup/VBoxContainer"]
+margin_right = 193.0
+margin_bottom = 58.0
+custom_fonts/font = ExtResource( 41 )
+text = "Quit"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -251,7 +298,74 @@ margin_bottom = 110.0
 stream = ExtResource( 40 )
 volume_db = -3.0
 bus = "Buttons"
+
+[node name="GameOverPopupMenu" type="Popup" parent="."]
+pause_mode = 2
+margin_left = 802.0
+margin_top = 382.0
+margin_right = 1118.0
+margin_bottom = 699.0
+mouse_filter = 2
+popup_exclusive = true
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="GameOverPopupMenu"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GameOverLabel" type="Label" parent="GameOverPopupMenu"]
+margin_top = 31.0
+margin_right = 316.0
+margin_bottom = 83.0
+custom_fonts/font = ExtResource( 41 )
+custom_colors/font_color = Color( 0.843137, 0.109804, 0.109804, 1 )
+text = "GAME OVER"
+align = 1
+
+[node name="Options" type="VBoxContainer" parent="GameOverPopupMenu"]
+margin_top = 84.0
+margin_right = 316.0
+margin_bottom = 142.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ReturnToMenuButton" type="Button" parent="GameOverPopupMenu/Options"]
+margin_right = 316.0
+margin_bottom = 58.0
+custom_fonts/font = ExtResource( 41 )
+text = "Main Menu"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RetryButton" type="Button" parent="GameOverPopupMenu/Options"]
+margin_top = 62.0
+margin_right = 316.0
+margin_bottom = 120.0
+custom_fonts/font = ExtResource( 41 )
+text = "Retry"
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color( 0, 0, 0, 1 )
+polygon = PoolVector2Array( -25, -39, -25, 1128, 1969, 1122, 1952, -72, 35, -66, 481, 60, 1439, 60, 1439, 1020, 481, 1020, 481, 75, 481, 28, -30, -92 )
+__meta__ = {
+"_edit_lock_": true
+}
+[connection signal="pressed" from="PausePopup/VBoxContainer/ResumeButton" to="." method="_on_ResumeButton_pressed"]
+[connection signal="pressed" from="PausePopup/VBoxContainer/RestartButton" to="." method="_on_ResumeButton_pressed"]
+[connection signal="pressed" from="PausePopup/VBoxContainer/RestartButton" to="." method="_on_RestartButton_pressed"]
+[connection signal="pressed" from="PausePopup/VBoxContainer/QuitButton" to="." method="_on_ResumeButton_pressed"]
+[connection signal="pressed" from="PausePopup/VBoxContainer/QuitButton" to="." method="_on_QuitButton_pressed"]
 [connection signal="timeout" from="GameTimer" to="." method="_on_GameTimer_timeout"]
+[connection signal="pressed" from="GameOverPopupMenu/Options/ReturnToMenuButton" to="." method="_on_ReturnToMenuButton_pressed"]
+[connection signal="pressed" from="GameOverPopupMenu/Options/RetryButton" to="." method="_on_RetryButton_pressed"]
 
 [editable path="Road/UpperLeft"]
 
