@@ -358,7 +358,6 @@ polygon = PoolVector2Array( -25, -39, -25, 1128, 1969, 1122, 1952, -72, 35, -66,
 __meta__ = {
 "_edit_lock_": true
 }
-
 [connection signal="pressed" from="PausePopup/VBoxContainer/ResumeButton" to="." method="_on_ResumeButton_pressed"]
 [connection signal="pressed" from="PausePopup/VBoxContainer/RestartButton" to="." method="_on_ResumeButton_pressed"]
 [connection signal="pressed" from="PausePopup/VBoxContainer/RestartButton" to="." method="_on_RestartButton_pressed"]
@@ -369,22 +368,41 @@ __meta__ = {
 [connection signal="pressed" from="GameOverPopupMenu/Options/RetryButton" to="." method="_on_RetryButton_pressed"]
 
 [editable path="Road/UpperLeft"]
+
 [editable path="Road/UpperLeft/NorthSouthRight"]
+
 [editable path="Road/UpperLeft/NorthSouthLeft"]
+
 [editable path="Road/UpperLeft/EastWestRight"]
+
 [editable path="Road/UpperLeft/EastWestLeft"]
+
 [editable path="Road/UpperRight"]
+
 [editable path="Road/UpperRight/NorthSouthRight"]
+
 [editable path="Road/UpperRight/NorthSouthLeft"]
+
 [editable path="Road/UpperRight/EastWestRight"]
+
 [editable path="Road/UpperRight/EastWestLeft"]
+
 [editable path="Road/LowerRight"]
+
 [editable path="Road/LowerRight/NorthSouthRight"]
+
 [editable path="Road/LowerRight/NorthSouthLeft"]
+
 [editable path="Road/LowerRight/EastWestRight"]
+
 [editable path="Road/LowerRight/EastWestLeft"]
+
 [editable path="Road/LowerLeft"]
+
 [editable path="Road/LowerLeft/NorthSouthRight"]
+
 [editable path="Road/LowerLeft/NorthSouthLeft"]
+
 [editable path="Road/LowerLeft/EastWestRight"]
+
 [editable path="Road/LowerLeft/EastWestLeft"]

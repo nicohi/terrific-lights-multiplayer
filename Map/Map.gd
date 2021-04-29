@@ -110,6 +110,7 @@ func _on_RestartButton_pressed():
 	#Restarts the map by reloading the scene and removing the pause-paralysis.
 	get_tree().change_scene("res://Map/Map.tscn")
 	get_tree().paused = false
+	Globals.car_engines_on = 0
 
 
 func _on_QuitButton_pressed():
