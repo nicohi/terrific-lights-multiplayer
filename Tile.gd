@@ -38,8 +38,8 @@ func mayEnter(movingFrom) -> bool:
 # the Tile is marked as taken by the Car that entered,
 # the Tile that the Car previously occupied is free.
 func _on_Tile_body_entered(body):
-	if self == body.getRoute().getTileAtInd(body.ind + 1):
-		body.getRoute().getTileAtInd(body.ind).takingCar = null
+	if self == body.route.getTileAtInd(body.ind + 1):
+		body.route.getTileAtInd(body.ind).takingCar = null
 		body.ind += 1
 		self.takingCar = body
 

@@ -72,8 +72,8 @@ func _release_a_car():
 	if cars.size():
 		for _i in range(Globals.CARS_PER_SEC):
 			var car = cars.pop_front()
-			if car != null and car.getRoute().getTileAtInd(0).isFree():
-				car.position = car.getRoute().getTileAtInd(0).position
+			if car != null and car.route.getTileAtInd(0).isFree():
+				car.position = car.route.getTileAtInd(0).position
 				car._go()
 
 func _physics_process(delta):
