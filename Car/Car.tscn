@@ -1,9 +1,13 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Car/Car.gd" type="Script" id=1]
 [ext_resource path="res://Car/TriotemplateOrangeTurns.png" type="Texture" id=2]
 [ext_resource path="res://Sounds/461679__15hpanska-ruttner-jan__05-horn_1.wav" type="AudioStream" id=3]
 [ext_resource path="res://Sounds/461679__15hpanska-ruttner-jan__05-horn_2.wav" type="AudioStream" id=4]
+[ext_resource path="res://Car/Texturizer.gd" type="Script" id=5]
+[ext_resource path="res://Car/Honkabilly.gd" type="Script" id=6]
+[ext_resource path="res://Car/PointCounter.gd" type="Script" id=7]
+[ext_resource path="res://Car/Engineer.gd" type="Script" id=8]
 
 [sub_resource type="Animation" id=1]
 resource_name = "DriveStraight"
@@ -80,20 +84,32 @@ anims/TurnRight = SubResource( 3 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 4 )
 
-[node name="EngineAudioStreamPlayer" type="AudioStreamPlayer2D" parent="."]
-stream = SubResource( 5 )
-volume_db = -24.0
-bus = "Cars"
+[node name="Texturizer" type="Node" parent="."]
+script = ExtResource( 5 )
 
-[node name="CarHorn1" type="AudioStreamPlayer2D" parent="."]
+[node name="Honkabilly" type="Node2D" parent="."]
+script = ExtResource( 6 )
+
+[node name="CarHorn1" type="AudioStreamPlayer2D" parent="Honkabilly"]
 stream = ExtResource( 3 )
 bus = "Horns"
 
-[node name="CarHorn2" type="AudioStreamPlayer2D" parent="."]
+[node name="CarHorn2" type="AudioStreamPlayer2D" parent="Honkabilly"]
 stream = ExtResource( 4 )
 bus = "Horns"
 
-[node name="HonkTimer" type="Timer" parent="."]
+[node name="HonkTimer" type="Timer" parent="Honkabilly"]
 wait_time = 2.0
 one_shot = true
-[connection signal="timeout" from="HonkTimer" to="." method="_on_HonkTimer_timeout"]
+
+[node name="PointCounter" type="Node" parent="."]
+script = ExtResource( 7 )
+
+[node name="Engineer" type="Node2D" parent="."]
+script = ExtResource( 8 )
+
+[node name="EngineAudioStreamPlayer" type="AudioStreamPlayer2D" parent="Engineer"]
+stream = SubResource( 5 )
+volume_db = -24.0
+bus = "Cars"
+[connection signal="timeout" from="Honkabilly/HonkTimer" to="Honkabilly" method="_on_HonkTimer_timeout"]
