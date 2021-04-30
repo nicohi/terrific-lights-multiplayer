@@ -1,6 +1,7 @@
-[gd_scene load_steps=41 format=2]
+[gd_scene load_steps=49 format=2]
 
 [ext_resource path="res://Lights/Light_option_31.jpg" type="Texture" id=1]
+[ext_resource path="res://MainMenu/Montserrat-ExtraBold.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Lights/Light_option_41_Light.jpg" type="Texture" id=3]
 [ext_resource path="res://Lights/Light_option_21.jpg" type="Texture" id=4]
 [ext_resource path="res://Lights/Light_option_11_Light.jpg" type="Texture" id=5]
@@ -40,6 +41,41 @@
 [ext_resource path="res://UI/TimerDisplay.tscn" type="PackedScene" id=39]
 [ext_resource path="res://Sounds/1_CarExit.wav" type="AudioStream" id=40]
 [ext_resource path="res://MainMenu/Title.tres" type="DynamicFont" id=41]
+
+[sub_resource type="DynamicFont" id=1]
+size = 30
+outline_color = Color( 0.996078, 0.988235, 0.988235, 1 )
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 30
+outline_color = Color( 0.996078, 0.988235, 0.988235, 1 )
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 30
+outline_color = Color( 0.996078, 0.988235, 0.988235, 1 )
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 42
+outline_color = Color( 0.996078, 0.988235, 0.988235, 1 )
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=7]
+size = 35
+outline_color = Color( 0.996078, 0.988235, 0.988235, 1 )
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 30
+outline_color = Color( 0.996078, 0.988235, 0.988235, 1 )
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=6]
+size = 30
+outline_color = Color( 0.996078, 0.988235, 0.988235, 1 )
+font_data = ExtResource( 2 )
 
 [node name="Map" type="Node2D"]
 script = ExtResource( 6 )
@@ -254,36 +290,38 @@ __meta__ = {
 
 [node name="ResumeButton" type="Button" parent="PausePopup/VBoxContainer"]
 margin_right = 193.0
-margin_bottom = 58.0
-custom_fonts/font = ExtResource( 41 )
+margin_bottom = 44.0
+custom_fonts/font = SubResource( 1 )
 text = "Resume"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="RestartButton" type="Button" parent="PausePopup/VBoxContainer"]
+margin_top = 48.0
 margin_right = 193.0
-margin_bottom = 58.0
-custom_fonts/font = ExtResource( 41 )
-text = "Restart"
+margin_bottom = 92.0
+custom_fonts/font = SubResource( 2 )
+text = "Retry"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="QuitButton" type="Button" parent="PausePopup/VBoxContainer"]
+margin_top = 96.0
 margin_right = 193.0
-margin_bottom = 58.0
-custom_fonts/font = ExtResource( 41 )
-text = "Quit"
+margin_bottom = 140.0
+custom_fonts/font = SubResource( 3 )
+text = "Main Menu"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="ScoreDisplay" parent="." instance=ExtResource( 38 )]
-margin_left = 496.0
-margin_top = 72.0
-margin_right = 536.0
-margin_bottom = 112.0
+margin_left = 503.0
+margin_top = 60.0
+margin_right = 543.0
+margin_bottom = 100.0
 
 [node name="GameTimer" type="Timer" parent="."]
 wait_time = 300.0
@@ -301,6 +339,7 @@ bus = "Buttons"
 
 [node name="GameOverPopupMenu" type="Popup" parent="."]
 pause_mode = 2
+visible = true
 margin_left = 802.0
 margin_top = 382.0
 margin_right = 1118.0
@@ -323,10 +362,13 @@ __meta__ = {
 margin_top = 31.0
 margin_right = 316.0
 margin_bottom = 83.0
-custom_fonts/font = ExtResource( 41 )
+custom_fonts/font = SubResource( 4 )
 custom_colors/font_color = Color( 0.843137, 0.109804, 0.109804, 1 )
 text = "GAME OVER"
 align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Options" type="VBoxContainer" parent="GameOverPopupMenu"]
 margin_top = 84.0
@@ -336,21 +378,28 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ReturnToMenuButton" type="Button" parent="GameOverPopupMenu/Options"]
+[node name="ScoreLabel" type="Label" parent="GameOverPopupMenu/Options"]
 margin_right = 316.0
-margin_bottom = 58.0
-custom_fonts/font = ExtResource( 41 )
+margin_bottom = 43.0
+custom_fonts/font = SubResource( 7 )
+align = 1
+
+[node name="RetryButton" type="Button" parent="GameOverPopupMenu/Options"]
+margin_top = 47.0
+margin_right = 316.0
+margin_bottom = 91.0
+custom_fonts/font = SubResource( 5 )
+text = "Retry"
+
+[node name="ReturnToMenuButton" type="Button" parent="GameOverPopupMenu/Options"]
+margin_top = 95.0
+margin_right = 316.0
+margin_bottom = 139.0
+custom_fonts/font = SubResource( 6 )
 text = "Main Menu"
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="RetryButton" type="Button" parent="GameOverPopupMenu/Options"]
-margin_top = 62.0
-margin_right = 316.0
-margin_bottom = 120.0
-custom_fonts/font = ExtResource( 41 )
-text = "Retry"
 
 [node name="Polygon2D" type="Polygon2D" parent="."]
 color = Color( 0, 0, 0, 1 )
@@ -358,51 +407,33 @@ polygon = PoolVector2Array( -25, -39, -25, 1128, 1969, 1122, 1952, -72, 35, -66,
 __meta__ = {
 "_edit_lock_": true
 }
+
 [connection signal="pressed" from="PausePopup/VBoxContainer/ResumeButton" to="." method="_on_ResumeButton_pressed"]
 [connection signal="pressed" from="PausePopup/VBoxContainer/RestartButton" to="." method="_on_ResumeButton_pressed"]
 [connection signal="pressed" from="PausePopup/VBoxContainer/RestartButton" to="." method="_on_RestartButton_pressed"]
 [connection signal="pressed" from="PausePopup/VBoxContainer/QuitButton" to="." method="_on_ResumeButton_pressed"]
 [connection signal="pressed" from="PausePopup/VBoxContainer/QuitButton" to="." method="_on_QuitButton_pressed"]
 [connection signal="timeout" from="GameTimer" to="." method="_on_GameTimer_timeout"]
-[connection signal="pressed" from="GameOverPopupMenu/Options/ReturnToMenuButton" to="." method="_on_ReturnToMenuButton_pressed"]
 [connection signal="pressed" from="GameOverPopupMenu/Options/RetryButton" to="." method="_on_RetryButton_pressed"]
+[connection signal="pressed" from="GameOverPopupMenu/Options/ReturnToMenuButton" to="." method="_on_ReturnToMenuButton_pressed"]
 
 [editable path="Road/UpperLeft"]
-
 [editable path="Road/UpperLeft/NorthSouthRight"]
-
 [editable path="Road/UpperLeft/NorthSouthLeft"]
-
 [editable path="Road/UpperLeft/EastWestRight"]
-
 [editable path="Road/UpperLeft/EastWestLeft"]
-
 [editable path="Road/UpperRight"]
-
 [editable path="Road/UpperRight/NorthSouthRight"]
-
 [editable path="Road/UpperRight/NorthSouthLeft"]
-
 [editable path="Road/UpperRight/EastWestRight"]
-
 [editable path="Road/UpperRight/EastWestLeft"]
-
 [editable path="Road/LowerRight"]
-
 [editable path="Road/LowerRight/NorthSouthRight"]
-
 [editable path="Road/LowerRight/NorthSouthLeft"]
-
 [editable path="Road/LowerRight/EastWestRight"]
-
 [editable path="Road/LowerRight/EastWestLeft"]
-
 [editable path="Road/LowerLeft"]
-
 [editable path="Road/LowerLeft/NorthSouthRight"]
-
 [editable path="Road/LowerLeft/NorthSouthLeft"]
-
 [editable path="Road/LowerLeft/EastWestRight"]
-
 [editable path="Road/LowerLeft/EastWestLeft"]

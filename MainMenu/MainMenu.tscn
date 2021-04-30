@@ -31,15 +31,18 @@ position = Vector2( 1191.41, 349.704 )
 [node name="Sprite" parent="MainMenuEasy/ExitButton/Button" index="0"]
 position = Vector2( 157, 154 )
 
+[node name="ScoreDisplay" parent="MainMenuEasy" index="6"]
+margin_left = 514.464
+margin_top = 240.304
+margin_right = 727.464
+margin_bottom = 286.304
+
 [node name="MenuMusic" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 1 )
 volume_db = -3.0
 autoplay = true
 
 [editable path="MainMenuEasy"]
-
 [editable path="MainMenuEasy/StartButton"]
-
 [editable path="MainMenuEasy/DifficultyButton"]
-
 [editable path="MainMenuEasy/ExitButton"]

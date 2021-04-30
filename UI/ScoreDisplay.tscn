@@ -1,44 +1,72 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://UI/ScoreDisplay.gd" type="Script" id=1]
+[ext_resource path="res://MainMenu/Montserrat-ExtraBold.ttf" type="DynamicFontData" id=2]
+
+[sub_resource type="DynamicFont" id=1]
+size = 25
+outline_color = Color( 0.996078, 0.988235, 0.988235, 1 )
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 25
+outline_color = Color( 0.996078, 0.988235, 0.988235, 1 )
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 25
+outline_color = Color( 0.996078, 0.988235, 0.988235, 1 )
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 25
+outline_color = Color( 0.996078, 0.988235, 0.988235, 1 )
+font_data = ExtResource( 2 )
 
 [node name="ScoreDisplay" type="Control"]
-margin_right = 40.0
-margin_bottom = 40.0
+margin_right = 321.0
+margin_bottom = 97.0
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="ScoreHeading" type="Label" parent="."]
-margin_right = 80.0
-margin_bottom = 14.0
+margin_right = 75.0
+margin_bottom = 32.0
+custom_fonts/font = SubResource( 1 )
 text = "Score"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Score" type="Label" parent="."]
-margin_left = 100.0
-margin_right = 150.0
-margin_bottom = 14.0
+margin_left = 89.2721
+margin_right = 110.272
+margin_bottom = 32.0
+custom_fonts/font = SubResource( 2 )
 text = "0"
 align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="CarsPassedHeading" type="Label" parent="."]
-margin_top = 20.0
-margin_right = 100.0
-margin_bottom = 34.0
+margin_top = 38.0
+margin_right = 161.0
+margin_bottom = 73.0
+custom_fonts/font = SubResource( 3 )
 text = "Cars Passed"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="CarsPassed" type="Label" parent="."]
-margin_left = 100.0
-margin_top = 20.0
-margin_right = 150.0
-margin_bottom = 40.0
+margin_left = 180.423
+margin_top = 38.0
+margin_right = 197.423
+margin_bottom = 70.0
+custom_fonts/font = SubResource( 4 )
 text = "0"
 align = 2
 __meta__ = {
