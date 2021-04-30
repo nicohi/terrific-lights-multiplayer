@@ -24,9 +24,17 @@ var ind: int
 
 onready var sprite := $Sprite
 onready var animationPlayer := $AnimationPlayer
+
+# Hands out random textures for the cars.
 onready var texturizer := $Texturizer
+
+# Handles the car horn functionality.
 onready var honkabilly := $Honkabilly
+
+# Keeps track of the points that the car has left.
 onready var pointCounter := $PointCounter
+
+# Handles the cars' engine sounds.
 onready var engineer := $Engineer
 
 func _ready():
@@ -138,6 +146,18 @@ func _car_will_proceed_to_crossing(nextTile):
 		not next_nextTile.is_crossing
 	)
 
+func _car_is_still_in_the_crossing(tile, nextTile):
+	return (
+		tile.is_crossing and
+		nextTile.isFree() and
+		nextTile.is_crossing and
+		not nextTile.mayEnter(movingInDirection())
+	)
+
+func _go_to_next_tile(nextTile):
+	speed_modifier = ACCELERATION
+	input_vector = position.direction_to(nextTile.global_position).normalized()
+
 # Primary movement. Checks the Tiles on the Route to see whether to move or stop
 func _set_speed_and_direction(delta):
 	var tile = route.getTileAtInd(ind)
@@ -159,28 +179,20 @@ func _set_speed_and_direction(delta):
 		if nextTile.takingCar == null:
 			nextTile.takingCar = self
 		
-		speed_modifier = ACCELERATION
-		input_vector = position.direction_to(nextTile.global_position).normalized()
+		_go_to_next_tile(nextTile)
 			
 	# The Car will always move onto a tile it has previously marked as taken
 	elif nextTile.takingCar == self:
-		speed_modifier = ACCELERATION
-		input_vector = position.direction_to(nextTile.global_position).normalized()
+		_go_to_next_tile(nextTile)
 	
 	# If the traffic lights are changed when the Car is still in the crossing,
 	# the Car will continue moving out of the way and mark the next Tile as taken
 	# so that deadlocks do not occur
-	elif (
-		tile.is_crossing and
-		nextTile.isFree() and
-		nextTile.is_crossing and
-		not nextTile.mayEnter(movingInDirection())
-	):
+	elif _car_is_still_in_the_crossing(tile, nextTile):
 		if nextTile.takingCar == null:
 			nextTile.takingCar = self
 		
-		speed_modifier = ACCELERATION
-		input_vector = position.direction_to(nextTile.global_position).normalized()
+		_go_to_next_tile(nextTile)
 		
 	# In the case that the Car may not move onto the next Tile,
 	# then it will stop, and if it had marked the next Tile as taken, unmark it to free it for others

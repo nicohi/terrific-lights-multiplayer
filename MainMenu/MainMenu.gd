@@ -13,12 +13,13 @@ func _ready():
 	mainMenu.visible = true
 	mainMenu.connect("openDifficultyMenu", self, "_openDifficultyMenu")
 	difficultyMenu.connect("difficulty_set", self, "_onDifficultySet")
+	_set_difficulty_sprite(Globals.current_difficulty)
 	
 func _openDifficultyMenu():
 	mainMenu.visible = false
 	difficultyMenu.visible = true
 
-func _onDifficultySet(difficulty):
+func _set_difficulty_sprite(difficulty):
 	match difficulty:
 		Globals.DIFFICULTY_EASY:
 			difficultySprite.texture = easyDiffTexture
@@ -26,6 +27,10 @@ func _onDifficultySet(difficulty):
 			difficultySprite.texture = mediumDiffTexture
 		Globals.DIFFICULTY_HARD:
 			difficultySprite.texture = hardDiffTexture
+
+func _onDifficultySet(difficulty):
+	Globals.current_difficulty = difficulty
+	_set_difficulty_sprite(difficulty)
 
 	mainMenu.visible = true
 	difficultyMenu.visible = false

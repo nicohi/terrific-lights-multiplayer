@@ -18,5 +18,5 @@ func _on_DiffButton_pressed():
 	emit_signal("openDifficultyMenu")
 
 func _on_StartButton_pressed():
-	Globals.car_engines_on = 0
+	EngineConfig.car_engines_on = 0
 	get_tree().change_scene("res://Map/Map.tscn")
