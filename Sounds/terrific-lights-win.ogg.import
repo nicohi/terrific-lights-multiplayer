@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/terrific-lights-win.ogg-3188d6d31017513fc4738c53b502eba4.oggstr"
+
+[deps]
+
+source_file="res://Sounds/terrific-lights-win.ogg"
+dest_files=[ "res://.import/terrific-lights-win.ogg-3188d6d31017513fc4738c53b502eba4.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

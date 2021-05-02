@@ -112,5 +112,4 @@ script = ExtResource( 8 )
 stream = SubResource( 5 )
 volume_db = -24.0
 bus = "Cars"
-
 [connection signal="timeout" from="Honkabilly/HonkTimer" to="Honkabilly" method="_on_HonkTimer_timeout"]
