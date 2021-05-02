@@ -11,5 +11,5 @@ dest_files=[ "res://.import/terrific-lights-gameover.ogg-04129cad5a6f04184f351e6
 
 [params]
 
-loop=true
+loop=false
 loop_offset=0
