@@ -1,6 +1,5 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=11 format=2]
 
-[ext_resource path="res://MainMenuHard.gd" type="Script" id=1]
 [ext_resource path="res://MainMenu/OnOffStart.png" type="Texture" id=2]
 [ext_resource path="res://MainMenu/OnOffDiffMedium.png" type="Texture" id=3]
 [ext_resource path="res://MainMenu/MenuLights.png" type="Texture" id=4]
@@ -13,7 +12,6 @@
 [ext_resource path="res://UI/ScoreDisplay.tscn" type="PackedScene" id=11]
 
 [node name="MainMenuMedium" type="Node2D"]
-script = ExtResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
 position = Vector2( 970.469, 502.186 )

@@ -46,6 +46,7 @@ var LEFT = Globals.LEFT
 var RIGHT = Globals.RIGHT
 var STRAIGHT = Globals.STRAIGHT
 
+# The setup for different routes
 var routeSetup = [
 	{
 		"startPos": NWN_START_POS,
@@ -129,6 +130,7 @@ var routeSetup = [
 	},
 ]
 
+# Setup the tile grid for the roads.
 func setUpTiles():
 	var tileIsRoad = false
 	var keepOn = false
@@ -168,6 +170,8 @@ func setUpTiles():
 			y_pos += Globals.TILE_SIDE_LEN
 		x_pos += Globals.TILE_SIDE_LEN
 
+# Creates a portion of a route where the car goes straight and the proceeds to
+# the next intersection.
 func _straight(targetArray: Array, steps: int, from: Vector2, toDir: Vector2, nextTurn) -> Vector2:
 	var pos = from
 
@@ -181,6 +185,8 @@ func _straight(targetArray: Array, steps: int, from: Vector2, toDir: Vector2, ne
 
 	return pos
 
+# Creates a portion of a route where the car turns left and the proceeds to the
+# next intersection.
 func _turn_left(targetArray: Array, from: Vector2, toDir: Vector2, nextTurn) -> Vector2:
 	var pos = from
 
@@ -206,6 +212,8 @@ func _turn_left(targetArray: Array, from: Vector2, toDir: Vector2, nextTurn) -> 
 
 	return pos
 
+# Creates a portion of a route where the car turns right and the proceeds to the
+# next intersection.
 func _turn_right(targetArray: Array, from: Vector2, toDir: Vector2, nextTurn) -> Vector2:
 	var pos = from
 
@@ -229,6 +237,7 @@ func _turn_right(targetArray: Array, from: Vector2, toDir: Vector2, nextTurn) ->
 
 	return pos
 
+# Returns the vector that is 90 degrees to the left from the dir vector.
 func _left_from(dir: Vector2) -> Vector2:
 	match dir:
 		NORTH:
@@ -240,6 +249,7 @@ func _left_from(dir: Vector2) -> Vector2:
 		_:
 			return SOUTH
 
+# Returns the vector that is 90 degrees to the right from the dir vector.
 func _right_from(dir: Vector2) -> Vector2:
 	match dir:
 		NORTH:
@@ -251,6 +261,7 @@ func _right_from(dir: Vector2) -> Vector2:
 		_:
 			return NORTH
 
+# Returns the turn vector based on the turn direction and the current direction.
 func _get_turn_vector(turnTo, directionFrom: Vector2) -> Vector2:
 	match turnTo:
 		LEFT:
@@ -300,10 +311,12 @@ func randomRoute():
 func _ready():
 	setUpTiles()
 	setUpRoutes()
+	
 	light_ul.connect("lit", self, "handle_lights")
 	light_ll.connect("lit", self, "handle_lights")
 	light_ur.connect("lit", self, "handle_lights")
 	light_lr.connect("lit", self, "handle_lights")
+	
 	light_ul.begin()
 	light_ll.begin()
 	light_ur.begin()

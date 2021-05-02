@@ -11,5 +11,5 @@ dest_files=[ "res://.import/terrific-lights-win.ogg-3188d6d31017513fc4738c53b502
 
 [params]
 
-loop=true
+loop=false
 loop_offset=0
