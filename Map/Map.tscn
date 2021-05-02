@@ -62,17 +62,17 @@ size = 42
 outline_color = Color( 0.996078, 0.988235, 0.988235, 1 )
 font_data = ExtResource( 2 )
 
-[sub_resource type="DynamicFont" id=7]
+[sub_resource type="DynamicFont" id=5]
 size = 35
 outline_color = Color( 0.996078, 0.988235, 0.988235, 1 )
 font_data = ExtResource( 2 )
 
-[sub_resource type="DynamicFont" id=5]
+[sub_resource type="DynamicFont" id=6]
 size = 30
 outline_color = Color( 0.996078, 0.988235, 0.988235, 1 )
 font_data = ExtResource( 2 )
 
-[sub_resource type="DynamicFont" id=6]
+[sub_resource type="DynamicFont" id=7]
 size = 30
 outline_color = Color( 0.996078, 0.988235, 0.988235, 1 )
 font_data = ExtResource( 2 )
@@ -84,9 +84,15 @@ script = ExtResource( 6 )
 position = Vector2( 960, 540 )
 scale = Vector2( 0.8, 0.8 )
 texture = ExtResource( 7 )
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="Road" type="Node2D" parent="."]
 script = ExtResource( 37 )
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="UpperLeft" parent="Road" instance=ExtResource( 36 )]
 
@@ -248,6 +254,7 @@ margin_right = 1901.0
 margin_bottom = 1075.0
 color = Color( 0, 0, 0, 0.392157 )
 __meta__ = {
+"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
@@ -318,9 +325,9 @@ __meta__ = {
 }
 
 [node name="ScoreDisplay" parent="." instance=ExtResource( 38 )]
-margin_left = 503.0
+margin_left = 491.0
 margin_top = 60.0
-margin_right = 543.0
+margin_right = 531.0
 margin_bottom = 100.0
 
 [node name="GameTimer" type="Timer" parent="."]
@@ -381,21 +388,21 @@ __meta__ = {
 [node name="ScoreLabel" type="Label" parent="GameOverPopupMenu/Options"]
 margin_right = 316.0
 margin_bottom = 43.0
-custom_fonts/font = SubResource( 7 )
+custom_fonts/font = SubResource( 5 )
 align = 1
 
 [node name="RetryButton" type="Button" parent="GameOverPopupMenu/Options"]
 margin_top = 47.0
 margin_right = 316.0
 margin_bottom = 91.0
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 6 )
 text = "Retry"
 
 [node name="ReturnToMenuButton" type="Button" parent="GameOverPopupMenu/Options"]
 margin_top = 95.0
 margin_right = 316.0
 margin_bottom = 139.0
-custom_fonts/font = SubResource( 6 )
+custom_fonts/font = SubResource( 7 )
 text = "Main Menu"
 __meta__ = {
 "_edit_use_anchors_": false
