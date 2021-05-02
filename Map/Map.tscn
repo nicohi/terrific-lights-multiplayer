@@ -1,6 +1,7 @@
-[gd_scene load_steps=41 format=2]
+[gd_scene load_steps=43 format=2]
 
 [ext_resource path="res://Lights/Light_option_31.jpg" type="Texture" id=1]
+[ext_resource path="res://MainMenu/Montserrat-ExtraBold.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Lights/Light_option_41_Light.jpg" type="Texture" id=3]
 [ext_resource path="res://Lights/Light_option_21.jpg" type="Texture" id=4]
 [ext_resource path="res://Lights/Light_option_11_Light.jpg" type="Texture" id=5]
@@ -41,6 +42,10 @@
 [ext_resource path="res://Sounds/1_CarExit.wav" type="AudioStream" id=40]
 [ext_resource path="res://MainMenu/Title.tres" type="DynamicFont" id=41]
 
+[sub_resource type="DynamicFont" id=1]
+size = 50
+font_data = ExtResource( 2 )
+
 [node name="Map" type="Node2D"]
 script = ExtResource( 6 )
 
@@ -50,6 +55,7 @@ scale = Vector2( 0.8, 0.8 )
 texture = ExtResource( 7 )
 
 [node name="Road" type="Node2D" parent="."]
+visible = false
 script = ExtResource( 37 )
 
 [node name="UpperLeft" parent="Road" instance=ExtResource( 36 )]
@@ -358,6 +364,26 @@ polygon = PoolVector2Array( -25, -39, -25, 1128, 1969, 1122, 1952, -72, 35, -66,
 __meta__ = {
 "_edit_lock_": true
 }
+
+[node name="Instructions" type="Polygon2D" parent="."]
+color = Color( 0, 0, 0, 1 )
+polygon = PoolVector2Array( -8.24306, -55, 1944.76, -52, 1946.76, 1105, -15.2431, 1107, -15.2431, 1107 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Instructions"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Heading" type="Label" parent="Instructions/VBoxContainer"]
+anchor_right = 0.068
+margin_left = 960.0
+margin_right = 1279.0
+margin_bottom = 62.0
+custom_fonts/font = SubResource( 1 )
+text = "How to play"
 [connection signal="pressed" from="PausePopup/VBoxContainer/ResumeButton" to="." method="_on_ResumeButton_pressed"]
 [connection signal="pressed" from="PausePopup/VBoxContainer/RestartButton" to="." method="_on_ResumeButton_pressed"]
 [connection signal="pressed" from="PausePopup/VBoxContainer/RestartButton" to="." method="_on_RestartButton_pressed"]
