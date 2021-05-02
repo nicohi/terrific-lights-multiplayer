@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/terrific-lights-gameover.ogg-04129cad5a6f04184f351e63d1a26e55.oggstr"
+
+[deps]
+
+source_file="res://Sounds/terrific-lights-gameover.ogg"
+dest_files=[ "res://.import/terrific-lights-gameover.ogg-04129cad5a6f04184f351e63d1a26e55.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

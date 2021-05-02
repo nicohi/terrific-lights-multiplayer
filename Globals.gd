@@ -8,6 +8,8 @@ var cars_passed = 0
 enum { NONE, ALL, NORTH, EAST, SOUTH, WEST }
 enum { LEFT, RIGHT, STRAIGHT }
 
+var instructions_shown = false
+
 enum {
 	DIFFICULTY_EASY
 	DIFFICULTY_MEDIUM

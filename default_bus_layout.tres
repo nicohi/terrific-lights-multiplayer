@@ -1,4 +1,4 @@
-[gd_resource type="AudioBusLayout" load_steps=5 format=2]
+[gd_resource type="AudioBusLayout" load_steps=6 format=2]
 
 [sub_resource type="AudioEffectReverb" id=1]
 resource_name = "Reverb"
@@ -19,6 +19,10 @@ cutoff_hz = 3000.0
 
 [sub_resource type="AudioEffectLowPassFilter" id=4]
 resource_name = "LowPassFilter"
+
+[sub_resource type="AudioEffectLowPassFilter" id=5]
+resource_name = "LowPassFilter"
+cutoff_hz = 3000.0
 
 [resource]
 bus/1/name = "Roads"
@@ -53,3 +57,11 @@ bus/4/volume_db = 0.0
 bus/4/send = "Master"
 bus/4/effect/0/effect = SubResource( 4 )
 bus/4/effect/0/enabled = true
+bus/5/name = "Music"
+bus/5/solo = false
+bus/5/mute = false
+bus/5/bypass_fx = false
+bus/5/volume_db = 0.0
+bus/5/send = "Master"
+bus/5/effect/0/effect = SubResource( 5 )
+bus/5/effect/0/enabled = true

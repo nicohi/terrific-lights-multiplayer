@@ -1,4 +1,4 @@
-[gd_scene load_steps=49 format=2]
+[gd_scene load_steps=60 format=2]
 
 [ext_resource path="res://Lights/Light_option_31.jpg" type="Texture" id=1]
 [ext_resource path="res://MainMenu/Montserrat-ExtraBold.ttf" type="DynamicFontData" id=2]
@@ -41,15 +41,27 @@
 [ext_resource path="res://UI/TimerDisplay.tscn" type="PackedScene" id=39]
 [ext_resource path="res://Sounds/1_CarExit.wav" type="AudioStream" id=40]
 [ext_resource path="res://MainMenu/Title.tres" type="DynamicFont" id=41]
+[ext_resource path="res://UI/Instructions.tscn" type="PackedScene" id=42]
+[ext_resource path="res://UI/Instructions.gd" type="Script" id=43]
+[ext_resource path="res://Sounds/6_MenuMouseEnter.wav" type="AudioStream" id=44]
+[ext_resource path="res://Sounds/8_MenuPress.wav" type="AudioStream" id=45]
+[ext_resource path="res://Map/PausePopup.gd" type="Script" id=46]
+[ext_resource path="res://Map/GameOverPopupMenu.gd" type="Script" id=47]
+[ext_resource path="res://Sounds/terrific-lights-gameover.ogg" type="AudioStream" id=48]
+[ext_resource path="res://Sounds/terrific-lights-win.ogg" type="AudioStream" id=49]
 
 [sub_resource type="DynamicFont" id=1]
-size = 50
+size = 30
 outline_color = Color( 0.996078, 0.988235, 0.988235, 1 )
 font_data = ExtResource( 2 )
 
 [sub_resource type="DynamicFont" id=2]
 size = 30
 outline_color = Color( 0.996078, 0.988235, 0.988235, 1 )
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=9]
+size = 30
 font_data = ExtResource( 2 )
 
 [sub_resource type="DynamicFont" id=3]
@@ -77,6 +89,14 @@ size = 30
 outline_color = Color( 0.996078, 0.988235, 0.988235, 1 )
 font_data = ExtResource( 2 )
 
+[sub_resource type="DynamicFont" id=10]
+size = 50
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=8]
+size = 36
+font_data = ExtResource( 2 )
+
 [node name="Map" type="Node2D"]
 script = ExtResource( 6 )
 
@@ -89,7 +109,6 @@ __meta__ = {
 }
 
 [node name="Road" type="Node2D" parent="."]
-visible = false
 script = ExtResource( 37 )
 __meta__ = {
 "_edit_lock_": true
@@ -267,6 +286,7 @@ margin_right = 1118.0
 margin_bottom = 699.0
 mouse_filter = 2
 popup_exclusive = true
+script = ExtResource( 46 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -297,7 +317,7 @@ __meta__ = {
 }
 
 [node name="ResumeButton" type="Button" parent="PausePopup/VBoxContainer"]
-margin_right = 193.0
+margin_right = 227.0
 margin_bottom = 44.0
 custom_fonts/font = SubResource( 1 )
 text = "Resume"
@@ -307,7 +327,7 @@ __meta__ = {
 
 [node name="RestartButton" type="Button" parent="PausePopup/VBoxContainer"]
 margin_top = 48.0
-margin_right = 193.0
+margin_right = 227.0
 margin_bottom = 92.0
 custom_fonts/font = SubResource( 2 )
 text = "Retry"
@@ -315,15 +335,32 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="QuitButton" type="Button" parent="PausePopup/VBoxContainer"]
+[node name="InstructionsButton" type="Button" parent="PausePopup/VBoxContainer"]
 margin_top = 96.0
-margin_right = 193.0
+margin_right = 227.0
 margin_bottom = 140.0
+custom_fonts/font = SubResource( 9 )
+text = "Instructions"
+
+[node name="QuitButton" type="Button" parent="PausePopup/VBoxContainer"]
+margin_top = 144.0
+margin_right = 227.0
+margin_bottom = 188.0
 custom_fonts/font = SubResource( 3 )
 text = "Main Menu"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="ButtonAudio" type="Node" parent="PausePopup"]
+
+[node name="OnHover" type="AudioStreamPlayer" parent="PausePopup/ButtonAudio"]
+stream = ExtResource( 44 )
+bus = "Buttons"
+
+[node name="OnClick" type="AudioStreamPlayer" parent="PausePopup/ButtonAudio"]
+stream = ExtResource( 45 )
+bus = "Buttons"
 
 [node name="ScoreDisplay" parent="." instance=ExtResource( 38 )]
 margin_left = 491.0
@@ -347,13 +384,13 @@ bus = "Buttons"
 
 [node name="GameOverPopupMenu" type="Popup" parent="."]
 pause_mode = 2
-visible = true
 margin_left = 802.0
 margin_top = 382.0
 margin_right = 1118.0
 margin_bottom = 699.0
 mouse_filter = 2
 popup_exclusive = true
+script = ExtResource( 47 )
 __meta__ = {
 "_edit_group_": true,
 "_edit_use_anchors_": false
@@ -409,6 +446,16 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="ButtonAudio" type="Node" parent="GameOverPopupMenu"]
+
+[node name="OnHover" type="AudioStreamPlayer" parent="GameOverPopupMenu/ButtonAudio"]
+stream = ExtResource( 44 )
+bus = "Buttons"
+
+[node name="OnClick" type="AudioStreamPlayer" parent="GameOverPopupMenu/ButtonAudio"]
+stream = ExtResource( 45 )
+bus = "Buttons"
+
 [node name="Polygon2D" type="Polygon2D" parent="."]
 color = Color( 0, 0, 0, 1 )
 polygon = PoolVector2Array( -25, -39, -25, 1128, 1969, 1122, 1952, -72, 35, -66, 481, 60, 1439, 60, 1439, 1020, 481, 1020, 481, 75, 481, 28, -30, -92 )
@@ -417,30 +464,103 @@ __meta__ = {
 }
 
 [node name="Instructions" type="Polygon2D" parent="."]
+pause_mode = 2
+visible = false
 color = Color( 0, 0, 0, 1 )
 polygon = PoolVector2Array( -8.24306, -55, 1944.76, -52, 1946.76, 1105, -15.2431, 1107, -15.2431, 1107 )
+script = ExtResource( 43 )
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Instructions"]
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
+[node name="Heading" type="Label" parent="Instructions"]
+anchor_bottom = 256.0
+margin_top = 64.0
+margin_right = 1920.0
+margin_bottom = 126.0
+custom_fonts/font = SubResource( 10 )
+text = "How to play"
+align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Heading" type="Label" parent="Instructions/VBoxContainer"]
-margin_right = 319.0
-margin_bottom = 62.0
-custom_fonts/font = SubResource( 1 )
-text = "How to play"
+[node name="Instructions" parent="Instructions" instance=ExtResource( 42 )]
+margin_top = 176.0
+margin_bottom = 255.0
+align = 3
+
+[node name="Instructions2" parent="Instructions" instance=ExtResource( 42 )]
+margin_top = 288.75
+margin_bottom = 576.75
+text = "There are four intersections, each of which contain four buttons from which you can choose which cars can enter the intersection:
+
+1. Cars coming from north and south going STRAIGHT or turning RIGHT.
+2. Cars coming from north and south turning LEFT.
+3. Cars coming from east and west going STRAIGHT or turning RIGHT.
+4. Cars coming from east and west turning LEFT."
+align = 3
+max_lines_visible = -1
+
+[node name="Instructions3" parent="Instructions" instance=ExtResource( 42 )]
+margin_top = 624.75
+margin_bottom = 662.75
+text = "One game lasts for five minutes."
+
+[node name="Instructions4" parent="Instructions" instance=ExtResource( 42 )]
+margin_top = 712.75
+margin_bottom = 791.75
+text = "You get points from each car that successfully navigates its way through the intersections and exits the game field. The quicker the car exits the game field, the more points you will get!"
+align = 3
+
+[node name="Instructions5" parent="Instructions" instance=ExtResource( 42 )]
+margin_top = 840.75
+margin_bottom = 878.75
+text = "If a car doesn't exit the game field within 99 seconds, the game ends."
+
+[node name="Button" type="Button" parent="Instructions"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = 892.0
+margin_top = 968.0
+margin_right = 1028.0
+margin_bottom = 1019.0
+custom_fonts/font = SubResource( 8 )
+text = "START"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ButtonAudio" type="Node" parent="Instructions"]
+
+[node name="OnHover" type="AudioStreamPlayer" parent="Instructions/ButtonAudio"]
+stream = ExtResource( 44 )
+bus = "Buttons"
+
+[node name="OnClick" type="AudioStreamPlayer" parent="Instructions/ButtonAudio"]
+stream = ExtResource( 45 )
+bus = "Buttons"
+
+[node name="VictoryAudio" type="AudioStreamPlayer" parent="."]
+pause_mode = 2
+stream = ExtResource( 49 )
+volume_db = -6.0
+bus = "Music"
+
+[node name="GameOverAudio" type="AudioStreamPlayer" parent="."]
+pause_mode = 2
+stream = ExtResource( 48 )
+bus = "Music"
 [connection signal="pressed" from="PausePopup/VBoxContainer/ResumeButton" to="." method="_on_ResumeButton_pressed"]
 [connection signal="pressed" from="PausePopup/VBoxContainer/RestartButton" to="." method="_on_ResumeButton_pressed"]
 [connection signal="pressed" from="PausePopup/VBoxContainer/RestartButton" to="." method="_on_RestartButton_pressed"]
+[connection signal="pressed" from="PausePopup/VBoxContainer/InstructionsButton" to="." method="_on_InstructionsButton_pressed"]
 [connection signal="pressed" from="PausePopup/VBoxContainer/QuitButton" to="." method="_on_ResumeButton_pressed"]
 [connection signal="pressed" from="PausePopup/VBoxContainer/QuitButton" to="." method="_on_QuitButton_pressed"]
 [connection signal="timeout" from="GameTimer" to="." method="_on_GameTimer_timeout"]
 [connection signal="pressed" from="GameOverPopupMenu/Options/RetryButton" to="." method="_on_RetryButton_pressed"]
 [connection signal="pressed" from="GameOverPopupMenu/Options/ReturnToMenuButton" to="." method="_on_ReturnToMenuButton_pressed"]
+[connection signal="mouse_entered" from="Instructions/Button" to="Instructions" method="_on_Button_mouse_entered"]
+[connection signal="pressed" from="Instructions/Button" to="Instructions" method="_on_Button_pressed"]
 
 [editable path="Road/UpperLeft"]
 

@@ -15,6 +15,10 @@ onready var carExitAudio = $CarExitAudio
 onready var gameOverPopUp = $GameOverPopupMenu
 onready var darken = $Darken
 onready var carStorage = $Cars
+onready var instructions = $Instructions
+onready var instructionButton = $Instructions/Button
+onready var gameOverTune = $GameOverAudio
+onready var victoryTune = $VictoryAudio
 
 signal score_changed(total_score, cars_passed)
 
@@ -41,6 +45,7 @@ func _create_cars():
 
 func _ready():
 	self.connect("score_changed", scoreDisplay, "update_score")
+	instructions.connect("instructions_closed", self, "_handle_instructions_closed")
 
 	timeDisplay.updateTime(GAME_TIME)
 	var _window_size = get_viewport().get_visible_rect().size
@@ -48,6 +53,23 @@ func _ready():
 	_create_cars()
 
 	randomize()
+	
+	if (
+		Globals.current_difficulty == Globals.DIFFICULTY_EASY and
+		not Globals.instructions_shown
+	):
+		instructions.visible = true
+		get_tree().paused = true
+
+func _handle_instructions_closed():
+	if (
+		not Globals.instructions_shown and
+		Globals.current_difficulty == Globals.DIFFICULTY_EASY
+	):
+		Globals.instructions_shown = true
+		get_tree().paused = false
+	else:
+		pausePopUp.visible = true
 
 func _reset_car(car, points):
 	carExitAudio.play()
@@ -69,6 +91,7 @@ func _game_over(car: Car):
 	gameOverLabel.text = "GAME OVER"
 	gameOverLabel.add_color_override("font_color", Color(1, 0, 0, 1))
 	gameOverPopUp.find_node("ScoreLabel").text = ""
+	gameOverTune.play()
 
 # Every 12 seconds, release a number of Cars dependent on the difficulty level
 func _release_a_car():
@@ -105,6 +128,7 @@ func _on_GameTimer_timeout():
 	gameOverLabel.text = "VICTORY"
 	gameOverLabel.add_color_override("font_color", Color(0, 1, 0, 1))
 	gameOverPopUp.find_node("ScoreLabel").text = "Score: " + str(Globals.score)
+	victoryTune.play()
 
 func _on_ReturnToMenuButton_pressed():
 	darken.hide()
@@ -113,7 +137,7 @@ func _on_ReturnToMenuButton_pressed():
 
 # Starts the current game mode from the beginning
 func _on_RetryButton_pressed():
-	EngineConfig.engine_idx = 0
+	EngineConfig.car_engines_on = 0
 	get_tree().change_scene("res://Map/Map.tscn")
 	get_tree().paused = false
 
@@ -136,3 +160,9 @@ func _on_QuitButton_pressed():
 	#Returns to main menu. Pause flased in order to return from pause-paralysis.
 	get_tree().paused = false
 	get_tree().change_scene("res://MainMenu/MainMenu.tscn")
+
+
+func _on_InstructionsButton_pressed():
+	instructionButton.text = "BACK"
+	pausePopUp.visible = false
+	instructions.visible = true
