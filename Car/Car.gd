@@ -4,7 +4,7 @@ class_name Car
 
 # this signal is emitted when the car leaves the route
 signal car_exited(car, points)
-signal game_over
+signal game_over(car)
 
 # constants for car control
 const ACCELERATION := Globals.TILE_SIDE_LEN * 0.6
@@ -42,7 +42,7 @@ func _ready():
 	_reset_car()
 
 func _game_over():
-	emit_signal("game_over")
+	emit_signal("game_over", self)
 
 # Called when the car should start driving.
 func _go():

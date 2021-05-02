@@ -58,23 +58,36 @@ func _reset_car(car, points):
 	emit_signal("score_changed", Globals.score, Globals.cars_passed)
 	car.setRoute(road.randomRoute())
 
-func _game_over():
+func _game_over(car: Car):
 	darken.show()
 	get_tree().paused = true
 	gameOverPopUp.popup_centered()
+	car.set_as_toplevel(true)
+	var carSprite = car.find_node("Sprite")
+	carSprite.modulate = Color(2, 0, 0, 1)
+	var gameOverLabel = gameOverPopUp.find_node("GameOverLabel")
+	gameOverLabel.text = "GAME OVER"
+	gameOverLabel.add_color_override("font_color", Color(1, 0, 0, 1))
+	gameOverPopUp.find_node("ScoreLabel").text = ""
 
 # Every 12 seconds, release a number of Cars dependent on the difficulty level
 func _release_a_car():
 	if gameTimer.is_stopped():
 		gameTimer.start(GAME_TIME)
 
-	timer.wait_time = 12
+#	timer.wait_time = 12
+#	if cars.size():
+#		for _i in range(Globals.CARS_PER_SEC):
+#			var car = cars.pop_front()
+#			if car != null and car.route.getTileAtInd(0).isFree():
+#				car.position = car.route.getTileAtInd(0).position
+#				car._go()
+	timer.wait_time = 12 / Globals.CARS_PER_SEC
 	if cars.size():
-		for _i in range(Globals.CARS_PER_SEC):
-			var car = cars.pop_front()
-			if car != null and car.route.getTileAtInd(0).isFree():
-				car.position = car.route.getTileAtInd(0).position
-				car._go()
+		var car = cars.pop_front()
+		if car != null and car.route.getTileAtInd(0).isFree():
+			car.position = car.route.getTileAtInd(0).position
+			car._go()
 
 func _physics_process(delta):
 	timeDisplay.updateTime(gameTimer.time_left)
@@ -85,7 +98,13 @@ func _physics_process(delta):
 
 
 func _on_GameTimer_timeout():
-	_game_over()
+	darken.show()
+	get_tree().paused = true
+	gameOverPopUp.popup_centered()
+	var gameOverLabel = gameOverPopUp.find_node("GameOverLabel")
+	gameOverLabel.text = "VICTORY"
+	gameOverLabel.add_color_override("font_color", Color(0, 1, 0, 1))
+	gameOverPopUp.find_node("ScoreLabel").text = "Score: " + str(Globals.score)
 
 func _on_ReturnToMenuButton_pressed():
 	darken.hide()
