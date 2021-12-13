@@ -14,6 +14,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Car/Car.gd"
 }, {
+"base": "Node",
+"class": "ClientManager",
+"language": "GDScript",
+"path": "res://Net/ClientManager.gd"
+}, {
 "base": "Node2D",
 "class": "LightButton",
 "language": "GDScript",
@@ -23,6 +28,16 @@ _global_script_classes=[ {
 "class": "LightButtonGroup",
 "language": "GDScript",
 "path": "res://Lights/LightButtonGroup.gd"
+}, {
+"base": "Reference",
+"class": "Message",
+"language": "GDScript",
+"path": "res://Net/Message.gd"
+}, {
+"base": "Node",
+"class": "RTC_Client",
+"language": "GDScript",
+"path": "res://Net/WebRTCClient.gd"
 }, {
 "base": "Node",
 "class": "Route",
@@ -36,8 +51,11 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "Car": "",
+"ClientManager": "",
 "LightButton": "",
 "LightButtonGroup": "",
+"Message": "",
+"RTC_Client": "",
 "Route": "",
 "Tile": ""
 }
