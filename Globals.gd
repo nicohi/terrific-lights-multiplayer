@@ -5,6 +5,7 @@ var CARS_PER_SEC = 2
 const VARIKKO = Vector2(-666, -666)
 var score = 0
 var cars_passed = 0
+var players = 1
 enum { NONE, ALL, NORTH, EAST, SOUTH, WEST }
 enum { LEFT, RIGHT, STRAIGHT }
 

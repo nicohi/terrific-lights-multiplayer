@@ -19,4 +19,4 @@ func _on_DiffButton_pressed():
 
 func _on_StartButton_pressed():
 	EngineConfig.car_engines_on = 0
-	get_tree().change_scene("res://Map/Map.tscn")
+	get_tree().change_scene("res://Map/MapMulti.tscn")

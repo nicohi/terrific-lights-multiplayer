@@ -41,6 +41,7 @@ func _create_cars():
 		car.connect("car_exited", self, "_reset_car")
 		car.connect("game_over", self, "_game_over")
 		car.setRoute(road.randomRoute())
+		car.setProgress(2)
 		add_child_below_node(carStorage, car)
 
 func _ready():
@@ -79,6 +80,7 @@ func _reset_car(car, points):
 
 	emit_signal("score_changed", Globals.score, Globals.cars_passed)
 	car.setRoute(road.randomRoute())
+	car.setProgress(car.progress - 1)
 
 func _game_over(car: Car):
 	darken.show()
