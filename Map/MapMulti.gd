@@ -41,7 +41,6 @@ func _create_cars():
 		car.connect("car_exited", self, "_reset_car")
 		car.connect("game_over", self, "_game_over")
 		car.setRoute(road.randomRoute())
-		car.setProgress(2)
 		add_child_below_node(carStorage, car)
 
 func _ready():
@@ -80,7 +79,6 @@ func _reset_car(car, points):
 
 	emit_signal("score_changed", Globals.score, Globals.cars_passed)
 	car.setRoute(road.randomRoute())
-	car.setProgress(car.progress - 1)
 
 func _game_over(car: Car):
 	darken.show()
@@ -135,12 +133,12 @@ func _on_GameTimer_timeout():
 func _on_ReturnToMenuButton_pressed():
 	darken.hide()
 	get_tree().paused = false
-	get_tree().change_scene("res://MainMenu/MainMenu.tscn")
+	get_tree().change_scene("res://MainMenu/MainMenuMulti.tscn")
 
 # Starts the current game mode from the beginning
 func _on_RetryButton_pressed():
 	EngineConfig.car_engines_on = 0
-	get_tree().change_scene("res://Map/Map.tscn")
+	get_tree().change_scene("res://Map/MapMulti.tscn")
 	get_tree().paused = false
 
 
@@ -153,7 +151,7 @@ func _on_ResumeButton_pressed():
 
 func _on_RestartButton_pressed():
 	#Restarts the map by reloading the scene and removing the pause-paralysis.
-	get_tree().change_scene("res://Map/Map.tscn")
+	get_tree().change_scene("res://Map/MapMulti.tscn")
 	get_tree().paused = false
 	EngineConfig.car_engines_on = 0
 
@@ -161,7 +159,7 @@ func _on_RestartButton_pressed():
 func _on_QuitButton_pressed():
 	#Returns to main menu. Pause flased in order to return from pause-paralysis.
 	get_tree().paused = false
-	get_tree().change_scene("res://MainMenu/MainMenu.tscn")
+	get_tree().change_scene("res://MainMenuMulti.tscn")
 
 
 func _on_InstructionsButton_pressed():
