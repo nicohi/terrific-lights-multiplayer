@@ -1,0 +1,82 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://MainMenu/MenuButton.gd" type="Script" id=1]
+[ext_resource path="res://MainMenu/ExitButton.gd" type="Script" id=2]
+[ext_resource path="res://Sounds/8_MenuPress.wav" type="AudioStream" id=3]
+[ext_resource path="res://MainMenu/MultiMenuLights.png" type="Texture" id=4]
+[ext_resource path="res://MainMenu/OnOffExit.png" type="Texture" id=5]
+[ext_resource path="res://Sounds/6_MenuMouseEnter.wav" type="AudioStream" id=6]
+[ext_resource path="res://MainMenu/MultiStart.gd" type="Script" id=7]
+[ext_resource path="res://Menumulti.gd" type="Script" id=8]
+[ext_resource path="res://MainMenu/OnOffStart.png" type="Texture" id=9]
+[ext_resource path="res://DifficultyMenu.tscn" type="PackedScene" id=10]
+[ext_resource path="res://Sounds/terrific-lights-background-music.ogg" type="AudioStream" id=11]
+
+[node name="MainMenuMulti" type="Node2D"]
+script = ExtResource( 7 )
+
+[node name="DifficultyMenu" parent="." instance=ExtResource( 10 )]
+visible = false
+
+[node name="MainMenu" type="Node2D" parent="."]
+script = ExtResource( 8 )
+
+[node name="Sprite" type="Sprite" parent="MainMenu"]
+position = Vector2( 910, 558 )
+texture = ExtResource( 4 )
+
+[node name="ExitButton" type="Node2D" parent="MainMenu"]
+script = ExtResource( 1 )
+
+[node name="Button" type="Button" parent="MainMenu/ExitButton"]
+margin_left = 1120.0
+margin_top = 460.0
+margin_right = 1304.0
+margin_bottom = 652.0
+flat = true
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprite" type="Sprite" parent="MainMenu/ExitButton/Button"]
+position = Vector2( 90.8727, 97.2181 )
+scale = Vector2( 0.601329, 0.593333 )
+texture = ExtResource( 5 )
+hframes = 2
+
+[node name="MouseEnter" type="AudioStreamPlayer2D" parent="MainMenu/ExitButton/Button"]
+stream = ExtResource( 6 )
+
+[node name="BtnPressed" type="AudioStreamPlayer2D" parent="MainMenu/ExitButton"]
+stream = ExtResource( 3 )
+
+[node name="StartButton" type="Node2D" parent="MainMenu"]
+
+[node name="BtnPressed" type="AudioStreamPlayer" parent="MainMenu/StartButton"]
+stream = ExtResource( 6 )
+
+[node name="Button" type="Button" parent="MainMenu/StartButton"]
+margin_left = 531.0
+margin_top = 479.0
+margin_right = 696.0
+margin_bottom = 645.0
+flat = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MouseEnter" type="AudioStreamPlayer2D" parent="MainMenu/StartButton/Button"]
+
+[node name="Sprite" type="Sprite" parent="MainMenu/StartButton/Button"]
+position = Vector2( 81.9626, 79.29 )
+scale = Vector2( 0.56195, 0.554551 )
+texture = ExtResource( 9 )
+hframes = 2
+
+[node name="Player1" type="Node2D" parent="MainMenu"]
+
+[node name="MenuMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 11 )
+volume_db = -3.0
+autoplay = true
