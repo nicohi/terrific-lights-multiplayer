@@ -43,9 +43,6 @@ volume_db = -3.0
 autoplay = true
 
 [editable path="MainMenuEasy"]
-
 [editable path="MainMenuEasy/StartButton"]
-
 [editable path="MainMenuEasy/DifficultyButton"]
-
 [editable path="MainMenuEasy/ExitButton"]
