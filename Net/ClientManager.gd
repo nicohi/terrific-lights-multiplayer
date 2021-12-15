@@ -2,7 +2,8 @@ extends Node
 
 class_name ClientManager
 
-export(String) var websocket_url = "localhost"
+#TODO change hardcoded server IP
+export(String) var websocket_url = "91.158.25.32"
 export(int) var port = 9080
 
 var _rtc : RTC_Client

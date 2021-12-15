@@ -22,14 +22,37 @@ func _on_game_over():
 
 	_relay_client.disconnect_from_server()
 
+func ping():
+	var msg = Message.new()
+	msg.is_echo = true
+	msg.content = {}
+	msg.content["id"] = _relay_client._id
+	msg.content["time"] = OS.get_unix_time()
+	msg.content["type"] = "ping"
+	msg.content["data"] = "Hello world #" + str(randi())
+	_relay_client.send_data(msg)
+	
+func pong(resp):
+	var msg = Message.new()
+	msg.is_echo = true
+	msg.content = {}
+	msg.content["id"] = _relay_client._id
+	msg.content["time"] = OS.get_unix_time()
+	msg.content["type"] = "pong"
+	msg.content["data"] = resp
+	_relay_client.send_data(msg)
 
 func _on_message(message : Message):
 	print(message.content)
+	#var is_dict = typeof(message.content) == TYPE_DICTIONARY
 	if (message.server_login): return
 	if (message.match_start): return
 	else:
-		if (message.content.has("gameover")):
-			_on_game_over()
+		#if (message.content.has("gameover")):
+		#	_on_game_over()
+		# if ping message is received send back pong with the same data
+		if (message.content.has("type") && message.content["type"] == "ping"):
+			pong(message.content["data"])
 
 func process_match_start():
 	# Disconnect from matchmaking server
@@ -37,10 +60,23 @@ func process_match_start():
 
 	var peers = _relay_client._match
 
-	var is_host = peers.find(_relay_client._id) == 0
-	if (is_host):
-		var msg = Message.new()
-		msg.is_echo = true
-		msg.content = {}
-		msg.content["seed"] = randi()
-		_relay_client.send_data(msg)
+	#var is_host = peers.find(_relay_client._id) == 0
+	#if (is_host):
+	#	var msg = Message.new()
+	#	msg.is_echo = true
+	#	msg.content = {}
+	#	msg.content["seed"] = randi()
+	#	_relay_client.send_data(msg)
+	
+var time = 0
+var rng = RandomNumberGenerator.new()
+var wait = 1
+
+func _process(delta):
+	time += delta
+	if time > wait:
+		rng.randomize()
+		wait = rng.randf_range(1.0, 10.0)
+		ping()
+		# Reset timer
+		time = 0
