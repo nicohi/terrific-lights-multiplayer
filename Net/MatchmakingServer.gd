@@ -38,7 +38,6 @@ func _ready():
 
 	_logger_coroutine()
 
-
 func _connected(id, proto):
 	print("Client %d connected with protocol: %s" % [id, proto])
 	_connected_players[id] = [] # match queue
@@ -46,7 +45,8 @@ func _connected(id, proto):
 
 	var message = Message.new()
 	message.server_login = true
-	message.content = id
+	message.content = {}
+	message.content = {"id":id, "players": _match_queue.size(), "match_size":match_size}
 	_server.get_peer(id).put_packet(message.get_raw())
 
 func create_new_match():

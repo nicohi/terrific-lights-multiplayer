@@ -9,6 +9,7 @@ export(int) var port = 9080
 var _rtc : RTC_Client
 var _match = []
 var _rtc_peers = {}
+var _players = 0
 var _id = 0
 var _player_number = 0
 var _client : WebSocketClient
@@ -86,9 +87,10 @@ func _on_data():
 	message.from_raw(data)
 	
 	if (message.server_login):
-		_id = message.content
+		_id = message.content["id"]
+		_players = message.content["players"]
 		_initialised = true
-		print("Logged in with id ", _id)
+		print("Player logged in with id ", _id, ". ", _players, "/", message.content["match_size"], " ready")
 	if (message.match_start):
 		_match = message.content as Array
 		_player_number = _match.find(_id)
