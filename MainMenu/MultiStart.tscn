@@ -1,9 +1,0 @@
-[gd_scene load_steps=3 format=2]
-
-[ext_resource path="res://DifficultyMenuMulti.tscn" type="PackedScene" id=1]
-[ext_resource path="res://MainMenu/MultiStart.gd" type="Script" id=2]
-
-[node name="MultiStart" type="Node2D"]
-script = ExtResource( 2 )
-
-[node name="MainMenuMulti" parent="." instance=ExtResource( 1 )]

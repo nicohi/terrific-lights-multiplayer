@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://MainMenuHard.gd" type="Script" id=1]
 [ext_resource path="res://MainMenu/OnOffStart.png" type="Texture" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://MainMenu/WalkerStand.png" type="Texture" id=7]
 [ext_resource path="res://MainMenu/Label.tscn" type="PackedScene" id=8]
 [ext_resource path="res://MainMenu/WalkerWalk.png" type="Texture" id=9]
+[ext_resource path="res://Sounds/terrific-lights-background-music.ogg" type="AudioStream" id=10]
 [ext_resource path="res://UI/ScoreDisplay.tscn" type="PackedScene" id=11]
 
 [node name="MainMenuEasy" type="Node2D"]
@@ -20,13 +21,13 @@ texture = ExtResource( 4 )
 
 [node name="FirstPlayer" type="Node2D" parent="."]
 
-[node name="Standing" type="Sprite" parent="FirstPlayer"]
+[node name="Walking" type="Sprite" parent="FirstPlayer"]
 position = Vector2( 522.909, 352.102 )
 scale = Vector2( 0.860158, 0.880135 )
 texture = ExtResource( 9 )
 hframes = 2
 
-[node name="Walking" type="Sprite" parent="FirstPlayer"]
+[node name="Standing" type="Sprite" parent="FirstPlayer"]
 position = Vector2( 821.821, 351.353 )
 scale = Vector2( 0.865152, 0.845175 )
 texture = ExtResource( 7 )
@@ -34,13 +35,13 @@ hframes = 2
 
 [node name="FirstPlayer2" type="Node2D" parent="."]
 
-[node name="Standing" type="Sprite" parent="FirstPlayer2"]
+[node name="Walking" type="Sprite" parent="FirstPlayer2"]
 position = Vector2( 1119.24, 355.099 )
 scale = Vector2( 0.860158, 0.880135 )
 texture = ExtResource( 9 )
 hframes = 2
 
-[node name="Walking" type="Sprite" parent="FirstPlayer2"]
+[node name="Standing" type="Sprite" parent="FirstPlayer2"]
 position = Vector2( 1419.65, 357.346 )
 scale = Vector2( 0.865152, 0.845175 )
 texture = ExtResource( 7 )
@@ -48,13 +49,13 @@ hframes = 2
 
 [node name="FirstPlayer3" type="Node2D" parent="."]
 
-[node name="Standing" type="Sprite" parent="FirstPlayer3"]
+[node name="Walking" type="Sprite" parent="FirstPlayer3"]
 position = Vector2( 521.411, 653.262 )
 scale = Vector2( 0.860158, 0.880135 )
 texture = ExtResource( 9 )
 hframes = 2
 
-[node name="Walking" type="Sprite" parent="FirstPlayer3"]
+[node name="Standing" type="Sprite" parent="FirstPlayer3"]
 position = Vector2( 818.825, 655.51 )
 scale = Vector2( 0.865152, 0.845175 )
 texture = ExtResource( 7 )
@@ -62,13 +63,13 @@ hframes = 2
 
 [node name="FirstPlayer4" type="Node2D" parent="."]
 
-[node name="Standing" type="Sprite" parent="FirstPlayer4"]
+[node name="Walking" type="Sprite" parent="FirstPlayer4"]
 position = Vector2( 1125.23, 654.76 )
 scale = Vector2( 0.860158, 0.880135 )
 texture = ExtResource( 9 )
 hframes = 2
 
-[node name="Walking" type="Sprite" parent="FirstPlayer4"]
+[node name="Standing" type="Sprite" parent="FirstPlayer4"]
 position = Vector2( 1418.15, 655.509 )
 scale = Vector2( 0.865152, 0.845175 )
 texture = ExtResource( 7 )
@@ -99,7 +100,7 @@ margin_bottom = 23.6337
 
 [node name="Sprite" parent="DifficultyButton/Button" index="0"]
 position = Vector2( 7.93799, 8.34796 )
-scale = Vector2( 1.21824e-10, 0.0133331 )
+scale = Vector2( 1e-05, 0.0133331 )
 texture = ExtResource( 3 )
 
 [node name="ExitButton" parent="." instance=ExtResource( 5 )]
@@ -136,8 +137,13 @@ margin_top = 470.804
 margin_right = 1071.05
 margin_bottom = 516.804
 
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 10 )
+volume_db = -3.0
+autoplay = true
+
+[connection signal="visibility_changed" from="FirstPlayer/Walking" to="." method="_on_Standing_visibility_changed"]
+
 [editable path="StartButton"]
-
 [editable path="DifficultyButton"]
-
 [editable path="ExitButton"]
