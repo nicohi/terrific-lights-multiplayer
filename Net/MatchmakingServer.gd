@@ -45,9 +45,12 @@ func _connected(id, proto):
 
 	var message = Message.new()
 	message.server_login = true
+	message.is_echo = true
 	message.content = {}
 	message.content = {"id":id, "players": _match_queue.size(), "match_size":match_size}
-	_server.get_peer(id).put_packet(message.get_raw())
+	#_server.get_peer(id).put_packet(message.get_raw())
+	for player_id in _connected_players[id]:
+		_server.get_peer(player_id).put_packet(message.get_raw())
 
 func create_new_match():
 	var new_match = []
