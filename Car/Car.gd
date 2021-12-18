@@ -20,6 +20,7 @@ var speed_modifier := ACCELERATION
 var drive := false # if true, the car can proceed
 
 var route setget setRoute
+var proceed setget setProgress
 var ind: int
 
 onready var sprite := $Sprite
@@ -56,6 +57,9 @@ func setRoute(r):
 	route = r
 	ind = 0
 
+func setProgress(p):
+	proceed = p
+
 # Determines the car's direction. Used when checking if the Car may enter a crossing
 func movingInDirection():
 	var dir
@@ -75,6 +79,7 @@ func _reset_car():
 	current_speed = MAX_SPEED
 	speed_modifier = ACCELERATION
 	drive = false
+	proceed = 2
 
 	pointCounter.reset()
 	pointCounter.stop()
