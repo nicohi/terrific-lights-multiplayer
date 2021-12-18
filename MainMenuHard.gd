@@ -18,7 +18,7 @@ onready var walking3 = $FirstPlayer3/Walking
 onready var standing4 = $FirstPlayer4/Standing
 onready var walking4 = $FirstPlayer4/Walking
 
-var players = 3
+var players = 1
 
 func _ready():
 	start.connect("button_pressed", self, "_on_StartButton_pressed")
@@ -39,40 +39,65 @@ func _on_StartButton_pressed():
 
 #func _on_Standing_visibility_changed():
 func changeVisibility(players):
-	if players == 1:
+	if players >= 1:
 		walking1.visible = 1
 		standing1.visible = 0
+	else:
+		walking1.visible = 0
+		standing1.visible = 1
+	if players >= 2:
+		walking2.visible = 1
+		standing2.visible = 0
+	else:
 		walking2.visible = 0
 		standing2.visible = 1
-		walking3.visible = 0
-		standing3.visible = 1
-		walking4.visible = 0
-		standing4.visible = 1
-	elif players == 2:
-		walking1.visible = 1
-		standing1.visible = 0
-		walking2.visible = 1
-		standing2.visible = 0
-		walking3.visible = 0
-		standing3.visible = 1
-		walking4.visible = 0
-		standing4.visible = 1
-	elif players == 3:
-		walking1.visible = 1
-		standing1.visible = 0
-		walking2.visible = 1
-		standing2.visible = 0
+	if players >= 3:
 		walking3.visible = 1
 		standing3.visible = 0
-		walking4.visible = 0
-		standing4.visible = 1
-	elif players == 4:
-		walking1.visible = 1
-		standing1.visible = 0
-		walking2.visible = 1
-		standing2.visible = 0
-		walking3.visible = 1
-		standing3.visible = 0
+	else:
+		walking3.visible = 0
+		standing3.visible = 1
+	if players >= 4:
 		walking4.visible = 1
 		standing4.visible = 0
+	else:
+		walking4.visible = 0
+		standing4.visible = 1
+	
+#	if players == 1:
+#		walking1.visible = 1
+#		standing1.visible = 0
+#		walking2.visible = 0
+#		standing2.visible = 1
+#		walking3.visible = 0
+#		standing3.visible = 1
+#		walking4.visible = 0
+#		standing4.visible = 1
+#	elif players == 2:
+#		walking1.visible = 1
+#		standing1.visible = 0
+#		walking2.visible = 1
+#		standing2.visible = 0
+#		walking3.visible = 0
+#		standing3.visible = 1
+#		walking4.visible = 0
+#		standing4.visible = 1
+#	elif players == 3:
+#		walking1.visible = 1
+#		standing1.visible = 0
+#		walking2.visible = 1
+#		standing2.visible = 0
+#		walking3.visible = 1
+#		standing3.visible = 0
+#		walking4.visible = 0
+#		standing4.visible = 1
+#	elif players == 4:
+#		walking1.visible = 1
+#		standing1.visible = 0
+#		walking2.visible = 1
+#		standing2.visible = 0
+#		walking3.visible = 1
+#		standing3.visible = 0
+#		walking4.visible = 1
+#		standing4.visible = 0
 	

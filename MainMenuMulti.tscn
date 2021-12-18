@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://MainMenuHard.gd" type="Script" id=1]
 [ext_resource path="res://MainMenu/OnOffStart.png" type="Texture" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://MainMenu/WalkerStand.png" type="Texture" id=7]
 [ext_resource path="res://MainMenu/Label.tscn" type="PackedScene" id=8]
 [ext_resource path="res://MainMenu/WalkerWalk.png" type="Texture" id=9]
+[ext_resource path="res://Sounds/terrific-lights-background-music.ogg" type="AudioStream" id=10]
 [ext_resource path="res://UI/ScoreDisplay.tscn" type="PackedScene" id=11]
 
 [node name="MainMenuEasy" type="Node2D"]
@@ -135,6 +136,11 @@ margin_left = 858.047
 margin_top = 470.804
 margin_right = 1071.05
 margin_bottom = 516.804
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 10 )
+volume_db = -3.0
+autoplay = true
 
 [connection signal="visibility_changed" from="FirstPlayer/Walking" to="." method="_on_Standing_visibility_changed"]
 
