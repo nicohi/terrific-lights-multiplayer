@@ -59,6 +59,8 @@ func process_match_start():
 	_relay_client.disconnect_from_server()
 
 	var peers = _relay_client._match
+	
+	print("MATCH STARTED ", peers)
 
 	#var is_host = peers.find(_relay_client._id) == 0
 	#if (is_host):
