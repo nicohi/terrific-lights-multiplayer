@@ -19,6 +19,9 @@ onready var instructions = $Instructions
 onready var instructionButton = $Instructions/Button
 onready var gameOverTune = $GameOverAudio
 onready var victoryTune = $VictoryAudio
+onready var _relay_client = $MatchmakingClient
+
+var scores = {}
 
 signal score_changed(total_score, cars_passed)
 
@@ -44,6 +47,52 @@ func _create_cars():
 		add_child_below_node(carStorage, car)
 
 func _ready():
+	#Initialize networking
+	_relay_client.connect("on_message", self, "_on_message")
+	_relay_client.connect("on_players_ready", self, "_on_players_ready")
+	_relay_client.connect_to_server()
+	print("connecting to matchmaking server")
+	
+	# TODO add and show lobby screen here
+	# number of currently connected players is accessible from _relay_client._players
+	# match size is accessible from _relay_client._match_size
+
+func _on_message(message : Message):
+	var cont = message.content
+	print(cont)
+	if (message.server_login): return
+	if (message.match_start): return
+	else:
+		if (cont.has("type")):
+			#Add cases for message types here
+			if (cont["type"] == "score"):
+				update_score_from_message(cont)
+
+func update_score_from_message(msg):
+	scores[msg["id"]] = msg["data"]
+	read_scores()
+	
+func read_scores():
+	print("CURRENT SCORES:")
+	for id in scores:
+		var cars_passed = scores[id]["cars_passed"]
+		var score = scores[id]["score"]
+		print("	Player", id, " has passed ", cars_passed, " cars and scored ", score, " points.")
+
+
+func _on_players_ready():
+	_relay_client.disconnect_from_server()
+
+	var peers = _relay_client._match
+
+	print("MATCH STARTED ", peers)
+
+	# TODO update number of players globally to peers.size()
+	#players = peers.size()
+
+	# TODO hide lobby screen here
+
+	#Start game
 	self.connect("score_changed", scoreDisplay, "update_score")
 	instructions.connect("instructions_closed", self, "_handle_instructions_closed")
 
@@ -53,13 +102,23 @@ func _ready():
 	_create_cars()
 
 	randomize()
-	
+
 	if (
 		Globals.current_difficulty == Globals.DIFFICULTY_EASY and
 		not Globals.instructions_shown
 	):
 		instructions.visible = true
 		get_tree().paused = true
+
+func send_message(type, data):
+	var msg = Message.new()
+	msg.is_echo = true
+	msg.content = {}
+	msg.content["id"] = _relay_client._id
+	msg.content["time"] = OS.get_unix_time()
+	msg.content["type"] = type
+	msg.content["data"] = data
+	_relay_client.send_data(msg)
 
 func _handle_instructions_closed():
 	if (
@@ -77,6 +136,7 @@ func _reset_car(car, points):
 	Globals.score += points
 	Globals.cars_passed += 1
 
+	send_message("score", {"score": Globals.score, "cars_passed": Globals.cars_passed})
 	emit_signal("score_changed", Globals.score, Globals.cars_passed)
 	car.setRoute(road.randomRoute())
 
