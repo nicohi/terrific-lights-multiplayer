@@ -58,7 +58,7 @@ func connect_to_server():
 		set_process(false)
 
 func rtc_on_peer_connected(id):
-	#print("RTC PEER CONNECTED: ", id)
+	print("RTC PEER CONNECTED: ", id)
 	_rtc_peers[id] = true
 	
 	for peer in _rtc_peers.keys():
@@ -88,6 +88,8 @@ func _on_data():
 	
 	var message = Message.new()
 	message.from_raw(data)
+	if (message.content.has("type")):
+		pass
 	if (message.server_login):
 		_id = message.content["id"]
 		_players = message.content["players"]
@@ -105,7 +107,7 @@ func _on_data():
 				_rtc_peers[player_id] = false
 				_rtc.create_peer(player_id)
 	else:
-		print("On message: ", message.content)
+		#print("On message: ", message.content)
 		_rtc.on_received_setup_message(message)
 	
 	emit_signal("on_message", message)

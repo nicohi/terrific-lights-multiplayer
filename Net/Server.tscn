@@ -4,4 +4,4 @@
 
 [node name="RelayServer" type="Node"]
 script = ExtResource( 1 )
-match_size = 2
+match_size = 4

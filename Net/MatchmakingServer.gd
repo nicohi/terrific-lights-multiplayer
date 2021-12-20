@@ -55,7 +55,7 @@ func _connected(id, proto):
 
 	var message = Message.new()
 	message.server_login = true
-	message.is_echo = true
+	message.is_echo = false
 	message.content = {}
 	message.content = {"id":id, "players": _match_queue.size(), "match_size":match_size}
 	_server.get_peer(id).put_packet(message.get_raw())

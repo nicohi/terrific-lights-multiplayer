@@ -90,6 +90,7 @@ func send_candidate(id, mid, index, sdp):
 	emit_signal("on_send_message", message)
 
 func on_received_setup_message(message : Message):
+	print("DEBUG RECV MESSAGE:", message)
 	if not (message.content is Dictionary): return
 	if (message.content.has("offer")):
 		offer_received(message.content["id"], message.content["offer"])
