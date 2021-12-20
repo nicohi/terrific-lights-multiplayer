@@ -4,6 +4,7 @@ class_name ClientManager
 
 #TODO change hardcoded server IP
 export(String) var websocket_url = "91.158.25.32"
+#export(String) var websocket_url = "localhost"
 export(int) var port = 9080
 
 var _rtc : RTC_Client

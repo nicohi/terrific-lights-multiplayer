@@ -18,14 +18,18 @@ onready var walking3 = $FirstPlayer3/Walking
 onready var standing4 = $FirstPlayer4/Standing
 onready var walking4 = $FirstPlayer4/Walking
 
-var players = 1
+var map = preload("res://Map/MapMulti.tscn")
 
 func _ready():
 	start.connect("button_pressed", self, "_on_StartButton_pressed")
 	difficulty.connect("button_pressed", self, "_on_DiffButton_pressed")
 	exit.connect("button_pressed", self, "_on_ExitButton_pressed")
-	changeVisibility(players)
-
+	changeVisibility(1)
+	
+func _show_map():
+	EngineConfig.car_engines_on = 0
+	map.show()
+	
 func _on_ExitButton_pressed():
 	get_tree().quit()
 
@@ -33,9 +37,12 @@ func _on_DiffButton_pressed():
 	emit_signal("openDifficultyMenu")
 
 func _on_StartButton_pressed():
-	EngineConfig.car_engines_on = 0
-	get_tree().change_scene("res://Map/MapMulti.tscn")
-
+	start.visible = false
+	map = map.instance()
+	add_child(map)
+	map.hide()
+	map.connect("player_joined", self, "changeVisibility")
+	map.connect("match_started", self, "_show_map")
 
 #func _on_Standing_visibility_changed():
 func changeVisibility(players):

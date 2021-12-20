@@ -10,7 +10,7 @@ var _match_queue = []
 
 func _logger_coroutine():
 	while(true):
-		yield(get_tree().create_timer(3), "timeout")
+		yield(get_tree().create_timer(1), "timeout")
 
 		var p = ""
 		for player in _connected_players.keys():
@@ -22,7 +22,17 @@ func _logger_coroutine():
 
 		printt("Connected:   " + p)
 		printt("Match queue: " + m + "\n")
+		
+		_send_player_count()
 
+func _send_player_count():
+	var message = Message.new()
+	message.is_echo = true
+	message.content = {}
+	message.content = {"type": "player_count", "match_size": match_size, "count": _match_queue.size()}
+	for player_id in _match_queue:
+		_server.get_peer(player_id).put_packet(message.get_raw())
+	
 func _ready():
 	print("Starting server...")
 

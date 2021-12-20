@@ -24,6 +24,8 @@ onready var _relay_client = $MatchmakingClient
 var scores = {}
 
 signal score_changed(total_score, cars_passed)
+signal player_joined(count)
+signal match_started()
 
 func _init():
 	randomize()
@@ -65,6 +67,8 @@ func _on_message(message : Message):
 	else:
 		if (cont.has("type")):
 			#Add cases for message types here
+			if (cont["type"] == "player_count"):
+				emit_signal("player_joined", cont["count"])
 			if (cont["type"] == "score"):
 				update_score_from_message(cont)
 
@@ -108,7 +112,8 @@ func _on_players_ready():
 		not Globals.instructions_shown
 	):
 		instructions.visible = true
-		get_tree().paused = true
+		#get_tree().paused = true
+	emit_signal("match_started")
 
 func send_message(type, data):
 	var msg = Message.new()

@@ -19,7 +19,6 @@ func _on_players_ready():
 	process_match_start()
 
 func _on_game_over():
-
 	_relay_client.disconnect_from_server()
 
 func ping():
