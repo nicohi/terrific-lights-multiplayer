@@ -89,7 +89,8 @@ func _on_data():
 	var message = Message.new()
 	message.from_raw(data)
 	if (message.content.has("type")):
-		pass
+		emit_signal("on_message", message)
+		return
 	if (message.server_login):
 		_id = message.content["id"]
 		_players = message.content["players"]

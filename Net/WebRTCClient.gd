@@ -71,27 +71,34 @@ func _offer_created(type, data, id):
 func send_offer(id, offer):
 	var message = Message.new()
 	message.content = {}
+	message.is_echo = false
 	message.content["id"] = _my_id
+	message.content["to"] = id
 	message.content["offer"] = offer
 	emit_signal("on_send_message", message)
 
 func send_answer(id, answer):
 	var message = Message.new()
 	message.content = {}
+	message.is_echo = false
 	message.content["id"] = _my_id
+	message.content["to"] = id
 	message.content["answer"] = answer
 	emit_signal("on_send_message", message)
 
 func send_candidate(id, mid, index, sdp):
 	var message = Message.new()
 	message.content = {}
+	message.is_echo = false
 	message.content["id"] = _my_id
+	message.content["to"] = id
 	message.content["candidate"] = {"mid":mid,"index":index,"sdp":sdp}
 	emit_signal("on_send_message", message)
 
 func on_received_setup_message(message : Message):
-	print("DEBUG RECV MESSAGE:", message)
 	if not (message.content is Dictionary): return
+	if (message.content.has("to") && message.content["to"] != _my_id):
+		return
 	if (message.content.has("offer")):
 		offer_received(message.content["id"], message.content["offer"])
 	elif (message.content.has("answer")):
@@ -100,15 +107,16 @@ func on_received_setup_message(message : Message):
 		candidate_received(message.content["id"], message.content["candidate"]["mid"], message.content["candidate"]["index"], message.content["candidate"]["sdp"])
 
 func offer_received(id, offer):
-	print("Got offer: %d" % id)
 	if rtc_mp.has_peer(id):
+		print("Got offer: %d" % id)
 		rtc_mp.get_peer(id).connection.set_remote_description("offer", offer)
 
 func answer_received(id, answer):
-	print("Got answer: %d" % id)
 	if rtc_mp.has_peer(id):
+		print("Got answer: %d" % id)
 		rtc_mp.get_peer(id).connection.set_remote_description("answer", answer)
 
 func candidate_received(id, mid, index, sdp):
 	if rtc_mp.has_peer(id):
+		print("Got candidate: %d" % id)
 		rtc_mp.get_peer(id).connection.add_ice_candidate(mid, index, sdp)
