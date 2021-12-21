@@ -82,6 +82,7 @@ func read_scores():
 		var cars_passed = scores[id]["cars_passed"]
 		var score = scores[id]["score"]
 		print("	Player", id, " has passed ", cars_passed, " cars and scored ", score, " points.")
+	$MultiScore.update_score(scores)
 
 
 func _on_players_ready():
@@ -90,11 +91,6 @@ func _on_players_ready():
 	var peers = _relay_client._match
 
 	print("MATCH STARTED ", peers)
-
-	# TODO update number of players globally to peers.size()
-	#players = peers.size()
-
-	# TODO hide lobby screen here
 
 	#Start game
 	self.connect("score_changed", scoreDisplay, "update_score")
