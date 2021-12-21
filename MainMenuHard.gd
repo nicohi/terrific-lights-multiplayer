@@ -28,6 +28,7 @@ func _ready():
 	
 func _show_map():
 	EngineConfig.car_engines_on = 0
+	$AudioStreamPlayer.stop()
 	map.show()
 	
 func _on_ExitButton_pressed():
