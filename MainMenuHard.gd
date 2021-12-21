@@ -24,12 +24,19 @@ func _ready():
 	start.connect("button_pressed", self, "_on_StartButton_pressed")
 	difficulty.connect("button_pressed", self, "_on_DiffButton_pressed")
 	exit.connect("button_pressed", self, "_on_ExitButton_pressed")
+	
+
 	changeVisibility(1)
 	
 func _show_map():
 	EngineConfig.car_engines_on = 0
 	$AudioStreamPlayer.stop()
 	map.show()
+		
+func _hide_map():
+	map.hide()
+	map = preload("res://Map/MapMulti.tscn")
+	start.visible = true
 	
 func _on_ExitButton_pressed():
 	get_tree().quit()
@@ -42,6 +49,7 @@ func _on_StartButton_pressed():
 	map = map.instance()
 	add_child(map)
 	map.hide()
+	map.connect("quit", self, "_hide_map")
 	map.connect("player_joined", self, "changeVisibility")
 	map.connect("match_started", self, "_show_map")
 

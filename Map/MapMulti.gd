@@ -26,6 +26,7 @@ var scores = {}
 signal score_changed(total_score, cars_passed)
 signal player_joined(count)
 signal match_started()
+signal quit()
 
 func _init():
 	randomize()
@@ -49,6 +50,8 @@ func _create_cars():
 		add_child_below_node(carStorage, car)
 
 func _ready():
+	gameOverPopUp.returnButton.connect("pressed", self, "_on_QuitButton_pressed")
+	pausePopUp.quitButton.connect("pressed", self, "_on_QuitButton_pressed")
 	#Initialize networking
 	_relay_client.connect("on_message", self, "_on_message")
 	_relay_client.connect("on_players_ready", self, "_on_players_ready")
@@ -194,12 +197,13 @@ func _on_GameTimer_timeout():
 func _on_ReturnToMenuButton_pressed():
 	darken.hide()
 	get_tree().paused = false
-	get_tree().change_scene("res://MainMenu/MainMenuMulti.tscn")
+	#get_tree().change_scene("res://MainMenu/MainMenuMulti.tscn")
+	emit_signal("quit")
 
 # Starts the current game mode from the beginning
 func _on_RetryButton_pressed():
 	EngineConfig.car_engines_on = 0
-	get_tree().change_scene("res://Map/MapMulti.tscn")
+	#get_tree().change_scene("res://Map/MapMulti.tscn")
 	get_tree().paused = false
 
 
@@ -212,15 +216,16 @@ func _on_ResumeButton_pressed():
 
 func _on_RestartButton_pressed():
 	#Restarts the map by reloading the scene and removing the pause-paralysis.
-	get_tree().change_scene("res://Map/MapMulti.tscn")
-	get_tree().paused = false
-	EngineConfig.car_engines_on = 0
+	#get_tree().change_scene("res://Map/MapMulti.tscn")
+	#get_tree().paused = false
+	#EngineConfig.car_engines_on = 0
+	pass
 
 
 func _on_QuitButton_pressed():
 	#Returns to main menu. Pause flased in order to return from pause-paralysis.
 	get_tree().paused = false
-	get_tree().change_scene("res://MainMenuMulti.tscn")
+	emit_signal("quit")
 
 
 func _on_InstructionsButton_pressed():
