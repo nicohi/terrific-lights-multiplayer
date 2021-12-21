@@ -198,6 +198,7 @@ func _on_ReturnToMenuButton_pressed():
 	darken.hide()
 	get_tree().paused = false
 	#get_tree().change_scene("res://MainMenu/MainMenuMulti.tscn")
+	gameOverPopUp.hide()
 	emit_signal("quit")
 
 # Starts the current game mode from the beginning
@@ -224,7 +225,9 @@ func _on_RestartButton_pressed():
 
 func _on_QuitButton_pressed():
 	#Returns to main menu. Pause flased in order to return from pause-paralysis.
+	darken.hide()
 	get_tree().paused = false
+	gameOverPopUp.hide()
 	emit_signal("quit")
 
 
