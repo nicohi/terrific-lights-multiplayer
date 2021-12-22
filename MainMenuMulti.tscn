@@ -141,9 +141,10 @@ margin_bottom = 516.804
 stream = ExtResource( 10 )
 volume_db = -3.0
 autoplay = true
-
 [connection signal="visibility_changed" from="FirstPlayer/Walking" to="." method="_on_Standing_visibility_changed"]
 
 [editable path="StartButton"]
+
 [editable path="DifficultyButton"]
+
 [editable path="ExitButton"]

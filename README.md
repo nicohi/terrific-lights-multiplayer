@@ -14,7 +14,7 @@ If you wish to test the game and don't have friends to play with, run the game i
 TURN DOWN SPEAKER/HEADPHONE VOLUME. Sounds from all 4 games play at once.
 
 And to quit:
-`tmux kill-session`
+Click exit on all four windows. After this you should still see four instances running in terminal. Exit all four instances with command ctrl + d. Note that you have to give the command four times.
 
 The default server creates matches with 4 players.
 Once you click "start" the game connects to the matchmaking server and waits for the other 3 players to do the same.

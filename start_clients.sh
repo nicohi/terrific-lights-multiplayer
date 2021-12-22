@@ -5,6 +5,6 @@ tmux split-window -v
 tmux select-pane -L
 tmux split-window -v 
 for _pane in $(tmux list-panes -F '#P'); do
-    tmux send-keys -t ${_pane} "godot MainMenuMulti.tscn" Enter
+    tmux send-keys -t ${_pane} "godot3 MainMenuMulti.tscn" Enter
 done
 tmux -2 attach-session -d
