@@ -1,6 +1,6 @@
 # terrific-lights-multiplayer
 
-The main additions to the original game are in the `Net` folder and `MainMenuMulti.gd` and `Map/MapMulti.gd`.
+The main additions to the original game are in the `Net/` folder and `MainMenuMulti.gd` and `Map/MapMulti.gd`.
 
 ## Run game
 Since we are hosting a public matchmaking server, the game can be started with:
