@@ -1,5 +1,7 @@
 # terrific-lights-multiplayer
 
+The main additions to the original game are in the `Net` folder and `MainMenuMulti.tscn` and `Map/MapMulti.tscn`.
+
 ## Run game
 Since we are hosting a public matchmaking server, the game can be started with:
 `godot MainMenuMulti.tscn`
