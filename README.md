@@ -2,6 +2,9 @@
 
 The main additions to the original game are in the `Net/` folder and `MainMenuMulti.gd` and `Map/MapMulti.gd`.
 
+## Requirements
+Godot must be installed.
+
 ## Run game
 Since we are hosting a public matchmaking server, the game can be started with:
 `godot MainMenuMulti.tscn`
